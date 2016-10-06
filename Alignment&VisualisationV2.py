@@ -104,18 +104,19 @@ print(matches, "/", count, " reads matched the genome")
 offsets.sort()                  #sort list
 offsets = sum(offsets, [])      #flatten list
 offsetsCount = collections.Counter(offsets) #record count of each offset => length of match
-print(len(offsetsCount)) #181
+#print(len(offsetsCount)) #181
 
-file = 'textfile.txt'
+file = 'testfile.txt'
 f = open(file, 'w')
-#arranges offsets with corresponding length in ascending order
+#arranges offsets with corresponding match length in ascending order
 for i in range(len(genome)):
-    if offsetsCount[i] == 0:
-        f.write(' ' * offsetsCount[i])
-        f.write('\n')
-        f.write(' ' * i) #indentation                  
-    else:
-        #print(i, ":", offsetsCount[i], end=" ")
+    if offsetsCount[i] != 0:
+        #f.write(i, ":", offsetsCount[i])
         f.write('-')# * offsetsCount[i])
+    elif (offsetsCount[i] == 0) & (offsetsCount[i+1] != 0):
+        f.write('\n')
+        f.write(' ' * (i+1)) #indentation  
+    elif (offsetsCount[i] == 0) & (offsetsCount[i+1] == 0):
+        f.write(' ')
 f.close()
     
