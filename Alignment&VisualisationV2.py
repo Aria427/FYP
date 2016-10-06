@@ -2,7 +2,7 @@ import collections
 import matplotlib.pyplot as plt
 import pdb
 from path import path
-import sys
+import base64
 
 #To read the genome:
 def readGenome(filename):
@@ -106,7 +106,7 @@ offsets = sum(offsets, [])      #flatten list
 offsetsCount = collections.Counter(offsets) #record count of each offset => length of match
 #print(len(offsetsCount)) #181
 
-file = 'testfile.txt'
+file = path('Output Test Files\DataVisualisationTest.txt').abspath()
 f = open(file, 'w')
 #arranges offsets with corresponding match length in ascending order
 for i in range(len(genome)):
