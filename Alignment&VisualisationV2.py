@@ -76,7 +76,7 @@ def reverseComplement(read):
 def align(sequence, genome):
     readsMatched = 0
     readsCount = 0
-    readsOffset = []
+    readsOffsets = []
     for read in reads:
         read = read[:25] #prefix of read as all 100 bases have a smaller chance of matching
         matches = naiveApproxHamming(read, genome) #check if read matches in forward direction of genome
@@ -84,9 +84,29 @@ def align(sequence, genome):
         readsCount += 1
         if len(matches) > 0: #match - read aligned in at least one place
             readsMatched += 1
-        readsOffset.append(matches)
-    return readsMatched, readsCount, readsOffset
+        readsOffsets.append(matches)
+    return readsMatched, readsCount, readsOffsets
 
+#To create a data visualisation of the matched reads against the genome:
+def visualisation(readsOffsets, outputFile):
+    readsOffsets.sort()                     #sort list
+    readsOffsets = sum(readsOffsets, [])    #flatten list
+    offsetsCount = collections.Counter(readsOffsets) #record count of each offset => length of match
+    #print(len(offsetsCount)) #181
+    file = open(outputFile, 'w')
+    #arranges offsets with corresponding match length in ascending order
+    for i in range(len(genome)):
+        if offsetsCount[i] != 0:
+            #f.write(i, ":", offsetsCount[i])
+            file.write('-' * offsetsCount[i])
+        elif (offsetsCount[i] == 0) & (offsetsCount[i+1] != 0):
+            file.write('\n')
+            file.write(' ' * (i+1)) #indentation  
+        elif (offsetsCount[i] == 0) & (offsetsCount[i+1] == 0):
+            file.write(' ')
+    file.close()
+    return outputFile
+    
 #pdb.set_trace()
 #genome = readGenome(path('Data\HumanGenome.fa.gz').abspath())
 #reads = readSequence(path('Data\HumanSequencingReads.tsv.bz2').abspath())
@@ -105,25 +125,9 @@ reads = readSequence(path('Data\PhiXSequencingReads1000.fastq').abspath())
 matches, count, offsets = align(reads, genome)
 print(matches, "/", count, " reads matched the genome")
 #The result is not 100% but this is to be expected due to sequencing errors. 
-
-offsets.sort()                  #sort list
-offsets = sum(offsets, [])      #flatten list
-offsetsCount = collections.Counter(offsets) #record count of each offset => length of match
-#print(len(offsetsCount)) #181
-
+    
 file = path('Output Test Files\DataVisualisationTest.txt').abspath()
-f = open(file, 'w')
-#arranges offsets with corresponding match length in ascending order
-for i in range(len(genome)):
-    if offsetsCount[i] != 0:
-        #f.write(i, ":", offsetsCount[i])
-        f.write('-' * offsetsCount[i])
-    elif (offsetsCount[i] == 0) & (offsetsCount[i+1] != 0):
-        f.write('\n')
-        f.write(' ' * (i+1)) #indentation  
-    elif (offsetsCount[i] == 0) & (offsetsCount[i+1] == 0):
-        f.write(' ')
-f.close()
+file = visualisation(offsets, file)
 
 """
 x = []
