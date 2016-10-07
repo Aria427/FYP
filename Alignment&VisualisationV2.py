@@ -8,6 +8,8 @@ import numpy
 import matplotlib.pyplot as plt
 import plotly.plotly as plty
 import plotly.graph_objs as pltg
+from PIL import Image, ImageDraw
+import sys
 
 #To read the genome:
 def readGenome(filename):
@@ -128,6 +130,23 @@ print(matches, "/", count, " reads matched the genome")
     
 file = path('Output Test Files\DataVisualisationTest.txt').abspath()
 file = visualisation(offsets, file)
+
+img = Image.new('RGBA', (5000, 5000), (255, 255, 255, 0)) 
+draw = ImageDraw.Draw(img) 
+offsets.sort()                     #sort list
+offsets = sum(offsets, [])    #flatten list
+offsetsCount = collections.Counter(offsets)
+for i in range(len(genome)):
+    if offsetsCount[i] != 0:
+        draw.line(((i,1000), (offsetsCount[i],1000)), fill=128, width=3)
+        #file.write('-' * offsetsCount[i])
+    #elif (offsetsCount[i] == 0) & (offsetsCount[i+1] != 0):
+        #file.write('\n')
+        #file.write(' ' * (i+1)) #indentation  
+    #elif (offsetsCount[i] == 0) & (offsetsCount[i+1] == 0):
+        #file.write(' ')
+draw.line((1000,2000, 1500,3000), fill=128, width=2)
+img.show()
 
 """
 x = []
