@@ -1,8 +1,13 @@
+import plotly.tools as tls
+tls.set_credentials_file(username='Aria427', api_key='rois9sg5we')
+
 import collections
-import matplotlib.pyplot as plt
 import pdb
 from path import path
-import base64
+import numpy
+import matplotlib.pyplot as plt
+import plotly.plotly as plty
+import plotly.graph_objs as pltg
 
 #To read the genome:
 def readGenome(filename):
@@ -112,11 +117,31 @@ f = open(file, 'w')
 for i in range(len(genome)):
     if offsetsCount[i] != 0:
         #f.write(i, ":", offsetsCount[i])
-        f.write('-')# * offsetsCount[i])
+        f.write('-' * offsetsCount[i])
     elif (offsetsCount[i] == 0) & (offsetsCount[i+1] != 0):
         f.write('\n')
         f.write(' ' * (i+1)) #indentation  
     elif (offsetsCount[i] == 0) & (offsetsCount[i+1] == 0):
         f.write(' ')
 f.close()
+
+"""
+x = []
+y = []
+
+for i in range(len(genome)):
+    x.extend([i])
+    if offsetsCount[i] != 0:
+        y.extend([i+offsetsCount[i]])
+    elif (offsetsCount[i] == 0) & (offsetsCount[i+1] != 0):
+        y.extend([None]) #None
+    elif (offsetsCount[i] == 0) & (offsetsCount[i+1] == 0):
+        y.extend([None])
+
+trace = pltg.Scatter(x, y)
+
+fig = dict(data=[trace])
+plty.iplot(fig, filename='simple-connectgaps')"""
+
+#fig.savefig('yourfilename.png')
     
