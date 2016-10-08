@@ -1,15 +1,7 @@
-import plotly.tools as tls
-tls.set_credentials_file(username='Aria427', api_key='rois9sg5we')
-
 import collections
-import pdb
 from path import path
-import numpy
-import matplotlib.pyplot as plt
-import plotly.plotly as plty
-import plotly.graph_objs as pltg
 from PIL import Image, ImageDraw
-import sys
+import pdb
 
 #To read the genome:
 def readGenome(filename):
@@ -94,12 +86,9 @@ def visualisationText(readsOffsets, outputFile):
     readsOffsets.sort()                     #sort list
     readsOffsets = sum(readsOffsets, [])    #flatten list
     offsetsCount = collections.Counter(readsOffsets) #record count of each offset => length of match
-    #print(len(offsetsCount)) #181
     file = open(outputFile, 'w')
-    #arranges offsets with corresponding match length in ascending order
     for i in range(len(genome)):
         if offsetsCount[i] != 0:
-            #f.write(i, ":", offsetsCount[i])
             file.write('-' * offsetsCount[i])
         elif (offsetsCount[i] == 0) & (offsetsCount[i+1] != 0):
             file.write('\n')
@@ -119,7 +108,7 @@ def visualisationJPG(readsOffsets, outputFile):
     for i in range(len(genome)):
         if offsetsCount[i] != 0:
             draw.line(((i,100), (i+offsetsCount[i],100)), fill=0, width=5)
-    img.show()
+    #img.show() #display generated image
     img.save(outputFile, 'JPEG', quality=80, optimize=True, progressive=True)
     return outputFile
   
@@ -142,29 +131,8 @@ matches, count, offsets = align(reads, genome)
 print(matches, "/", count, " reads matched the genome")
 #The result is not 100% but this is to be expected due to sequencing errors. 
     
-#textFile = path('Output Test Files\DataVisualisationTest.txt').abspath()
-#textFile = visualisationText(offsets, textFile)
+textFile = path('Output Test Files\DataVisualisationTest.txt').abspath()
+textFile = visualisationText(offsets, textFile)
 
 jpgFile = path('Output Test Files\DataVisualisationTest.jpg').abspath()
-jpgFile = visualisationJPG(offsets, jpgFile)
-
-"""
-x = []
-y = []
-
-for i in range(len(genome)):
-    x.extend([i])
-    if offsetsCount[i] != 0:
-        y.extend([i+offsetsCount[i]])
-    elif (offsetsCount[i] == 0) & (offsetsCount[i+1] != 0):
-        y.extend([None]) #None
-    elif (offsetsCount[i] == 0) & (offsetsCount[i+1] == 0):
-        y.extend([None])
-
-trace = pltg.Scatter(x, y)
-
-fig = dict(data=[trace])
-plty.iplot(fig, filename='simple-connectgaps')"""
-
-#fig.savefig('yourfilename.png')
-    
+jpgFile = visualisationJPG(offsets, jpgFile) 
