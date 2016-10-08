@@ -138,14 +138,9 @@ offsets = sum(offsets, [])    #flatten list
 offsetsCount = collections.Counter(offsets)
 for i in range(len(genome)):
     if offsetsCount[i] != 0:
-        draw.line(((i,1000), (offsetsCount[i],1000)), fill=128, width=3)
-        #file.write('-' * offsetsCount[i])
-    #elif (offsetsCount[i] == 0) & (offsetsCount[i+1] != 0):
-        #file.write('\n')
-        #file.write(' ' * (i+1)) #indentation  
-    #elif (offsetsCount[i] == 0) & (offsetsCount[i+1] == 0):
-        #file.write(' ')
-draw.line((1000,2000, 1500,3000), fill=128, width=2)
+        draw.line(((i,1000), (i+offsetsCount[i],1000)), fill=0, width=3)
+    elif (offsetsCount[i] == 0):
+        draw.line(((0,0), (0,0)), fill=0, width=3)
 img.show()
 
 """
