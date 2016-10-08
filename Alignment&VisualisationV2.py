@@ -89,8 +89,8 @@ def align(sequence, genome):
         readsOffsets.append(matches)
     return readsMatched, readsCount, readsOffsets
 
-#To create a data visualisation of the matched reads against the genome:
-def visualisation(readsOffsets, outputFile):
+#To create a data visualisation of the matched reads against the genome in a text file:
+def visualisationText(readsOffsets, outputFile):
     readsOffsets.sort()                     #sort list
     readsOffsets = sum(readsOffsets, [])    #flatten list
     offsetsCount = collections.Counter(readsOffsets) #record count of each offset => length of match
@@ -108,7 +108,21 @@ def visualisation(readsOffsets, outputFile):
             file.write(' ')
     file.close()
     return outputFile
-    
+  
+#To create a data visualisation of the matched reads against the genome in a jpg file:
+def visualisationJPG(readsOffsets, outputFile):
+    readsOffsets.sort()                     #sort list
+    readsOffsets = sum(readsOffsets, [])    #flatten list
+    offsetsCount = collections.Counter(readsOffsets) #record count of each offset => length of match
+    img = Image.new('RGBA', (len(genome), 1000), (255, 255, 255, 0)) 
+    draw = ImageDraw.Draw(img) 
+    for i in range(len(genome)):
+        if offsetsCount[i] != 0:
+            draw.line(((i,100), (i+offsetsCount[i],100)), fill=0, width=5)
+    img.show()
+    img.save(outputFile, 'JPEG', quality=80, optimize=True, progressive=True)
+    return outputFile
+  
 #pdb.set_trace()
 #genome = readGenome(path('Data\HumanGenome.fa.gz').abspath())
 #reads = readSequence(path('Data\HumanSequencingReads.tsv.bz2').abspath())
@@ -128,25 +142,11 @@ matches, count, offsets = align(reads, genome)
 print(matches, "/", count, " reads matched the genome")
 #The result is not 100% but this is to be expected due to sequencing errors. 
     
-file = path('Output Test Files\DataVisualisationTest.txt').abspath()
-file = visualisation(offsets, file)
+#textFile = path('Output Test Files\DataVisualisationTest.txt').abspath()
+#textFile = visualisationText(offsets, textFile)
 
-img = Image.new('RGBA', (5000, 5000), (255, 255, 255, 0)) 
-draw = ImageDraw.Draw(img) 
-offsets.sort()                     #sort list
-offsets = sum(offsets, [])    #flatten list
-offsetsCount = collections.Counter(offsets)
-for i in range(len(genome)):
-    if offsetsCount[i] != 0:
-        draw.line(((i,1000), (offsetsCount[i],1000)), fill=128, width=3)
-        #file.write('-' * offsetsCount[i])
-    #elif (offsetsCount[i] == 0) & (offsetsCount[i+1] != 0):
-        #file.write('\n')
-        #file.write(' ' * (i+1)) #indentation  
-    #elif (offsetsCount[i] == 0) & (offsetsCount[i+1] == 0):
-        #file.write(' ')
-draw.line((1000,2000, 1500,3000), fill=128, width=2)
-img.show()
+jpgFile = path('Output Test Files\DataVisualisationTest.jpg').abspath()
+jpgFile = visualisationJPG(offsets, jpgFile)
 
 """
 x = []
