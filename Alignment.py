@@ -1,7 +1,6 @@
-import collections
-import matplotlib.pyplot as plt
-import pdb
-from path import path
+"""
+
+"""
 
 #To read the genome:
 def readGenome(filename):
@@ -54,8 +53,8 @@ def naiveApproxHamming(pattern, text, maxHammingDist=1):
                 if mismatches > maxHammingDist:
                     break           #exceeded maximum distance
         if mismatches <= maxHammingDist: #approximate match
-            matchOffsets.append((i, mismatches)) #pair (match offset, hamming distance)
-    return matchOffsets        
+            matchOffsets.append(i)
+    return matchOffsets      
 
 #The genome is double stranded and so the reads can come from one strand or the other.    
 #To match both the read and the reverse complement of the read to the genome: 
@@ -67,9 +66,10 @@ def reverseComplement(read):
     return reverseRead
 
 #To align the reads against the genome to see how many match:
-def align(sequence, genome):
+def align(reads, genome):
     readsMatched = 0
-    readsCount = 0 
+    readsCount = 0
+    readsOffsets = []
     for read in reads:
         read = read[:25] #prefix of read as all 100 bases have a smaller chance of matching
         matches = naiveApproxHamming(read, genome) #check if read matches in forward direction of genome
@@ -77,23 +77,6 @@ def align(sequence, genome):
         readsCount += 1
         if len(matches) > 0: #match - read aligned in at least one place
             readsMatched += 1
-    return readsMatched, readsCount 
-
-#pdb.set_trace()
-#genome = readGenome(path('Data\HumanGenome.fa.gz').abspath())
-#reads = readSequence(path('Data\HumanSequencingReads.tsv.bz2').abspath())
-genome = readGenome(path('Data\PhixGenome.fa').abspath())
-reads = readSequence(path('Data\PhiXSequencingReads1000.fastq').abspath())
-
-#print("Length of the genome: ", len(genome))
-#print("Frequency of each base in the genome: ", collections.Counter(genome))
-
-#print("Length of the reads: ", len(reads))
-#readsFreq = collections.Counter()
-#for read in reads:
-    #readsFreq.update(read)
-#print("Frequency of each base in the reads: ", readsFreq)
-
-matches, count = align(reads, genome)
-print(matches, "/", count, " reads matched the genome")
-#The result is not 100% but this is to be expected due to sequencing errors.  
+        readsOffsets.append(matches)
+    return readsMatched, readsCount, readsOffsets
+    
