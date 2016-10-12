@@ -1,5 +1,5 @@
 """
-
+This file includes functions for naive exact & approximate matching along with the alignment implementation.
 """
 
 #The following is a naive algorithm for exact matching where all occurrences are recorded:

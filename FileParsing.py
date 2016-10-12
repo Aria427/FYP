@@ -1,5 +1,5 @@
 """
-
+This file includes functions for efficient and inefficient parsing of a genome and sequencing reads.
 """
 
 from Bio import SeqIO
@@ -10,10 +10,11 @@ import pandas
 #To efficiently read the genome:
 def readGenome(filename):
     filehandle = open(filename, 'r', encoding="latin1")
-    faiter = (x[1] for x in groupby(filehandle, lambda line: line[0] == ">"))
-    for header in faiter:
+    #ignore boolean (x[0]) and hold header or sequence since they alternate
+    iteration = (x[1] for x in groupby(filehandle, lambda line: line[0] == ">"))
+    for header in iteration:
         header.__next__()[1:].strip() #drop '>'
-        seq = "".join(s.strip() for s in faiter.__next__()) #join all sequence lines
+        seq = "".join(s.strip() for s in iteration.__next__()) #join all sequence lines
         yield seq
 
 #To read the genome using SeqIO:

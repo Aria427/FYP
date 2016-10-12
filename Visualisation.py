@@ -1,5 +1,5 @@
 """
-
+This file includes functions for data visualisation in the form of a text file and a jpeg file.
 """
 
 import collections
@@ -11,7 +11,7 @@ def visualisationText(genome, readsOffsets, outputFile):
     readsOffsets = sum(readsOffsets, [])    #flatten list
     offsetsCount = collections.Counter(readsOffsets) #record count of each offset => length of match
     file = open(outputFile, 'w')
-    for i in range(len(genome)):
+    for i in range(len(list(genome))):
         if offsetsCount[i] != 0:
             file.write('-' * offsetsCount[i])
         elif (offsetsCount[i] == 0) & (offsetsCount[i+1] != 0):
@@ -27,11 +27,11 @@ def visualisationJPG(genome, readsOffsets, outputFile):
     readsOffsets.sort()                     #sort list
     readsOffsets = sum(readsOffsets, [])    #flatten list
     offsetsCount = collections.Counter(readsOffsets) #record count of each offset => length of match
-    img = Image.new('RGBA', (len(genome), 2500), (255, 255, 255, 0)) 
+    img = Image.new('RGBA', (len(list(genome)), 2500), (255, 255, 255, 0)) 
     draw = ImageDraw.Draw(img)
-    draw.line(((0, 10), (len(genome), 10)), fill='blue', width=5)
+    draw.line(((0, 10), (len(list(genome)), 10)), fill='blue', width=5)
     j = 0
-    for i in range(len(genome)):
+    for i in range(len(list(genome))):
         if offsetsCount[i] != 0:
             draw.line(((i, 20+j), (i+offsetsCount[i], 20+j)), fill='purple', width=5)
             j += 10

@@ -1,3 +1,7 @@
+"""
+This file contains the main functionality of the program.
+"""
+
 import FileParsing
 import Alignment
 import Visualisation
