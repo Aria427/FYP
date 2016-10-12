@@ -1,3 +1,4 @@
+import FileParsing
 import Alignment
 import Visualisation
 
@@ -5,10 +6,10 @@ from path import path
 import pdb
 
 #pdb.set_trace()
-#genome = Alignment.readGenome(path('Data\HumanGenome.fa.gz').abspath())
-#reads = Alignment.readSequence(path('Data\HumanSequencingReads.tsv.bz2').abspath())
-genome = Alignment.readGenome(path('Data\PhixGenome.fa').abspath())
-reads = Alignment.readSequence(path('Data\PhiXSequencingReads1000.fastq').abspath())
+genome = FileParsing.readGenome(path('Data\HumanGenome.fa.gz').abspath())
+reads = FileParsing.readSequence(path('Data\HumanSequencingReads.tsv.bz2').abspath())
+#genome = FileParsing.readGenome(path('Data\PhixGenome.fa').abspath())
+#reads = FileParsing.readSequence(path('Data\PhiXSequencingReads1000.fastq').abspath())
 
 #print("Length of the genome: ", len(genome))
 #print("Frequency of each base in the genome: ", collections.Counter(genome))
@@ -18,6 +19,8 @@ reads = Alignment.readSequence(path('Data\PhiXSequencingReads1000.fastq').abspat
 #for read in reads:
     #readsFreq.update(read)
 #print("Frequency of each base in the reads: ", readsFreq)
+
+#print(genome)
 
 matches, count, offsets = Alignment.align(reads, genome)
 print(matches, "/", count, " reads matched the genome")

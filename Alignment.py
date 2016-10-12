@@ -1,41 +1,6 @@
 """
 
 """
-from Bio import SeqIO
-
-#To efficiently read the genome:
-def readGenome(filename):
-    genome = ''   
-    #rU - open file for reading in universal readline mode (works across platforms due to differing newline characters)
-    filehandle = open(filename, 'rU', encoding="latin1") 
-    for record in SeqIO.parse(filehandle, "fasta"): #SeqRecord iterator
-        genome += record.seq #parses records one by one, without changing the file order
-    filehandle.close()
-    return genome
-
-#To inefficiently read the genome:
-def readGenomeInefficient(filename):
-    genome = '' 
-    with open(filename, 'r', encoding="latin1") as file: #opening a file for reading
-        for line in file:
-            if line[0] != '>': #ignore header line with genome information
-                genome += line.rstrip() #add each line of bases to the string 
-                #rstrip() removes any trailing whitespace from the ends of the string (trim off new line/tab/space)
-    return genome
-  
-#To read and parse the reads:
-def readSequence(filename):
-    sequences = []
-    with open(filename, encoding="latin1") as file:  
-        while True: #loops every 4 lines (each read is a set of 4) indefinitely until EOF
-            file.readline() #read tag
-            seq = file.readline().rstrip() #string of DNA bases
-            file.readline() #+
-            file.readline() #quality sequence - each quality score is Phredd33 encoded (converts to ASCII character)
-            if len(seq) == 0: #reached EOF
-                break
-            sequences.append(seq)
-    return sequences
 
 #The following is a naive algorithm for exact matching where all occurrences are recorded:
 def naiveExact(pattern, text):
@@ -56,9 +21,10 @@ def naiveExact(pattern, text):
 #The following is also a naive algorithm but for approximate matching using the Hamming distance:
 def naiveApproxHamming(pattern, text, maxHammingDist=1):
     matchOffsets = []
-    for i in range(len(text) - len(pattern) + 1): 
+    for i in range(len(list(text)) - len(pattern) + 1): 
         mismatches = 0
         for j in range(len(pattern)):
+            text = list(text)
             if text[i+j] != pattern[j]:
                 mismatches += 1     #mismatch
                 if mismatches > maxHammingDist:
@@ -84,9 +50,9 @@ def align(reads, genome):
     for read in reads:
         read = read[:25] #prefix of read as all 100 bases have a smaller chance of matching
         matches = naiveApproxHamming(read, genome) #check if read matches in forward direction of genome
-        matches.extend(naiveApproxHamming(reverseComplement(read), genome)) #add results of any matches in reverse complement of genome
+        #matches.extend(naiveApproxHamming(reverseComplement(read), genome)) #add results of any matches in reverse complement of genome
         readsCount += 1
-        if len(matches) > 0: #match - read aligned in at least one place
+        if len(list(matches)) > 0: #match - read aligned in at least one place
             readsMatched += 1
         readsOffsets.append(matches)
     return readsMatched, readsCount, readsOffsets
