@@ -21,11 +21,11 @@ def naiveExact(pattern, text):
 #The following is also a naive algorithm but for approximate matching using the Hamming distance:
 def naiveApproxHamming(pattern, text, maxHammingDist=1):
     matchOffsets = []
-    for i in range(len(list(text)) - len(list(pattern)) + 1): 
+    for i in range(len(text) - len(pattern) + 1): 
         mismatches = 0
-        for j in range(len(list(pattern))):
-            text = list(text)
-            pattern = list(pattern)
+        for j in range(len(pattern)):
+            #text = list(text)
+            #pattern = list(pattern)
             if text[i+j] != pattern[j]:
                 mismatches += 1     #mismatch
                 if mismatches > maxHammingDist:
@@ -51,7 +51,7 @@ def align(reads, genome):
     for read in reads:
         read = read[:25] #prefix of read as all 100 bases have a smaller chance of matching
         matches = naiveApproxHamming(read, genome) #check if read matches in forward direction of genome
-        #matches.extend(naiveApproxHamming(reverseComplement(read), genome)) #add results of any matches in reverse complement of genome
+        matches.extend(naiveApproxHamming(reverseComplement(read), genome)) #add results of any matches in reverse complement of genome
         readsCount += 1
         if len(list(matches)) > 0: #match - read aligned in at least one place
             readsMatched += 1
