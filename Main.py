@@ -20,8 +20,6 @@ reads = FileParsing.readSequence(path('Data\HumanSequencingReads.tsv.bz2').abspa
     #readsFreq.update(read)
 #print("Frequency of each base in the reads: ", readsFreq)
 
-#print(genome)
-
 matches, count, offsets = Alignment.align(reads, genome)
 print(matches, "/", count, " reads matched the genome")
 #The result is not 100% but this is to be expected due to sequencing errors. 

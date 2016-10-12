@@ -21,10 +21,11 @@ def naiveExact(pattern, text):
 #The following is also a naive algorithm but for approximate matching using the Hamming distance:
 def naiveApproxHamming(pattern, text, maxHammingDist=1):
     matchOffsets = []
-    for i in range(len(list(text)) - len(pattern) + 1): 
+    for i in range(len(list(text)) - len(list(pattern)) + 1): 
         mismatches = 0
-        for j in range(len(pattern)):
+        for j in range(len(list(pattern))):
             text = list(text)
+            pattern = list(pattern)
             if text[i+j] != pattern[j]:
                 mismatches += 1     #mismatch
                 if mismatches > maxHammingDist:

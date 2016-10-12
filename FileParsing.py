@@ -7,14 +7,14 @@ from itertools import groupby
 import csv
 import pandas
 
-#To read the genome efficiently:
+#To efficiently read the genome:
 def readGenome(filename):
     filehandle = open(filename, 'r', encoding="latin1")
     faiter = (x[1] for x in groupby(filehandle, lambda line: line[0] == ">"))
     for header in faiter:
         header.__next__()[1:].strip() #drop '>'
         seq = "".join(s.strip() for s in faiter.__next__()) #join all sequence lines
-        yield(seq)
+        yield seq
 
 #To read the genome using SeqIO:
 def readGenomeSeqIO(filename):
@@ -37,12 +37,24 @@ def readGenomeInefficient(filename):
                 #rstrip() removes any trailing whitespace from the ends of the string (trim off new line/tab/space)
     return genome
   
-#To read and parse the reads:
+#To efficiently read the sequencing reads:
 def readSequence(filename):
-    sequences = []
     #filehandle = open(filename, 'rU', encoding="latin1")
     #tsvreader = csv.reader(filehandle, delimiter="\t")
     with open(filename, encoding="latin1") as file:     
+        while True: #loops every 4 lines (each read is a set of 4) indefinitely until EOF
+            next(file) #skip tag line 
+            seq = file.readline().rstrip() #string of DNA bases
+            next(file) #skip + line
+            next(file) #skip quality sequence line          
+            if len(seq) == 0: #reached EOF
+                break
+            yield seq
+  
+#To inefficiently read the sequencing reads:          
+def readSequenceInefficient(filename):
+    sequences = []
+    with open(filename, encoding="latin1") as file:  
         while True: #loops every 4 lines (each read is a set of 4) indefinitely until EOF
             file.readline() #read tag
             seq = file.readline().rstrip() #string of DNA bases
@@ -51,4 +63,5 @@ def readSequence(filename):
             if len(seq) == 0: #reached EOF
                 break
             sequences.append(seq)
-    return sequences
+    return sequences       
+     
