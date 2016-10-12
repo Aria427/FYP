@@ -5,8 +5,8 @@ from path import path
 import pdb
 
 #pdb.set_trace()
-#genome = readGenome(path('Data\HumanGenome.fa.gz').abspath())
-#reads = readSequence(path('Data\HumanSequencingReads.tsv.bz2').abspath())
+#genome = Alignment.readGenome(path('Data\HumanGenome.fa.gz').abspath())
+#reads = Alignment.readSequence(path('Data\HumanSequencingReads.tsv.bz2').abspath())
 genome = Alignment.readGenome(path('Data\PhixGenome.fa').abspath())
 reads = Alignment.readSequence(path('Data\PhiXSequencingReads1000.fastq').abspath())
 

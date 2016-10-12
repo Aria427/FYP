@@ -1,9 +1,20 @@
 """
 
 """
+from Bio import SeqIO
 
-#To read the genome:
+#To efficiently read the genome:
 def readGenome(filename):
+    genome = ''   
+    #rU - open file for reading in universal readline mode (works across platforms due to differing newline characters)
+    filehandle = open(filename, 'rU', encoding="latin1") 
+    for record in SeqIO.parse(filehandle, "fasta"): #SeqRecord iterator
+        genome += record.seq #parses records one by one, without changing the file order
+    filehandle.close()
+    return genome
+
+#To inefficiently read the genome:
+def readGenomeInefficient(filename):
     genome = '' 
     with open(filename, 'r', encoding="latin1") as file: #opening a file for reading
         for line in file:
@@ -11,7 +22,7 @@ def readGenome(filename):
                 genome += line.rstrip() #add each line of bases to the string 
                 #rstrip() removes any trailing whitespace from the ends of the string (trim off new line/tab/space)
     return genome
-    
+  
 #To read and parse the reads:
 def readSequence(filename):
     sequences = []
