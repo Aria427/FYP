@@ -34,3 +34,6 @@ textFile = Visualisation.visualisationText(genome, offsets, textFile)
 
 jpgFile = path('Output Test Files\DataVisualisationTest.jpg').abspath()
 jpgFile = Visualisation.visualisationJPG(genome, offsets, jpgFile) 
+
+pngFile = path('Output Test Files\DataVisualisationTest.png').abspath()
+pngFile = Visualisation.visualisationGD(genome, offsets, pngFile)
