@@ -26,8 +26,6 @@ def naiveApproxHamming(pattern, text, maxHammingDist=1):
     for i in range(len(text) - len(pattern) + 1): 
         mismatches = 0
         for j in range(len(pattern)):
-            #text = list(text)
-            #pattern = list(pattern)
             if text[i+j] != pattern[j]: #mismatch
                 mismatches += 1     
                 if mismatches > maxHammingDist:
@@ -60,7 +58,7 @@ def align(reads, genome):
     for read in reads:
         read = read[:25] #prefix of read as all 100 bases have a smaller chance of matching
         matchOffsets = naiveApproxHamming(read, genome) #check if read matches in forward direction of genome
-        matchOffsets.extend(naiveApproxHamming(reverseComplement(read), genome)) #add results of any matches in reverse complement of genome
+        #matchOffsets.extend(naiveApproxHamming(reverseComplement(read), genome)) #add results of any matches in reverse complement of genome
         readsCount += 1
         if len(list(matchOffsets)) > 0: #match - read aligned in at least one place
             readsMatched += 1

@@ -4,11 +4,26 @@ This file includes functions for efficient and inefficient parsing of a genome a
 
 from Bio import SeqIO
 from itertools import groupby
-import csv
-import pandas
+
+def readGenome(filename): #fastA
+    file = open(filename, 'r')
+    line = file.readline()
+    if not line: #reached EOF
+        return None
+
+    sequenceLines = []
+    while True: #read  sequence lines up to blank line
+        line = file.readline().rstrip()
+        if line == "": #reached end of record or end of file
+            break
+        sequenceLines.append(line)     
+    sequence = ''.join(sequenceLines) #merge lines to form sequence
+    
+    file.close()
+    return sequence
 
 #To efficiently read the genome:
-def readGenome(filename):
+def readGenomeTry(filename):
     filehandle = open(filename, 'r')#, encoding="latin1")
     #ignore boolean (x[0]) and hold header or sequence since they alternate
     iteration = (x[1] for x in groupby(filehandle, lambda line: line[0] == ">"))
@@ -18,7 +33,7 @@ def readGenome(filename):
         yield seq        
         
 #To read the genome using SeqIO:
-def readGenomeSeqIO(filename):
+def readGenomeSeqIO(filename):  
     genome = ''   
     #rU - open file for reading in universal readline mode (works across platforms due to differing newline characters)    
     filehandle = open(filename, 'rU')#, encoding="latin1")
@@ -38,8 +53,53 @@ def readGenomeInefficient(filename):
                 #rstrip() removes any trailing whitespace from the ends of the string (trim off new line/tab/space)
     return genome
   
+def removeNonAscii(string): #removes non-ASCII characters
+    return ''.join(i for i in string if ord(i) < 128)
+        
+def readSequence(filename): #fastQ
+    readID, sequence, quality = None, None, None
+    file = open(filename, 'r')
+    while True: #runs until EOF
+        line = file.readline()
+        if not line: #reached EOF
+            break
+
+        if line.startswith('@'): #first line of read/record
+            sequence = removeNonAscii(sequence)
+            yield readID, sequence, quality #where each loop iteration ends
+
+            #reset to default values
+            readID = line.rstrip()
+            sequence = None
+            quality = None   
+
+        elif not readID: #if no previous line starts with @
+            readID = line.rstrip() #get first ID
+            continue
+
+        elif not sequence:
+            sequenceLines = []
+            while not line.startswith('+'): #not placeholder line (third line)
+                #rstrip() - removes leading/trailing whitespace
+                #replace() - removes whitespace from within string
+                sequenceLines.append(line.rstrip().replace(' ', '')) #no whitespace in sequence
+                line = file.readline()
+            sequence = ''.join(sequenceLines) #merge lines to form sequence
+        
+        elif not quality:
+            quality = []
+            while True: #collect base qualities
+                quality += line.rstrip().replace(' ', '') 
+                if len(quality) >= len(sequence): #bases and qualities line up
+                    break
+                else:
+                    line = file.readline()
+    
+    file.close()
+    yield readID, sequence, quality      
+    
 #To efficiently read the sequencing reads:
-def readSequence(filename):
+def readSequenceTry(filename):
     #filehandle = open(filename, 'rU', encoding="latin1")
     #tsvreader = csv.reader(filehandle, delimiter="\t")
     with open(filename) as file:     

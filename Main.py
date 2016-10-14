@@ -11,11 +11,12 @@ import collections
 import pdb
 
 #pdb.set_trace()
-#genome = FileParsing.readGenome(path('Data\HumanGenome.fa.gz').abspath())
-#reads = FileParsing.readSequence(path('Data\HumanSequencingReads.tsv.bz2').abspath())
-genome = FileParsing.readGenomeInefficient(path('Data\PhixGenome.fa').abspath())
-reads = FileParsing.readSequenceInefficient(path('Data\PhiXSequencingReads1000.fastq').abspath())
+genome = FileParsing.readGenome(path('Data\HumanGenome.fa.gz').abspath())
+reads = FileParsing.readSequence(path('Data\HumanSequencingReads.tsv.bz2').abspath())
+#genome = FileParsing.readGenome(path('Data\PhixGenome.fa').abspath())
+#reads = FileParsing.readSequence(path('Data\PhiXSequencingReads1000.fastq').abspath())
 
+"""
 print "Length of the genome: %d" % len(genome)
 print "Frequency of each base in the genome:", collections.Counter(genome)
 
@@ -37,3 +38,4 @@ jpgFile = Visualisation.visualisationJPG(genome, offsets, jpgFile)
 
 pngFile = path('Output Test Files\DataVisualisationTest.png').abspath()
 pngFile = Visualisation.visualisationGD(genome, offsets, pngFile)
+"""
