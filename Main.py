@@ -25,8 +25,8 @@ for read in reads:
     readsFreq.update(read)
 print "Frequency of each base in the reads:", readsFreq
 
-matches, count, offsets = Alignment.align(reads, genome)
-print "%d/%d reads matched the genome." % (matches, count)
+matchesCount, totalCount, offsets = Alignment.align(reads, genome)
+print "%d/%d reads matched the genome." % (matchesCount, totalCount)
 #The result is not 100% but this is to be expected due to sequencing errors. 
     
 textFile = path('Output Test Files\DataVisualisationTest.txt').abspath()
