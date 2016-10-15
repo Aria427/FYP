@@ -2,9 +2,7 @@
 This file includes functions for efficient and inefficient parsing of a genome and sequencing reads.
 """
 
-from Bio import SeqIO
-from itertools import groupby
-
+#To efficiently read the genome:
 def readGenome(filename): #fastA
     file = open(filename, 'r')
     line = file.readline()
@@ -22,27 +20,6 @@ def readGenome(filename): #fastA
     file.close()
     return sequence
 
-#To efficiently read the genome:
-def readGenomeTry(filename):
-    filehandle = open(filename, 'r')#, encoding="latin1")
-    #ignore boolean (x[0]) and hold header or sequence since they alternate
-    iteration = (x[1] for x in groupby(filehandle, lambda line: line[0] == ">"))
-    for header in iteration:
-        header.next()[1:].strip() #drop '>'
-        seq = "".join(s.strip() for s in iteration.next()) #join all sequence lines
-        yield seq        
-        
-#To read the genome using SeqIO:
-def readGenomeSeqIO(filename):  
-    genome = ''   
-    #rU - open file for reading in universal readline mode (works across platforms due to differing newline characters)    
-    filehandle = open(filename, 'rU')#, encoding="latin1")
-    for record in SeqIO.parse(filehandle, "fasta"): #SeqRecord iterator - multiple records
-    #record = SeqIO.read(filehandle, "fasta") #one record
-        genome += record.seq #parses records one by one, without changing the file order
-    filehandle.close()
-    return genome
-
 #To inefficiently read the genome:
 def readGenomeInefficient(filename):
     genome = '' 
@@ -55,7 +32,8 @@ def readGenomeInefficient(filename):
   
 def removeNonAscii(string): #removes non-ASCII characters
     return ''.join(i for i in string if ord(i) < 128)
-        
+
+    #To efficiently read the sequencing reads:        
 def readSequence(filename): #fastQ
     readID, sequence, quality = None, None, None
     file = open(filename, 'r')
@@ -65,8 +43,9 @@ def readSequence(filename): #fastQ
             break
 
         if line.startswith('@'): #first line of read/record
-            sequence = removeNonAscii(sequence)
-            yield readID, sequence, quality #where each loop iteration ends
+            #sequence = removeNonAscii(sequence)
+            #yield readID, sequence, quality #where each loop iteration ends
+            yield sequence
 
             #reset to default values
             readID = line.rstrip()
@@ -96,22 +75,9 @@ def readSequence(filename): #fastQ
                     line = file.readline()
     
     file.close()
-    yield readID, sequence, quality      
-    
-#To efficiently read the sequencing reads:
-def readSequenceTry(filename):
-    #filehandle = open(filename, 'rU', encoding="latin1")
-    #tsvreader = csv.reader(filehandle, delimiter="\t")
-    with open(filename) as file:     
-        while True: #loops every 4 lines (each read is a set of 4) indefinitely until EOF
-            next(file) #skip tag line 
-            seq = file.readline().rstrip() #string of DNA bases
-            next(file) #skip + line
-            next(file) #skip quality sequence line          
-            if len(seq) == 0: #reached EOF
-                break
-            yield seq
-  
+    #yield readID, sequence, quality  
+    yield sequence
+      
 #To inefficiently read the sequencing reads:          
 def readSequenceInefficient(filename):
     sequences = []
@@ -125,4 +91,42 @@ def readSequenceInefficient(filename):
                 break
             sequences.append(seq)
     return sequences       
-     
+
+"""
+The following functions were tested but proved to be insufficient:   
+
+from Bio import SeqIO
+from itertools import groupby 
+    
+def readGenomeTry(filename):
+    filehandle = open(filename, 'r')#, encoding="latin1")
+    #ignore boolean (x[0]) and hold header or sequence since they alternate
+    iteration = (x[1] for x in groupby(filehandle, lambda line: line[0] == ">"))
+    for header in iteration:
+        header.next()[1:].strip() #drop '>'
+        seq = "".join(s.strip() for s in iteration.next()) #join all sequence lines
+        yield seq        
+        
+def readGenomeSeqIO(filename):  
+    genome = ''   
+    #rU - open file for reading in universal readline mode (works across platforms due to differing newline characters)    
+    filehandle = open(filename, 'rU')#, encoding="latin1")
+    for record in SeqIO.parse(filehandle, "fasta"): #SeqRecord iterator - multiple records
+    #record = SeqIO.read(filehandle, "fasta") #one record
+        genome += record.seq #parses records one by one, without changing the file order
+    filehandle.close()
+    return genome
+
+def readSequenceTry(filename):
+    #filehandle = open(filename, 'rU', encoding="latin1")
+    #tsvreader = csv.reader(filehandle, delimiter="\t")
+    with open(filename) as file:     
+        while True: #loops every 4 lines (each read is a set of 4) indefinitely until EOF
+            next(file) #skip tag line 
+            seq = file.readline().rstrip() #string of DNA bases
+            next(file) #skip + line
+            next(file) #skip quality sequence line          
+            if len(seq) == 0: #reached EOF
+                break
+            yield seq
+"""

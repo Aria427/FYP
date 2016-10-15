@@ -11,12 +11,14 @@ import collections
 import pdb
 
 #pdb.set_trace()
-genome = FileParsing.readGenome(path('Data\HumanGenome.fa.gz').abspath())
-reads = FileParsing.readSequence(path('Data\HumanSequencingReads.tsv.bz2').abspath())
-#genome = FileParsing.readGenome(path('Data\PhixGenome.fa').abspath())
-#reads = FileParsing.readSequence(path('Data\PhiXSequencingReads1000.fastq').abspath())
+#genome = FileParsing.readGenome(path('Data\HumanGenome.fa.gz').abspath())
+#reads = FileParsing.readSequence(path('Data\HumanSequencingReads.tsv.bz2').abspath())
+genome = FileParsing.readGenome(path('Data\PhixGenome.fa').abspath())
+reads = FileParsing.readSequence(path('Data\PhiXSequencingReads1000.fastq').abspath())
 
-"""
+reads = list(reads) #to list generator object contents
+reads = [x for x in reads if x is not None] #removes None type
+
 print "Length of the genome: %d" % len(genome)
 print "Frequency of each base in the genome:", collections.Counter(genome)
 
@@ -29,7 +31,7 @@ print "Frequency of each base in the reads:", readsFreq
 matchesCount, totalCount, offsets = Alignment.align(reads, genome)
 print "%d/%d reads matched the genome." % (matchesCount, totalCount)
 #The result is not 100% but this is to be expected due to sequencing errors. 
-    
+
 textFile = path('Output Test Files\DataVisualisationTest.txt').abspath()
 textFile = Visualisation.visualisationText(genome, offsets, textFile)
 
@@ -38,4 +40,3 @@ jpgFile = Visualisation.visualisationJPG(genome, offsets, jpgFile)
 
 pngFile = path('Output Test Files\DataVisualisationTest.png').abspath()
 pngFile = Visualisation.visualisationGD(genome, offsets, pngFile)
-"""
