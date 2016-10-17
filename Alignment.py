@@ -25,7 +25,7 @@ def naiveApproxHamming(pattern, text, maxHammingDist=1):
     matches = []
     for i in range(len(text) - len(pattern) + 1): 
         mismatches = 0
-        for j in range(len(pattern)):
+        for j in range(len(pattern)):#range(len(pattern)):
             if text[i+j] != pattern[j]: #mismatch
                 mismatches += 1     
                 if mismatches > maxHammingDist:

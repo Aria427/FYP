@@ -59,7 +59,7 @@ def readSequence1(filename): #fastQ
         if line.startswith('@'): #first line of read/record
             #yield readID, sequence, quality #where each loop iteration ends
             yield sequence
-
+            
             #reset to default values
             readID = line.rstrip()
             sequence = None

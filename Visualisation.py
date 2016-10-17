@@ -6,6 +6,7 @@ import collections
 from PIL import Image, ImageDraw
 from Bio.Graphics import GenomeDiagram
 from Bio.SeqFeature import SeqFeature, FeatureLocation
+import Tkinter
 
 #To create a data visualisation of the matched reads against the genome in a text file:
 def visualisationText(genome, readsOffsets, outputFile):
@@ -54,4 +55,27 @@ def visualisationGD(genome, readsOffsets, outputFile):
             featuresSet.add_feature(feature, name="%d" % i, label=True, label_size=8) 
     dia.draw(format='linear', pagesize=(len(genome), 2500), fragments=10, start=0, end=len(genome))
     dia.write(outputFile, "PNG")
-    return outputFile
+    return outputFile  
+
+def visualisationTkinter(genome, readsOffsets):
+    readsOffsets.sort()                     #sort list
+    readsOffsets = sum(readsOffsets, [])    #flatten list
+    offsetsCount = collections.Counter(readsOffsets) #record count of each offset => length of match
+    window = Tkinter.Tk()
+    canvas = Tkinter.Canvas(window, bg='white', width=len(genome), height=2500)
+    
+    def onObjectClick(event): 
+        canvas.create_text(50, event.y, text='Clicked at offset %d' % event.x, tag='%d' % event.x)                 
+        print 'Clicked at offset', event.x #, event.y #, event.widget,
+        #print event.widget.find_closest(event.x, event.y) 
+    
+    canvas.create_line(0, 5, len(genome), 5, fill='red', width=2.5)
+    j = 0
+    for i in range(len(genome)):
+        if offsetsCount[i] != 0:
+            line = canvas.create_line(i, 10+j, i+offsetsCount[i], 10+j, fill='purple', width=2.5)
+            canvas.tag_bind(line, '<Button-1>', onObjectClick)
+            j += 5
+    canvas.pack()
+    window.mainloop()
+    
