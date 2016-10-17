@@ -48,7 +48,7 @@ def readGenomeInefficient(filename):
 
 #To efficiently read the sequencing reads:        
 def readSequence1(filename): #fastQ 
-    readID, sequence, quality = None, None, None
+    readID, sequence, quality = '', '', ''
     file = open(filename, 'r')
     #file = bz2.BZ2File(filename, 'r')
     while True: #runs until EOF
@@ -62,8 +62,8 @@ def readSequence1(filename): #fastQ
             
             #reset to default values
             readID = line.rstrip()
-            sequence = None
-            quality = None   
+            sequence = ''
+            quality = ''   
 
         elif not readID: #if no previous line starts with @
             readID = line.rstrip() #get first ID
@@ -95,8 +95,8 @@ def readSequence2(filename):
     #filehandle = open(filename, 'rU', encoding="latin1")
     #tsvreader = csv.reader(filehandle, delimiter="\t")
     sequenceLines = []
-    #with open(filename) as file:  
-    with bz2.BZ2File(filename) as file:
+    with open(filename) as file:  
+    #with bz2.BZ2File(filename) as file:
         while True: #loops every 4 lines (each read is a set of 4) indefinitely until EOF
             next(file) #skip tag line 
             seq = next(file) #string of DNA bases
