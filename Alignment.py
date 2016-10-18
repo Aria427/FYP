@@ -54,13 +54,10 @@ def align(reads, genome):
     readsMatched = 0
     readsCount = 0
     readsOffsets = []
-    readsList = []
     for read in reads:
-        #reads = reads[:25] #prefix of read as all 100 bases have a smaller chance of matching
-        readsList.append(read)
-        readsList = readsList[:25]
-        matchOffsets = naiveApproxHamming(readsList, genome) #check if read matches in forward direction of genome
-        #matchOffsets.extend(naiveApproxHamming(reverseComplement(readsList), genome)) #add results of any matches in reverse complement of genome
+        read = read[:25] #prefix of read as all 100 bases have a smaller chance of matching
+        matchOffsets = naiveApproxHamming(read, genome) #check if read matches in forward direction of genome
+        matchOffsets.extend(naiveApproxHamming(reverseComplement(read), genome)) #add results of any matches in reverse complement of genome
         readsCount += 1
         if len(matchOffsets) > 0: #match - read aligned in at least one place
             readsMatched += 1

@@ -66,8 +66,7 @@ def visualisationTkinter(genome, readsOffsets):
     
     def onObjectClick(event): 
         canvas.create_text(50, event.y, text='Clicked at offset %d' % event.x, tag='%d' % event.x)                 
-        print 'Clicked at offset', event.x #, event.y #, event.widget,
-        #print event.widget.find_closest(event.x, event.y) 
+        print 'Clicked at offset', event.x  
     
     canvas.create_line(0, 5, len(genome), 5, fill='red', width=2.5)
     j = 0

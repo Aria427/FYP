@@ -36,8 +36,7 @@ def readGenome2(filename): #faster than readGenome1()
         seq = ''.join(s.strip() for s in iteration.next()) #join all sequence lines
         yield seq           
         
-#To inefficiently read the genome:
-def readGenomeInefficient(filename):
+def readGenome3(filename):
     genome = '' 
     with open(filename, 'r') as file: #opening a file for reading
         for line in file:
@@ -92,8 +91,6 @@ def readSequence1(filename): #fastQ
     yield sequence
  
 def readSequence2(filename):
-    #filehandle = open(filename, 'rU', encoding="latin1")
-    #tsvreader = csv.reader(filehandle, delimiter="\t")
     sequenceLines = []
     with open(filename) as file:  
     #with bz2.BZ2File(filename) as file:
