@@ -25,8 +25,9 @@ for read in reads:
     readsFreq.update(read)
 print "Frequency of each base in the reads:", readsFreq
 """
-matchesCount, totalCount, offsets = Alignment.align(reads, genome)
+matchesCount, totalCount, offsets, matches = Alignment.align(reads, genome)
 print "%d/%d reads matched the genome." % (matchesCount, totalCount)
+#print matches
 #The result is not 100% but this is to be expected due to sequencing errors. 
 """
 textFile = path('Output Test Files\DataVisualisationTest.txt').abspath()
@@ -38,4 +39,4 @@ jpgFile = Visualisation.visualisationJPG(genome, offsets, jpgFile)
 pngFile = path('Output Test Files\DataVisualisationTest.png').abspath()
 pngFile = Visualisation.visualisationGD(genome, offsets, pngFile)
 """
-Visualisation.visualisationTkinter(genome, offsets)
+Visualisation.visualisationTkinter(genome, offsets, matches)

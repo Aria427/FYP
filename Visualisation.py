@@ -57,7 +57,7 @@ def visualisationGD(genome, readsOffsets, outputFile):
     dia.write(outputFile, "PNG")
     return outputFile  
 
-def visualisationTkinter(genome, readsOffsets):
+def visualisationTkinter(genome, readsOffsets, readsMatched):
     readsOffsets.sort()                     #sort list
     readsOffsets = sum(readsOffsets, [])    #flatten list
     offsetsCount = collections.Counter(readsOffsets) #record count of each offset => length of match
