@@ -63,7 +63,7 @@ def align(reads, genome):
     readsMatches = []
     #readsList = []
     nextReads = next(reads)
-    for read in nextReads: #next(reads):
+    for read in nextReads: 
         #readsList.append(read)
     #for read in readsList:
         nextReads = nextReads[:25] #prefix of read as all 100 bases have a smaller chance of matching

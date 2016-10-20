@@ -15,6 +15,7 @@ import pdb
 #reads = FileParsing.readSequence1(path('Data\HumanSequencingReads.tsv.bz2').abspath())
 genome = FileParsing.readGenome3(path('Data\PhixGenome.fa').abspath())
 reads = FileParsing.readSequence1(path('Data\PhiXSequencingReads1000.fastq').abspath())
+print next(reads)
 """
 print "Length of the genome: %d" % len(genome)
 print "Frequency of each base in the genome:", collections.Counter(genome)

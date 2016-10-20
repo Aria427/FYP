@@ -5,6 +5,8 @@ This file includes functions for efficient and inefficient parsing of a genome a
 from itertools import groupby
 import gzip
 import bz2
+import io
+import subprocess
 
 #To efficiently read the genome:
 def readGenome1(filename): #fastA 
@@ -39,11 +41,12 @@ def readGenome2(filename): #faster than readGenome1()
 def readGenome3(filename):
     genome = '' 
     with open(filename, 'r') as file: #opening a file for reading
-    #with gzip.open(filename, 'r') as file:
+    #with gzip.open(filename, 'r') as gzipFile:
+        #with io.BufferedReader(gzipFile) as file:
         for line in file:
             if line[0] != '>': #ignore header line with genome information
                 genome += line.rstrip() #add each line of bases to the string 
-                #rstrip() removes any trailing whitespace from the ends of the string (trim off new line/tab/space)
+                    #rstrip() removes any trailing whitespace from the ends of the string (trim off new line/tab/space)
     return genome
 
 #To efficiently read the sequencing reads:        
