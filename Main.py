@@ -39,4 +39,4 @@ jpgFile = Visualisation.visualisationJPG(genome, offsets, jpgFile)
 pngFile = path('Output Test Files\DataVisualisationTest.png').abspath()
 pngFile = Visualisation.visualisationGD(genome, offsets, pngFile)
 """
-Visualisation.visualisationTkinter(genome, offsets, matches)
+#Visualisation.visualisationTkinter(genome, offsets, matches)

@@ -39,6 +39,7 @@ def readGenome2(filename): #faster than readGenome1()
 def readGenome3(filename):
     genome = '' 
     with open(filename, 'r') as file: #opening a file for reading
+    #with gzip.open(filename, 'r') as file:
         for line in file:
             if line[0] != '>': #ignore header line with genome information
                 genome += line.rstrip() #add each line of bases to the string 
@@ -57,7 +58,7 @@ def readSequence1(filename): #fastQ
 
         if line.startswith('@'): #first line of read/record
             #yield readID, sequence, quality #where each loop iteration ends
-            yield sequence
+            #yield sequence
             
             #reset to default values
             readID = line.rstrip()
@@ -76,6 +77,7 @@ def readSequence1(filename): #fastQ
                 sequenceLines.append(line.rstrip().replace(' ', '')) #no whitespace in sequence
                 line = file.readline()
             sequence = ''.join(sequenceLines) #merge lines to form sequence
+            yield sequence
         
         elif not quality:
             quality = []
@@ -88,7 +90,6 @@ def readSequence1(filename): #fastQ
     
     file.close()
     #yield readID, sequence, quality  
-    yield sequence
  
 def readSequence2(filename):
     sequenceLines = []

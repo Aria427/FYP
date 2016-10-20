@@ -62,18 +62,20 @@ def align(reads, genome):
     readsOffsets = []
     readsMatches = []
     #readsList = []
-    for read in reads:
+    nextReads = next(reads)
+    for read in nextReads: #next(reads):
         #readsList.append(read)
     #for read in readsList:
-        read = read[:25] #prefix of read as all 100 bases have a smaller chance of matching
-        matchOffsets = approxMatchOffsets(read, genome) #check if read matches in forward direction of genome
-        matchOffsets.extend(approxMatchOffsets(reverseComplement(read), genome)) #add results of any matches in reverse complement of genome
-        matches = approxMatches(read, genome)
-        matches.extend(approxMatches(reverseComplement(read), genome))
+        nextReads = nextReads[:25] #prefix of read as all 100 bases have a smaller chance of matching
+        matchOffsets = approxMatchOffsets(nextReads, genome) #check if read matches in forward direction of genome
+        matchOffsets.extend(approxMatchOffsets(reverseComplement(nextReads), genome)) #add results of any matches in reverse complement of genome
+        #matches = approxMatches(read, genome)
+        #matches.extend(approxMatches(reverseComplement(read), genome))
         readsCount += 1
         if len(matchOffsets) > 0: #match - read aligned in at least one place
             readsMatched += 1
         readsOffsets.append(matchOffsets) 
-        readsMatches.append(matches)
+        #readsMatches.append(matches)
+        nextReads = next(reads)
     return readsMatched, readsCount, readsOffsets, readsMatches
     
