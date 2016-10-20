@@ -40,33 +40,27 @@ def readGenome2(filename): #faster than readGenome1()
         yield seq           
         
 def readGenome3(filename):
-    start = time.time()
     genome = '' 
-    with open(filename, 'r') as file: #opening a file for reading
-    #with gzip.open(filename, 'r') as gzipFile:
-        #with io.BufferedReader(gzipFile) as file:
-        for line in file:
-            if line[0] != '>': #ignore header line with genome information
-                genome += line.rstrip() #add each line of bases to the string 
+    #with open(filename, 'r') as file: #opening a file for reading
+    with gzip.open(filename, 'r') as gzipFile:
+        with io.BufferedReader(gzipFile) as file:
+            for line in file:
+                if line[0] != '>': #ignore header line with genome information
+                    genome += line.rstrip() #add each line of bases to the string 
                     #rstrip() removes any trailing whitespace from the ends of the string (trim off new line/tab/space)
-    end = time.time()
-    print "Time to read genome: %f" % (end-start)
     return genome
 
 #To efficiently read the sequencing reads:        
 def readSequence1(filename): #fastQ 
     readID, sequence, quality = '', '', ''
-    file = open(filename, 'r')
-    #file = bz2.BZ2File(filename, 'r')
+    #file = open(filename, 'r')
+    file = bz2.BZ2File(filename, 'r')
     while True: #runs until EOF
         line = file.readline()
         if not line: #reached EOF
             break
 
         if line.startswith('@'): #first line of read/record
-            #yield readID, sequence, quality #where each loop iteration ends
-            #yield sequence
-            
             #reset to default values
             readID = line.rstrip()
             sequence = ''
@@ -95,8 +89,7 @@ def readSequence1(filename): #fastQ
                 else:
                     line = file.readline()
     
-    file.close()
-    #yield readID, sequence, quality  
+    file.close() 
  
 def readSequence2(filename):
     sequenceLines = []
