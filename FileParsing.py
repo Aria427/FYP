@@ -7,6 +7,7 @@ import gzip
 import bz2
 import io
 import subprocess
+import time
 
 #To efficiently read the genome:
 def readGenome1(filename): #fastA 
@@ -39,6 +40,7 @@ def readGenome2(filename): #faster than readGenome1()
         yield seq           
         
 def readGenome3(filename):
+    start = time.time()
     genome = '' 
     with open(filename, 'r') as file: #opening a file for reading
     #with gzip.open(filename, 'r') as gzipFile:
@@ -47,6 +49,8 @@ def readGenome3(filename):
             if line[0] != '>': #ignore header line with genome information
                 genome += line.rstrip() #add each line of bases to the string 
                     #rstrip() removes any trailing whitespace from the ends of the string (trim off new line/tab/space)
+    end = time.time()
+    print "Time to read genome: %f" % (end-start)
     return genome
 
 #To efficiently read the sequencing reads:        
