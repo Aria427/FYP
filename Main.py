@@ -15,7 +15,6 @@ import pdb
 #reads = FileParsing.readSequence1(path('Data\HumanSequencingReads.tsv.bz2').abspath())
 genome = FileParsing.readGenome3(path('Data\PhixGenome.fa').abspath())
 reads = FileParsing.readSequence1(path('Data\PhiXSequencingReads1000.fastq').abspath())
-print next(reads)
 """
 print "Length of the genome: %d" % len(genome)
 print "Frequency of each base in the genome:", collections.Counter(genome)
@@ -28,7 +27,7 @@ print "Frequency of each base in the reads:", readsFreq
 """
 matchesCount, totalCount, offsets, matches = Alignment.align(reads, genome)
 print "%d/%d reads matched the genome." % (matchesCount, totalCount)
-#print matches
+print matches
 #The result is not 100% but this is to be expected due to sequencing errors. 
 """
 textFile = path('Output Test Files\DataVisualisationTest.txt').abspath()

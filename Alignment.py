@@ -21,7 +21,6 @@ def naiveExact(pattern, text):
 #The following is also a naive algorithm but for approximate matching using the Hamming distance:
 def naiveApproxHamming(pattern, text, maxHammingDist=1):
     matchOffsets = []
-    possibleMatches = ""
     matches = []
     for i in range(len(text) - len(pattern) + 1):
         mismatches = 0
@@ -30,12 +29,9 @@ def naiveApproxHamming(pattern, text, maxHammingDist=1):
                 mismatches += 1     
                 if mismatches > maxHammingDist:
                     break           #exceeded maximum distance
-            else: #match if haven't exceeded maximum distance (possible)
-                possibleMatches += text[i+j]
         if mismatches <= maxHammingDist: #approximate match
             matchOffsets.append(i)
-            matches.append(possibleMatches)
-        possibleMatches = "" #empty string for new possible match
+            matches.append(pattern)
     return matchOffsets, matches
 
 def approxMatchOffsets(pattern, text):
@@ -63,16 +59,16 @@ def align(reads, genome):
     readsMatches = []
     nextReads = next(reads)
     for read in nextReads: 
-        nextReads = nextReads[:25] #prefix of read as all 100 bases have a smaller chance of matching
+        nextReads = nextReads[:50] #prefix of read as all 100 bases have a smaller chance of matching
         matchOffsets = approxMatchOffsets(nextReads, genome) #check if read matches in forward direction of genome
         matchOffsets.extend(approxMatchOffsets(reverseComplement(nextReads), genome)) #add results of any matches in reverse complement of genome
-        #matches = approxMatches(read, genome)
-        #matches.extend(approxMatches(reverseComplement(read), genome))
+        matches = approxMatches(read, genome)
+        matches.extend(approxMatches(reverseComplement(read), genome))
         readsCount += 1
         if len(matchOffsets) > 0: #match - read aligned in at least one place
             readsMatched += 1
         readsOffsets.append(matchOffsets) 
-        #readsMatches.append(matches)
+        readsMatches.append(matches)
         nextReads = next(reads)
     return readsMatched, readsCount, readsOffsets, readsMatches
     
