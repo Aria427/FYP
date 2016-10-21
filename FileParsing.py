@@ -30,31 +30,32 @@ def readGenome1(filename): #fastA
     return sequence
 
 def readGenome2(filename): #faster than readGenome1()
-    #filehandle = open(filename, 'r')
-    filehandle = gzip.open(filename, 'r')
+    filehandle = open(filename, 'r')
+    #filehandle = gzip.open(filename, 'r')
     #ignore boolean (x[0]) and hold header or sequence since they alternate
     iteration = (x[1] for x in groupby(filehandle, lambda line: line[0] == ">"))
     for header in iteration:
         header.next()[1:].strip() #drop '>'
         seq = ''.join(s.strip() for s in iteration.next()) #join all sequence lines
-        yield seq           
+        yield seq    
+    filehandle.close()
         
 def readGenome3(filename):
     genome = '' 
-    #with open(filename, 'r') as file: #opening a file for reading
-    with gzip.open(filename, 'r') as gzipFile:
-        with io.BufferedReader(gzipFile) as file:
-            for line in file:
-                if line[0] != '>': #ignore header line with genome information
-                    genome += line.rstrip() #add each line of bases to the string 
-                    #rstrip() removes any trailing whitespace from the ends of the string (trim off new line/tab/space)
+    with open(filename, 'r') as file: #opening a file for reading
+    #with gzip.open(filename, 'r') as gzipFile:
+        #with io.BufferedReader(gzipFile) as file:
+        for line in file:
+            if line[0] != '>': #ignore header line with genome information
+                genome += line.rstrip() #add each line of bases to the string 
+                #rstrip() removes any trailing whitespace from the ends of the string (trim off new line/tab/space)
     return genome
 
 #To efficiently read the sequencing reads:        
 def readSequence1(filename): #fastQ 
     readID, sequence, quality = '', '', ''
-    #file = open(filename, 'r')
-    file = bz2.BZ2File(filename, 'r')
+    file = open(filename, 'r')
+    #file = bz2.BZ2File(filename, 'r')
     while True: #runs until EOF
         line = file.readline()
         if not line: #reached EOF

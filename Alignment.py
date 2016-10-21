@@ -22,6 +22,7 @@ def naiveExact(pattern, text):
 def naiveApproxHamming(pattern, text, maxHammingDist=1):
     matchOffsets = []
     matches = []
+    #nextText = next(text, '')
     for i in range(len(text) - len(pattern) + 1):
         mismatches = 0
         for j in range(len(pattern)):
@@ -32,6 +33,7 @@ def naiveApproxHamming(pattern, text, maxHammingDist=1):
         if mismatches <= maxHammingDist: #approximate match
             matchOffsets.append(i)
             matches.append(pattern)
+            #yield matchOffsets, matches
     return matchOffsets, matches
 
 def approxMatchOffsets(pattern, text):
@@ -57,6 +59,7 @@ def align(reads, genome):
     readsCount = 0
     readsOffsets = []
     readsMatches = []
+    genome = next(genome)
     nextReads = next(reads)
     for read in nextReads: 
         nextReads = nextReads[:50] #prefix of read as all 100 bases have a smaller chance of matching
