@@ -30,8 +30,10 @@ def readGenome1(filename): #fastA
     return sequence
 
 def readGenome2(filename): #faster than readGenome1()
+    start = time.time()        
     filehandle = open(filename, 'r')
     #filehandle = gzip.open(filename, 'r')
+    #fhBuffer = io.BufferedReader(filehandle)
     #ignore boolean (x[0]) and hold header or sequence since they alternate
     iteration = (x[1] for x in groupby(filehandle, lambda line: line[0] == ">"))
     for header in iteration:
@@ -39,6 +41,8 @@ def readGenome2(filename): #faster than readGenome1()
         seq = ''.join(s.strip() for s in iteration.next()) #join all sequence lines
         yield seq    
     filehandle.close()
+    end = time.time()
+    print (end-start)
         
 def readGenome3(filename):
     genome = '' 
