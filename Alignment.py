@@ -36,8 +36,8 @@ def naiveApproxHamming(pattern, text, maxHammingDist=1):
             matchOffsets.append(i)
             matches.append(possibleMatch)
             possibleMatch = ''
-            yield matchOffsets#, matches
-    #return matchOffsets, matches
+            #yield matchOffsets#, matches
+    return matchOffsets, matches
 
 def approxMatchOffsets(pattern, text):
     matchOffsets, _ = naiveApproxHamming(pattern, text)    
@@ -66,6 +66,27 @@ def align(reads, genome):
     nextReads = next(reads)
     for read in nextReads: 
         nextReads = nextReads[:50] #prefix of read as all 100 bases have a smaller chance of matching
+        matchOffsets = approxMatchOffsets(nextReads, genome) #check if read matches in forward direction of genome
+        matchOffsets.extend(approxMatchOffsets(reverseComplement(nextReads), genome)) #add results of any matches in reverse complement of genome
+        #matches = approxMatches(read, genome)
+        #matches.extend(approxMatches(reverseComplement(read), genome))
+        readsCount += 1
+        if len(list(matchOffsets)) > 0: #match - read aligned in at least one place
+            readsMatched += 1
+        readsOffsets.append(matchOffsets) 
+        #readsMatches.append(matches)
+        nextReads = next(reads)
+    return readsMatched, readsCount, readsOffsets, readsMatches    
+    
+def alignGen(reads, genome):
+    readsMatched = 0
+    readsCount = 0
+    readsOffsets = []
+    readsMatches = []
+    genome = next(genome)
+    nextReads = next(reads)
+    for read in nextReads: 
+        nextReads = nextReads[:50] #prefix of read as all 100 bases have a smaller chance of matching
         matchOffsets1 = naiveApproxHamming(nextReads, genome) #check if read matches in forward direction of genome
         matchOffsets2 = naiveApproxHamming(reverseComplement(nextReads), genome) #add results of any matches in reverse complement of genome
         #matches = approxMatches(read, genome)
@@ -79,23 +100,3 @@ def align(reads, genome):
         nextReads = next(reads)
     return readsMatched, readsCount, readsOffsets, readsMatches
  
-def align1(reads, genome):
-    readsMatched = 0
-    readsCount = 0
-    readsOffsets = []
-    readsMatches = []
-    genome = next(genome)
-    nextReads = next(reads)
-    for read in nextReads: 
-        nextReads = nextReads[:50] #prefix of read as all 100 bases have a smaller chance of matching
-        matchOffsets = naiveApproxHamming(nextReads, genome) #check if read matches in forward direction of genome
-        matchOffsets.extend(naiveApproxHamming(reverseComplement(nextReads), genome)) #add results of any matches in reverse complement of genome
-        #matches = approxMatches(read, genome)
-        #matches.extend(approxMatches(reverseComplement(read), genome))
-        readsCount += 1
-        if len(list(matchOffsets)) > 0: #match - read aligned in at least one place
-            readsMatched += 1
-        readsOffsets.append(matchOffsets) 
-        #readsMatches.append(matches)
-        nextReads = next(reads)
-    return readsMatched, readsCount, readsOffsets, readsMatches    
