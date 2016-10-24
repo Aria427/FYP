@@ -18,6 +18,7 @@ reads = fileParsing.parseReads(path('Data\PhiXSequencingReads1000.fastq').abspat
 
 matchesCount, totalCount, offsets, matches = alignment.align(reads, genome)
 print "%d/%d reads matched the genome." % (matchesCount, totalCount) #The result is not 100% but this is to be expected due to sequencing errors. 
+
 """
 textFile = path('Output Test Files\DataVisualisationTest.txt').abspath()
 textFile = visualisation.visualisationText(genome, offsets, textFile)

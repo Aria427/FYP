@@ -1,6 +1,8 @@
 """
 This file includes functions for naive exact & approximate matching along with the alignment implementation.
 """
+import bisect
+import sys
 
 #The following is a naive algorithm for exact matching where all occurrences are recorded:
 def naiveExact(pattern, text):
@@ -69,7 +71,34 @@ def naiveApproxEdit(pattern, text, maxEditDist=5500):
     if D <= maxEditDist: #approximate match
         matchOffsets.append(D)
     return matchOffsets      
+
+class Index(object):
+    def __init__(self, text, k): #initialise index from all k-mer length substrings
+        self.k = k  # k-mer length
+        self.index = []
+        for i in range(len(text) - k + 1): #for each k-mer
+            self.index.append((text[i:i+k], i)) #add (k-mer, offset) tuple
+        self.index.sort()  #sort in ascending order according to k-mer
     
+    def query(self, pattern): #returns no of index hits for first k-mer of P
+        kmer = pattern[:self.k]  #query with first k-mer
+        i = bisect.bisect_left(self.index, (kmer, -1)) #binary search
+        hits = []
+        while i < len(self.index): #collect matching index entries
+            if self.index[i][0] != kmer:
+                break
+            hits.append(self.index[i][1])
+            i += 1
+        return hits
+
+def queryIndex(pattern, text, index):
+    k = index.k
+    matchOffsets = []
+    for i in index.query(pattern):
+        if pattern[k:] == text[i+k:i+len(pattern)]:  #verify rest of P matches
+            matchOffsets.append(i)
+    return matchOffsets
+  
 def approxMatchOffsets(pattern, text):
     matchOffsets, _ = naiveApproxHamming(pattern, text)    
     return matchOffsets
@@ -96,8 +125,11 @@ def align(reads, genome):
     nextReads = next(reads)
     for read in nextReads: 
         nextReads = nextReads[:50] #prefix of read as all 100 bases have a smaller chance of matching
-        matchOffsets = naiveApproxEdit(nextReads, genome) #check if read matches in forward direction of genome
-        matchOffsets.extend(naiveApproxEdit(reverseComplement(nextReads), genome)) #add results of any matches in reverse complement of genome
+        index = Index(genome, 10)
+        matchOffsets = queryIndex(nextReads, genome, index)
+        matchOffsets.extend(queryIndex(reverseComplement(nextReads), genome, index))
+        #matchOffsets = naiveApproxHamming(nextReads, genome) #check if read matches in forward direction of genome
+        #matchOffsets.extend(naiveApproxHamming(reverseComplement(nextReads), genome)) #add results of any matches in reverse complement of genome
         #matches = approxMatches(read, genome)
         #matches.extend(approxMatches(reverseComplement(read), genome))
         readsCount += 1
