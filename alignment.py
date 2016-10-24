@@ -2,7 +2,6 @@
 This file includes functions for naive exact & approximate matching along with the alignment implementation.
 """
 import bisect
-import sys
 
 #The following is a naive algorithm for exact matching where all occurrences are recorded:
 def naiveExact(pattern, text):
@@ -20,7 +19,7 @@ def naiveExact(pattern, text):
     return matchOffsets
 
 #Hamming distance = minimum no of substitutions required to change one string into another.
-#The following is also a naive algorithm but for approximate matching using the Hamming distance:
+#The following is also an online naive algorithm but for approximate matching using the Hamming distance:
 def naiveApproxHamming(pattern, text, maxHammingDist=1):
     matchOffsets = []
     matches = []
@@ -61,7 +60,7 @@ def editDistance(pattern, text):
     
     return D[-1][-1] #edit distance = bottom-right
 
-#The following is also a naive algorithm but for approximate matching using the Edit distance:
+#The following is also an online naive algorithm for approximate matching but using the Edit distance:
 def naiveApproxEdit(pattern, text, maxEditDist=5500):
     matchOffsets = []
     D = []
@@ -72,29 +71,31 @@ def naiveApproxEdit(pattern, text, maxEditDist=5500):
         matchOffsets.append(D)
     return matchOffsets      
 
+#The following is an index object which is applied for k-mer indexing:    
 class Index(object):
-    def __init__(self, text, k): #initialise index from all k-mer length substrings
-        self.k = k  # k-mer length
+    def __init__(self, text, k): #initialise index from all k-mer length substrings - preprocesses string text
+        self.k = k  #k-mer length
         self.index = []
-        for i in range(len(text) - k + 1): #for each k-mer
+        for i in range(len(text) - k + 1): #for each k-mer 
             self.index.append((text[i:i+k], i)) #add (k-mer, offset) tuple
         self.index.sort()  #sort in ascending order according to k-mer
     
     def query(self, pattern): #returns no of index hits for first k-mer of P
         kmer = pattern[:self.k]  #query with first k-mer
-        i = bisect.bisect_left(self.index, (kmer, -1)) #binary search
-        hits = []
+        i = bisect.bisect_left(self.index, (kmer, -1)) #binary search for 1st position in list where k-mer occurs
+        indexHits = [] #all indices in T where the first k bases of P match
         while i < len(self.index): #collect matching index entries
             if self.index[i][0] != kmer:
                 break
-            hits.append(self.index[i][1])
+            indexHits.append(self.index[i][1]) #append 2nd value of tuple
             i += 1
-        return hits
+        return indexHits
 
+#The following is the offline algorithm using k-mer indexing by the above class:
 def queryIndex(pattern, text, index):
-    k = index.k
+    k = index.k #length of k
     matchOffsets = []
-    for i in index.query(pattern):
+    for i in index.query(pattern): #returns a list of possible places where P could start (where 1st k bases of P match 1st k bases of T)
         if pattern[k:] == text[i+k:i+len(pattern)]:  #verify rest of P matches
             matchOffsets.append(i)
     return matchOffsets
