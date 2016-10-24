@@ -10,20 +10,20 @@ import time
 #To efficiently read the genome:
 def parseGenome(filename):
     genome = '' 
-    #with open(filename, 'r') as file: #opening a file for reading
-    with gzip.open(filename, 'r') as gzipFile:
-        with io.BufferedReader(gzipFile) as file:
-            for line in file:
-                if line and line[0] != '>': #ignore header line with genome information
-                    genome += line.rstrip() #add each line of bases to the string 
-                    #rstrip() removes any trailing whitespace from the ends of the string (trim off new line/tab/space)
+    with open(filename, 'r') as file: #opening a file for reading
+    #with gzip.open(filename, 'r') as gzipFile:
+        #with io.BufferedReader(gzipFile) as file:
+        for line in file:
+            if line and line[0] != '>': #ignore header line with genome information
+                genome += line.rstrip() #add each line of bases to the string 
+                #rstrip() removes any trailing whitespace from the ends of the string (trim off new line/tab/space)
     return genome
 
 #To efficiently read the sequencing reads:        
 def parseReads(filename): #fastQ 
     readID, sequence, quality = '', '', ''
-    #file = open(filename, 'r')
-    file = bz2.BZ2File(filename, 'r')
+    file = open(filename, 'r')
+    #file = bz2.BZ2File(filename, 'r')
     while True: #runs until EOF
         line = file.readline()
         if not line: #reached EOF

@@ -11,10 +11,10 @@ import collections
 import pdb
 
 #pdb.set_trace()
-genome = fileParsing.parseGenome(path('Data\HumanGenome.fa.gz').abspath())
-reads = fileParsing.parseReads(path('Data\HumanSequencingReads.tsv.bz2').abspath())
-#genome = fileParsing.readGenome2(path('Data\PhixGenome.fa').abspath())
-#reads = fileParsing.readSequence1(path('Data\PhiXSequencingReads1000.fastq').abspath())
+#genome = fileParsing.parseGenome(path('Data\HumanGenome.fa.gz').abspath())
+#reads = fileParsing.parseReads(path('Data\HumanSequencingReads.tsv.bz2').abspath())
+genome = fileParsing.parseGenome(path('Data\PhixGenome.fa').abspath())
+reads = fileParsing.parseReads(path('Data\PhiXSequencingReads1000.fastq').abspath())
 
 matchesCount, totalCount, offsets, matches = alignment.align(reads, genome)
 print "%d/%d reads matched the genome." % (matchesCount, totalCount) #The result is not 100% but this is to be expected due to sequencing errors. 

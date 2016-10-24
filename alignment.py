@@ -36,8 +36,40 @@ def naiveApproxHamming(pattern, text, maxHammingDist=1):
             matchOffsets.append(i)
             matches.append(possibleMatch)
             possibleMatch = ''
-    return matchOffsets, matches
+    return matchOffsets#, matches
 
+#Edit distance = minimum no of edits (substitutions, insertions, deletions) required to change one string into another.
+def editDistance(pattern, text):
+    D = [] #distance matrix
+    for i in range(len(pattern) + 1): #initialize D as x+1 by y+1 array of 0s 
+        D.append([0] * (len(text) + 1))
+    for i in range(len(pattern) + 1): #first row of ascending integers
+        D[i][0] = i
+    for i in range(len(text) + 1): #first column of ascending integers
+        D[0][i] = i
+    for i in range(1, len(pattern) + 1): #fill in rest of matrix row by row
+        for j in range(1, len(text) + 1):
+            distHorizontal = D[i][j-1] + 1
+            distVertical = D[i-1][j] + 1
+            if pattern[i-1] == text[j-1]:
+                distDiagonal = D[i-1][j-1]
+            else:
+                distDiagonal = D[i-1][j-1] + 1
+            D[i][j] = min(distHorizontal, distVertical, distDiagonal)
+    
+    return D[-1][-1] #edit distance = bottom-right
+
+#The following is also a naive algorithm but for approximate matching using the Edit distance:
+def naiveApproxEdit(pattern, text, maxEditDist=5500):
+    matchOffsets = []
+    D = []
+    D = editDistance(pattern, text)
+    if D > maxEditDist: #exceeded maximum distance
+        return []
+    if D <= maxEditDist: #approximate match
+        matchOffsets.append(D)
+    return matchOffsets      
+    
 def approxMatchOffsets(pattern, text):
     matchOffsets, _ = naiveApproxHamming(pattern, text)    
     return matchOffsets
@@ -61,12 +93,11 @@ def align(reads, genome):
     readsCount = 0
     readsOffsets = []
     readsMatches = []
-    genome = next(genome)
     nextReads = next(reads)
     for read in nextReads: 
-        nextReads = nextReads[40:50] #prefix of read as all 100 bases have a smaller chance of matching
-        matchOffsets = approxMatchOffsets(nextReads, genome) #check if read matches in forward direction of genome
-        matchOffsets.extend(approxMatchOffsets(reverseComplement(nextReads), genome)) #add results of any matches in reverse complement of genome
+        nextReads = nextReads[:50] #prefix of read as all 100 bases have a smaller chance of matching
+        matchOffsets = naiveApproxEdit(nextReads, genome) #check if read matches in forward direction of genome
+        matchOffsets.extend(naiveApproxEdit(reverseComplement(nextReads), genome)) #add results of any matches in reverse complement of genome
         #matches = approxMatches(read, genome)
         #matches.extend(approxMatches(reverseComplement(read), genome))
         readsCount += 1
