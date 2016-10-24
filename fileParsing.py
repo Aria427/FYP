@@ -1,62 +1,29 @@
 """
-This file includes functions for efficient and inefficient parsing of a genome and sequencing reads.
+This file includes functions for efficient parsing of a genome and sequencing reads.
 """
 
-from itertools import groupby
 import gzip
 import bz2
 import io
-import subprocess
 import time
 
 #To efficiently read the genome:
-def readGenome1(filename): #fastA 
-    sequence = None
-    sequenceLines = []
-    file = open(filename, 'r')
-    #file = gzip.open(filename, 'r')
-    line = file.readline()
-    if not line: #reached EOF
-        return None
-
-    while True: #read  sequence lines up to blank line
-        line = file.readline().rstrip()
-        if line == "": #reached end of record or end of file
-            break
-        sequenceLines.append(line)     
-    sequence = ''.join(sequenceLines) #merge lines to form sequence
-    
-    file.close()
-    return sequence
-
-def readGenome2(filename): #faster than readGenome1()        
-    filehandle = open(filename, 'r')
-    #filehandle = gzip.open(filename, 'r')
-    #fhBuffer = io.BufferedReader(filehandle)
-    #ignore boolean (x[0]) and hold header or sequence since they alternate
-    iteration = (x[1] for x in groupby(filehandle, lambda line: line[0] == ">"))
-    for header in iteration:
-        header.next()[1:].strip() #drop '>'
-        seq = ''.join(s.strip() for s in iteration.next()) #join all sequence lines
-        yield seq    
-    filehandle.close()
-        
-def readGenome3(filename):
+def parseGenome(filename):
     genome = '' 
-    with open(filename, 'r') as file: #opening a file for reading
-    #with gzip.open(filename, 'r') as gzipFile:
-        #with io.BufferedReader(gzipFile) as file:
-        for line in file:
-            if line[0] != '>': #ignore header line with genome information
-                genome += line.rstrip() #add each line of bases to the string 
-                #rstrip() removes any trailing whitespace from the ends of the string (trim off new line/tab/space)
+    #with open(filename, 'r') as file: #opening a file for reading
+    with gzip.open(filename, 'r') as gzipFile:
+        with io.BufferedReader(gzipFile) as file:
+            for line in file:
+                if line and line[0] != '>': #ignore header line with genome information
+                    genome += line.rstrip() #add each line of bases to the string 
+                    #rstrip() removes any trailing whitespace from the ends of the string (trim off new line/tab/space)
     return genome
 
 #To efficiently read the sequencing reads:        
-def readSequence1(filename): #fastQ 
+def parseReads(filename): #fastQ 
     readID, sequence, quality = '', '', ''
-    file = open(filename, 'r')
-    #file = bz2.BZ2File(filename, 'r')
+    #file = open(filename, 'r')
+    file = bz2.BZ2File(filename, 'r')
     while True: #runs until EOF
         line = file.readline()
         if not line: #reached EOF
@@ -92,8 +59,45 @@ def readSequence1(filename): #fastQ
                     line = file.readline()
     
     file.close() 
- 
-def readSequence2(filename):
+       
+
+"""
+The following functions were also tested but proved to be insufficient: 
+
+from itertools import groupby   
+    
+def readGenome1(filename): #fastA 
+    sequence = None
+    sequenceLines = []
+    file = open(filename, 'r')
+    #file = gzip.open(filename, 'r')
+    line = file.readline()
+    if not line: #reached EOF
+        return None
+
+    while True: #read  sequence lines up to blank line
+        line = file.readline().rstrip()
+        if line == "": #reached end of record or end of file
+            break
+        sequenceLines.append(line)     
+    sequence = ''.join(sequenceLines) #merge lines to form sequence
+    
+    file.close()
+    return sequence
+
+def readGenome2(filename): #faster than readGenome1()        
+    #filehandle = open(filename, 'r')
+    filehandle = gzip.open(filename, 'r')
+    fhBuffer = io.BufferedReader(filehandle)
+    #ignore boolean (x[0]) and hold header or sequence since they alternate
+    iteration = (x[1] for x in groupby(fhBuffer, lambda line: line[0] == ">"))
+    for header in iteration:
+        header.next()[1:].strip() #drop '>'
+        seq = ''.join(s.strip() for s in iteration.next()) #join all sequence lines
+        yield seq    
+    filehandle.close()    
+
+def readSequence1(filename):
     sequenceLines = []
     with open(filename) as file:  
     #with bz2.BZ2File(filename) as file:
@@ -108,9 +112,8 @@ def readSequence2(filename):
             yield seq
         sequences = ''.join(sequenceLines)
     yield sequences
-             
-#To inefficiently read the sequencing reads:          
-def readSequenceInefficient(filename):
+                     
+def readSequence2(filename):
     sequences = []
     with open(filename) as file:  
         while True: #loops every 4 lines (each read is a set of 4) indefinitely until EOF
@@ -121,20 +124,6 @@ def readSequenceInefficient(filename):
             if len(seq) == 0: #reached EOF
                 break
             sequences.append(seq)
-    return sequences       
+    return sequences     
 
-"""
-The following functions were tested but proved to be insufficient:   
-
-from Bio import SeqIO
-                   
-def readGenomeSeqIO(filename): #keeps looping even for PhiX  
-    genome = ''   
-    #rU - open file for reading in universal readline mode (works across platforms due to differing newline characters)    
-    filehandle = open(filename, 'rU')#, encoding="latin1")
-    for record in SeqIO.parse(filehandle, "fasta"): #SeqRecord iterator - multiple records
-    #record = SeqIO.read(filehandle, "fasta") #one record
-        genome += record.seq #parses records one by one, without changing the file order
-    filehandle.close()
-    return genome
 """
