@@ -8,3 +8,5 @@ This is a repository for my final year project entitled 'The Malta Human Genome 
 'Output Test File': includes the resultant files from function implementations.
 
 'Paper Summaries & Research Notes': includes summaries of the read papers and any notes taken from further reading.
+
+'Research Notebook': includes details of all meetings and the research accomplished.  
