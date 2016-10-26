@@ -62,7 +62,7 @@ def visualisationTkinter(genome, readsOffsets, readsMatched):
     readsOffsets = sum(readsOffsets, [])    #flatten list
     offsetsCount = collections.Counter(readsOffsets) #record count of each offset => length of match
     window = Tkinter.Tk()
-    canvas = Tkinter.Canvas(window, bg='white', width=len(genome), height=200)
+    canvas = Tkinter.Canvas(window, bg='white', width=len(genome), height=250)
     
     def onObjectClick(event): 
         canvas.create_text(50, event.y, text='Clicked at offset %d' % event.x, tag='%d' % event.x)                 
