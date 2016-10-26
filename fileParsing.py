@@ -8,15 +8,18 @@ import io
 import time
 
 #To efficiently read the genome:
-def parseGenome(filename):
+def parseGenome(filename, output):
     genome = '' 
-    with open(filename, 'r') as file: #opening a file for reading
-    #with gzip.open(filename, 'r') as gzipFile:
+    #with open(filename, 'r') as file: #opening a file for reading
+    with gzip.open(filename, 'r') as file:
         #with io.BufferedReader(gzipFile) as file:
         for line in file:
             if line and line[0] != '>': #ignore header line with genome information
                 genome += line.rstrip() #add each line of bases to the string 
                 #rstrip() removes any trailing whitespace from the ends of the string (trim off new line/tab/space)
+    file = open(output, 'w')
+    file.write(genome) #save genome to text file => unzip and parse only once
+    file.close()
     return genome
 
 #To efficiently read the sequencing reads:        
