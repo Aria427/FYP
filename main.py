@@ -11,13 +11,14 @@ import collections
 import pdb
 
 #pdb.set_trace()
-genome = fileParsing.parseGenome(path('Data\HumanGenome.fa.gz').abspath(), path('Data\HumanGenome.txt').abspath())
+#genome = fileParsing.parseGenome(path('Data\HumanGenome.fa.gz').abspath(), path('Data\HumanGenome.txt').abspath())
 #reads = fileParsing.parseReads(path('Data\HumanSequencingReads.tsv.bz2').abspath())
-#genome = fileParsing.parseGenome(path('Data\PhixGenome.fa').abspath(), path('Data\PhixGenome.txt').abspath())
-#reads = fileParsing.parseReads(path('Data\PhiXSequencingReads1000.fastq').abspath())
+genome = fileParsing.parseGenome(path('Data\PhixGenome.fa').abspath(), path('Data\PhixGenome.txt').abspath())
+#genome = path('Data\PhixGenome.txt').abspath()
+reads = fileParsing.parseReads(path('Data\PhiXSequencingReads1000.fastq').abspath())
 
-#matchesCount, totalCount, offsets, matches = alignment.align(reads, genome)
-#print "%d/%d reads matched the genome." % (matchesCount, totalCount) #The result is not 100% but this is to be expected due to sequencing errors. 
+matchesCount, totalCount, offsets, matches = alignment.align(reads, genome)
+print "%d/%d reads matched the genome." % (matchesCount, totalCount) #The result is not 100% but this is to be expected due to sequencing errors. 
 
 """
 textFile = path('Output Test Files\DataVisualisationTest.txt').abspath()

@@ -10,8 +10,8 @@ import time
 #To efficiently read the genome:
 def parseGenome(filename, output):
     genome = '' 
-    #with open(filename, 'r') as file: #opening a file for reading
-    with gzip.open(filename, 'r') as file:
+    with open(filename, 'r') as file: #opening a file for reading
+    #with gzip.open(filename, 'r') as file:
         #with io.BufferedReader(gzipFile) as file:
         for line in file:
             if line and line[0] != '>': #ignore header line with genome information
