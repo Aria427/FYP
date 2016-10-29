@@ -56,17 +56,6 @@ def editDistance(pattern, text):
     
     return D[-1][-1] #edit distance = bottom-right
 
-#The following is also an online naive algorithm for approximate matching but using the Edit distance:
-def naiveApproxEdit(pattern, text, maxEditDist=5500):
-    matchOffsets = []
-    D = []
-    D = editDistance(pattern, text)
-    if D > maxEditDist: #exceeded maximum distance
-        return []
-    if D <= maxEditDist: #approximate match
-        matchOffsets.append(D)
-    return matchOffsets      
-
 #Edit distance backtrace
 def editDistanceTrace(pattern, text, D):
     i = len(pattern)
