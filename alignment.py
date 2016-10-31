@@ -1,6 +1,6 @@
-"""
-This file includes functions for naive exact & approximate matching along with the alignment implementation.
-"""
+#!/usr/bin/env python
+#This file includes functions for naive exact & approximate matching along with the alignment implementation.
+
 import bisect
 import sys
 import numpy

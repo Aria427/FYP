@@ -1,6 +1,5 @@
-"""
-This file includes functions for data visualisation in the form of a text file and a jpeg file.
-"""
+#!/usr/bin/env python
+#This file includes functions for data visualisation in the form of a text file and a jpeg file.
 
 import collections
 from PIL import Image, ImageDraw

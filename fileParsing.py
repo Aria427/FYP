@@ -1,6 +1,5 @@
-"""
-This file includes functions for efficient parsing of a genome and sequencing reads.
-"""
+#!/usr/bin/env python
+#This file includes functions for efficient parsing of a genome and sequencing reads.
 
 import gzip
 import bz2
@@ -10,16 +9,16 @@ import time
 #To efficiently read the genome:
 def parseGenome(filename, output):
     genome = '' 
+    outFile = open(output, 'w')
     with open(filename, 'r') as file: #opening a file for reading
     #with gzip.open(filename, 'r') as file:
         #with io.BufferedReader(gzipFile) as file:
         for line in file:
             if line and line[0] != '>': #ignore header line with genome information
-                genome += line.rstrip() #add each line of bases to the string 
-                #rstrip() removes any trailing whitespace from the ends of the string (trim off new line/tab/space)
-    file = open(output, 'w')
-    file.write(genome) #save genome to text file => unzip and parse only once
-    file.close()
+                l = line.rstrip() #rstrip() removes any trailing whitespace from the ends of the string (trim off new line/tab/space)
+                genome += l #add each line of bases to the string      
+                outFile.write(l) #save genome to text file
+    outFile.close()
     return genome
 
 #To efficiently read the sequencing reads:        
