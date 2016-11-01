@@ -10,9 +10,22 @@ import collections
 import pdb
 
 #pdb.set_trace()
-#genome = fileParsing.parseGenome(path('Data\HumanGenome.fa.gz').abspath(), path('Data\HumanGenome.txt').abspath())
-#reads = fileParsing.parseReads(path('Data\HumanSequencingReads.tsv.bz2').abspath())
-genome = fileParsing.parseGenome(path('Data\PhixGenome.fa').abspath(), path('Data\PhixGenome.bin').abspath())
+
+#binaryGenomeFile = path('Data\HumanGenome.bin').abspath()
+#only need to parseGenome() once; use binary file directly afterwards
+#genome = fileParsing.parseGenome(path('Data\HumanGenome.fa.gz').abspath(), binaryGenomeFile)
+
+binaryGenomeFile = path('Data\PhixGenome.bin').abspath() 
+#genome = fileParsing.parseGenome(path('Data\PhixGenome.fa').abspath(), binaryGenomeFile)
+
+with open(binaryGenomeFile, 'rb') as f:
+    byte = f.read(1)
+    genome = byte
+    while byte != '':
+        byte = f.read(1)
+        genome += byte
+       
+#reads = fileParsing.parseReads(path('Data\HumanSequencingReads.tsv.bz2').abspath())        
 reads = fileParsing.parseReads(path('Data\PhiXSequencingReads1000.fastq').abspath())
 
 matchesCount, totalCount, offsets, matches = alignment.align(reads, genome)
