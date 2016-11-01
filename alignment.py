@@ -232,10 +232,11 @@ class fmIndex():
 #The genome is double stranded and so the reads can come from one strand or the other.    
 #To match both the read and the reverse complement of the read to the genome: 
 def reverseComplement(read):
-    complement = {'A': 'T', 'T': 'A', 'C': 'G', 'G': 'C', 'N': 'N'} #each base is associated with its complementary base
+    #complement = {'A': 'T', 'T': 'A', 'C': 'G', 'G': 'C', 'N': 'N'} #each base is associated with its complementary base
+    complementBinary = {'00': '11', '11': '00', '01': '10', '10': '01', 'N': 'N'}
     reverseRead = ''
     for base in read:
-        reverseRead = complement[base] + reverseRead #complement added to beginning in order to reverse the read from end to start
+        reverseRead = complementBinary[base] + reverseRead #complement added to beginning in order to reverse the read from end to start
     return reverseRead
 
 #To align the reads against the genome to see how many match:
@@ -254,7 +255,7 @@ def align(reads, genome):
         #matchOffsets.extend(queryKmerIndex(reverseComplement(nextReads), genome, index))
         fm = fmIndex(genome)
         matchOffsets = fm.occurrences(nextReads)
-        matchOffsets.extend(fm.occurrences(reverseComplement(nextReads)))
+        #matchOffsets.extend(fm.occurrences(reverseComplement(nextReads)))
         readsCount += 1
         if (readsCount % 50) == 0:
             print "*"

@@ -12,7 +12,7 @@ import pdb
 #pdb.set_trace()
 #genome = fileParsing.parseGenome(path('Data\HumanGenome.fa.gz').abspath(), path('Data\HumanGenome.txt').abspath())
 #reads = fileParsing.parseReads(path('Data\HumanSequencingReads.tsv.bz2').abspath())
-genome = fileParsing.parseGenome(path('Data\PhixGenome.fa').abspath(), path('Data\PhixGenome.txt').abspath())
+genome = fileParsing.parseGenome(path('Data\PhixGenome.fa').abspath(), path('Data\PhixGenome.bin').abspath())
 reads = fileParsing.parseReads(path('Data\PhiXSequencingReads1000.fastq').abspath())
 
 matchesCount, totalCount, offsets, matches = alignment.align(reads, genome)
