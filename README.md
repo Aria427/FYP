@@ -5,8 +5,10 @@ This is a repository for my final year project entitled 'The Malta Human Genome 
 
 'Data': includes the genomes and sequencing reads on which the functions are applied on.
 
-'Output Test File': includes the resultant files from function implementations.
+'Further Research': includes any notes taken from books, articles, online videos, etc... 
 
-'Paper Summaries & Research Notes': includes summaries of the read papers and any notes taken from further reading.
+'Output Test Files': includes the resultant files from function implementations.
+
+'Paper Summaries': includes summaries of the read papers.
 
 'Research Notebook': includes details of all meetings and the research accomplished.  
