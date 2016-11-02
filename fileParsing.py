@@ -4,7 +4,6 @@
 import gzip
 import bz2
 import io
-import time
 
 binaryBase = {'A' : '00',
               'C' : '01',

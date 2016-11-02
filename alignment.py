@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#This file includes functions for naive exact & approximate matching along with the alignment implementation.
+#This file includes functions for exact & approximate matching along with the alignment implementation.
 
 import bisect
 import sys
@@ -244,7 +244,6 @@ def align(reads, genome):
     readsMatched = 0
     readsCount = 0
     readsOffsets = []
-    readsMatches = []
     nextReads = next(reads)
     for read in nextReads: 
         nextReads = nextReads[:50] #prefix of read as all 100 bases have a smaller chance of matching
@@ -263,5 +262,5 @@ def align(reads, genome):
             readsMatched += 1
         readsOffsets.append(matchOffsets) 
         nextReads = next(reads)
-    return readsMatched, readsCount, readsOffsets, readsMatches    
+    return readsMatched, readsCount, readsOffsets  
  
