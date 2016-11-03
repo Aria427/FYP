@@ -4,14 +4,10 @@
 import gzip
 import bz2
 import io
-
-binaryBase = {'A' : '00',
-              'C' : '01',
-              'G' : '10',
-              'T' : '11'}
-
+import huffmanCompression
+ 
 def baseToBinary(line):
-    for base, binary in binaryBase.items():
+    for base, binary in huffmanCompression.codes.items():
         line = line.replace(base, binary)
     return line           
              
@@ -19,13 +15,13 @@ def baseToBinary(line):
 def parseGenome(filename, output):
     genome = '' 
     outFile = open(output, 'w')
-    #with open(filename, 'r') as file: #opening a file for reading
-    with gzip.open(filename, 'r') as file:
+    with open(filename, 'r') as file: #opening a file for reading
+    #with gzip.open(filename, 'r') as file:
         #with io.BufferedReader(gzipFile) as file:
         for line in file:
             if line and line[0] != '>': #ignore header line with genome information
                 l = line.rstrip().upper() #rstrip() removes any trailing whitespace from the ends of the string (trim off new line/tab/space)
-                l = baseToBinary(l)
+                #l = baseToBinary(l)
                 genome += l #add each line of bases to the string      
                 outFile.write(l) #save encoded genome to binary file
     outFile.close()
