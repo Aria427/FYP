@@ -55,7 +55,7 @@ def codeGeneration(sequence):
     tree = constructTree(tuples)
     nestedTree = cutTree(tree)
     assignCodes(nestedTree)
-    return codes
+    return nestedTree, codes
 
 #This function encodes the DNA into binary codes and saves said encoding to file:       
 def encode(sequence, output):

@@ -256,8 +256,8 @@ def align(reads, genome, output):
         #matchOffsets = queryKmerIndex(encodedReads, genome, index)
         #matchOffsets.extend(queryKmerIndex(encodedReverseReads, genome, index))
         fm = fmIndex(genome)
-        matchOffsets = fm.occurrences(encodedReads)
-        matchOffsets.extend(fm.occurrences(encodedReverseReads))
+        matchOffsets = fm.occurrences(nextReads)
+        matchOffsets.extend(fm.occurrences(nextReverseReads))
         readsCount += 1
         if (readsCount % 50) == 0:
             print "*"
