@@ -36,10 +36,10 @@ decodedGenome = huffmanCompression.decode(tree, encodedGenome)
 reads = fileParsing.parseReads(path('Data\PhiXSequencingReads1000.fastq').abspath())
 binaryReadsFile = path('Data\PhiXSequencingReads1000.bin').abspath()
 
+analyseAlignment.plotTimeVsMatches(reads, decodedGenome, path('Output Test Files\AlignmentAnalysis.png').abspath())
+
 matchesCount, totalCount, offsets = alignment.alignFM(reads, decodedGenome)
 print "%d/%d reads matched the genome." % (matchesCount, totalCount) #The result is not 100% but this is to be expected due to sequencing errors. 
-
-analyseAlignment.plotTimeVsMatches(reads, decodedGenome)
 
 """
 textFile = path('Output Test Files\DataVisualisationTest.txt').abspath()

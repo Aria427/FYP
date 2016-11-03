@@ -6,7 +6,7 @@ import alignment
 from time import time
 from matplotlib import pyplot as plt
 
-def plotTimeVsMatches(pattern, text):
+def plotTimeVsMatches(pattern, text, output):
     timeHamming, matchesHamming = analyseHamming(pattern, text)
     timeEdit, matchesEdit = analyseEdit(pattern, text)
     timeKmer, matchesKmer = analyseKmer(pattern, text)
@@ -18,7 +18,9 @@ def plotTimeVsMatches(pattern, text):
     plt.title('Time Duration vs Matches Generated')
     plt.xlabel('Time/seconds')
     plt.ylabel('Matches')
-    plt.legend(handles=[hamming, edit, kmer, fm])
+    plt.legend(handles=[hamming, edit, kmer, fm], loc=4) #4=lower-right
+    plt.ylim([0, 110])
+    plt.savefig(output)
     plt.show()
     
 def analyseHamming(pattern, text):
