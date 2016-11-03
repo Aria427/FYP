@@ -24,20 +24,14 @@ print codes
 
 binaryGenomeFile = path('Data\PhixGenome.bin').abspath() 
 encodedGenome = huffmanCompression.encode(genome, binaryGenomeFile)
-
-#with open(binaryGenomeFile, 'rb') as f:
-    #byte = f.read(1)
-    #genome = byte
-    #while byte != '':
-        #byte = f.read(1)
-        #genome += byte
        
 #reads = fileParsing.parseReads(path('Data\HumanSequencingReads.tsv.bz2').abspath())        
 reads = fileParsing.parseReads(path('Data\PhiXSequencingReads1000.fastq').abspath())
+binaryReadsFile = path('Data\PhiXSequencingReads1000.bin').abspath()
 
 #t0 = time()
-#matchesCount, totalCount, offsets = alignment.align(reads, genome)
-#print "%d/%d reads matched the genome." % (matchesCount, totalCount) #The result is not 100% but this is to be expected due to sequencing errors. 
+matchesCount, totalCount, offsets = alignment.align(reads, genome, binaryReadsFile)
+print "%d/%d reads matched the genome." % (matchesCount, totalCount) #The result is not 100% but this is to be expected due to sequencing errors. 
 #t1 = time()
 
 #print (t1-t0)

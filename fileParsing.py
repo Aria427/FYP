@@ -4,13 +4,7 @@
 import gzip
 import bz2
 import io
-import huffmanCompression
  
-def baseToBinary(line):
-    for base, binary in huffmanCompression.codes.items():
-        line = line.replace(base, binary)
-    return line           
-             
 #To efficiently read the genome:
 def parseGenome(filename, output):
     genome = '' 
@@ -21,7 +15,6 @@ def parseGenome(filename, output):
         for line in file:
             if line and line[0] != '>': #ignore header line with genome information
                 l = line.rstrip().upper() #rstrip() removes any trailing whitespace from the ends of the string (trim off new line/tab/space)
-                #l = baseToBinary(l)
                 genome += l #add each line of bases to the string      
                 outFile.write(l) #save encoded genome to binary file
     outFile.close()
@@ -52,7 +45,6 @@ def parseReads(filename): #fastQ
             while not line.startswith('+'): #not placeholder line (third line)
                 #rstrip() - removes leading/trailing whitespace
                 #replace() - removes whitespace from within string
-                line = baseToBinary(line)
                 sequenceLines.append(line.rstrip().replace(' ', '')) #no whitespace in sequence
                 line = file.readline()
             sequence = ''.join(sequenceLines) #merge lines to form sequence

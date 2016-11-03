@@ -4,6 +4,7 @@
 import bisect
 import sys
 import numpy
+import huffmanCompression
 
 #The following is a naive algorithm for exact matching where all occurrences are recorded:
 def naiveExact(pattern, text):
@@ -232,29 +233,31 @@ class fmIndex():
 #The genome is double stranded and so the reads can come from one strand or the other.    
 #To match both the read and the reverse complement of the read to the genome: 
 def reverseComplement(read):
-    #complement = {'A': 'T', 'T': 'A', 'C': 'G', 'G': 'C', 'N': 'N'} #each base is associated with its complementary base
-    complementBinary = {'00': '11', '11': '00', '01': '10', '10': '01', 'N': 'N'}
+    complement = {'A': 'T', 'T': 'A', 'C': 'G', 'G': 'C', 'N': 'N'} #each base is associated with its complementary base
     reverseRead = ''
     for base in read:
-        reverseRead = complementBinary[base] + reverseRead #complement added to beginning in order to reverse the read from end to start
+        reverseRead = complement[base] + reverseRead #complement added to beginning in order to reverse the read from end to start
     return reverseRead
 
 #To align the reads against the genome to see how many match:
-def align(reads, genome):
+def align(reads, genome, output):
     readsMatched = 0
     readsCount = 0
     readsOffsets = []
     nextReads = next(reads)
     for read in nextReads: 
         nextReads = nextReads[:50] #prefix of read as all 100 bases have a smaller chance of matching
-        #matchOffsets = approxEdit(nextReads, genome) #check if read matches in forward direction of genome
-        #matchOffsets.extend(approxEdit(reverseComplement(nextReads), genome)) #add results of any matches in reverse complement of genome
+        nextReverseReads = reverseComplement(nextReads)
+        encodedReads = huffmanCompression.encode(nextReads, output)
+        encodedReverseReads = huffmanCompression.encode(nextReverseReads, output)
+        #matchOffsets = naiveApproxHamming(encodedReads, genome) #check if read matches in forward direction of genome
+        #matchOffsets.extend(naiveApproxHamming(encodedReverseReads, genome)) #add results of any matches in reverse complement of genome
         #index = kmerIndex(genome, 10)
-        #matchOffsets = queryKmerIndex(nextReads, genome, index)
-        #matchOffsets.extend(queryKmerIndex(reverseComplement(nextReads), genome, index))
+        #matchOffsets = queryKmerIndex(encodedReads, genome, index)
+        #matchOffsets.extend(queryKmerIndex(encodedReverseReads, genome, index))
         fm = fmIndex(genome)
-        matchOffsets = fm.occurrences(nextReads)
-        #matchOffsets.extend(fm.occurrences(reverseComplement(nextReads)))
+        matchOffsets = fm.occurrences(encodedReads)
+        matchOffsets.extend(fm.occurrences(encodedReverseReads))
         readsCount += 1
         if (readsCount % 50) == 0:
             print "*"
