@@ -61,7 +61,7 @@ def codeGeneration(sequence):
 def encode(sequence, output):
     global codes
     encoding = ''
-    outFile = open(output, 'w')
+    outFile = open(output, 'wb')
     for base in sequence: 
         encoding += codes[base]
         outFile.write(codes[base])
