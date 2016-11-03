@@ -4,12 +4,10 @@
 import fileParsing
 import huffmanCompression
 import alignment
-import timeComplexity
+import analyseAlignment
 import visualisation
 
 from path import path
-from time import time
-import timeit
 import pdb
 
 #pdb.set_trace()
@@ -38,14 +36,10 @@ decodedGenome = huffmanCompression.decode(tree, encodedGenome)
 reads = fileParsing.parseReads(path('Data\PhiXSequencingReads1000.fastq').abspath())
 binaryReadsFile = path('Data\PhiXSequencingReads1000.bin').abspath()
 
-t0 = time()
-matchesCount, totalCount, offsets = alignment.alignFM(reads, decodedGenome) #, binaryReadsFile)
+matchesCount, totalCount, offsets = alignment.alignFM(reads, decodedGenome)
 print "%d/%d reads matched the genome." % (matchesCount, totalCount) #The result is not 100% but this is to be expected due to sequencing errors. 
-t1 = time()
 
-print (t1-t0)
-
-timeComplexity.plotTC(alignment.alignFM, reads, genome, 1)
+analyseAlignment.plotTimeVsMatches(reads, decodedGenome)
 
 """
 textFile = path('Output Test Files\DataVisualisationTest.txt').abspath()
