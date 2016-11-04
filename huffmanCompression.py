@@ -63,13 +63,14 @@ def codeGeneration(sequence):
 def encode(sequence, output):
     global codes
     encoding = ''
+    packing = []
     outFile = open(output, 'wb')
     for base in sequence: 
         encoding += codes[base]
-        outFile.write(struct.pack('=s', codes[base]))
-        #outFile.write(codes[base])
+        #outFile.write(struct.pack('=s', codes[base]))
+        outFile.write(codes[base])
     outFile.close()
-    return encoding
+    return encoding, packing
  
 #This function decodes the binary back into its original DNA string:
 def decode(tree, binary):

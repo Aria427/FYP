@@ -26,10 +26,15 @@ encodedGenome = huffmanCompression.encode(genome, binaryGenomeFile)
 
 with open(binaryGenomeFile, 'rb') as f:
     byte = f.read(1)
-    encodedGenome = byte
+    data = byte
     while byte != '':
         byte = f.read(1)
-        encodedGenome += byte
+        data += byte     
+        
+encodedGenome = ''
+for i in range(0, len(data), 1):
+    byte = struct.unpack('=s', data[i:i+1])[0]  
+    encodedGenome += byte 
 
 decodedGenome = huffmanCompression.decode(tree, encodedGenome)
 
