@@ -8,6 +8,7 @@ import analyseAlignment
 import visualisation
 
 from path import path
+import struct
 import pdb
 
 #pdb.set_trace()
@@ -23,20 +24,20 @@ print codes
 binaryGenomeFile = path('Data\PhixGenome.bin').abspath() 
 encodedGenome = huffmanCompression.encode(genome, binaryGenomeFile)
 
-#with open(binaryGenomeFile, 'rb') as f:
-    #byte = f.read(1)
-    #genome = byte
-    #while byte != '':
-        #byte = f.read(1)
-        #genome += byte
-   
+with open(binaryGenomeFile, 'rb') as f:
+    byte = f.read(1)
+    encodedGenome = byte
+    while byte != '':
+        byte = f.read(1)
+        encodedGenome += byte
+
 decodedGenome = huffmanCompression.decode(tree, encodedGenome)
 
 #reads = fileParsing.parseReads(path('Data\HumanSequencingReads.tsv.bz2').abspath())        
 reads = fileParsing.parseReads(path('Data\PhiXSequencingReads1000.fastq').abspath())
-binaryReadsFile = path('Data\PhiXSequencingReads1000.bin').abspath()
+#binaryReadsFile = path('Data\PhiXSequencingReads1000.bin').abspath()
 
-analyseAlignment.plotTimeVsMatches(reads, decodedGenome, path('Output Test Files\AlignmentAnalysis.png').abspath())
+#analyseAlignment.plotTimeVsMatches(reads, decodedGenome, path('Output Test Files\AlignmentAnalysis.png').abspath())
 
 matchesCount, totalCount, offsets = alignment.alignFM(reads, decodedGenome)
 print "%d/%d reads matched the genome." % (matchesCount, totalCount) #The result is not 100% but this is to be expected due to sequencing errors. 

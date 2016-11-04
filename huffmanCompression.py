@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 #This file includes functions for Huffman coding to compress the DNA.
 
+import struct
+
 codes = {}
 
 #This function calculates the frequency of each encountered base (A, C, G, T, N):
@@ -64,7 +66,8 @@ def encode(sequence, output):
     outFile = open(output, 'wb')
     for base in sequence: 
         encoding += codes[base]
-        outFile.write(codes[base])
+        outFile.write(struct.pack('=s', codes[base]))
+        #outFile.write(codes[base])
     outFile.close()
     return encoding
  
