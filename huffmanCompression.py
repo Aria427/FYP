@@ -51,7 +51,7 @@ def assignCodes(node, path=''):
         assignCodes(node[1], path + '1') #branch to right
 
 #This function generates the binary codes from the above functions:
-def codeGeneration(sequence):
+def treeCodeGeneration(sequence):
     freq = frequency(sequence)
     tuples = sortFrequency(freq)
     tree = constructTree(tuples)
@@ -63,15 +63,28 @@ def codeGeneration(sequence):
 def encode(sequence, output):
     global codes
     encoding = ''
-    packing = []
     outFile = open(output, 'wb')
     for base in sequence: 
         encoding += codes[base]
         #outFile.write(struct.pack('=s', codes[base]))
         outFile.write(codes[base])
     outFile.close()
-    return encoding, packing
+    return encoding
  
+#This function reads the encoded binary file into memory:
+def readEncoding(binary):
+    encoding = ''
+    with open(binary, 'rb') as f:
+        byte = f.read(1) #read first byte
+        data = byte
+        while byte != '':
+            byte = f.read(1) #read the rest byte by byte
+            data += byte          
+    for i in range(0, len(data), 1):
+        byte = struct.unpack('=s', data[i:i+1])[0] #[0] to remove unnecessary syntax  
+        encoding += byte   
+    return encoding
+    
 #This function decodes the binary back into its original DNA string:
 def decode(tree, binary):
     decoding = ''

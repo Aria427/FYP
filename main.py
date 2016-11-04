@@ -8,7 +8,6 @@ import analyseAlignment
 import visualisation
 
 from path import path
-import struct
 import pdb
 
 #pdb.set_trace()
@@ -18,29 +17,19 @@ import pdb
 textGenomeFile = path('Data\PhixGenome.txt').abspath() 
 genome = fileParsing.parseGenome(path('Data\PhixGenome.fa').abspath(), textGenomeFile)
 
-tree, codes = huffmanCompression.codeGeneration(genome)
+tree, codes = huffmanCompression.treeCodeGeneration(genome)
 print codes
 
+#binaryGenomeFile = path('Data\HumanGenome.bin').abspath()
 binaryGenomeFile = path('Data\PhixGenome.bin').abspath() 
-encodedGenome = huffmanCompression.encode(genome, binaryGenomeFile)
+huffmanCompression.encode(genome, binaryGenomeFile)
 
-with open(binaryGenomeFile, 'rb') as f:
-    byte = f.read(1)
-    data = byte
-    while byte != '':
-        byte = f.read(1)
-        data += byte     
-        
-encodedGenome = ''
-for i in range(0, len(data), 1):
-    byte = struct.unpack('=s', data[i:i+1])[0]  
-    encodedGenome += byte 
+encodedGenome = huffmanCompression.readEncoding(binaryGenomeFile)
 
 decodedGenome = huffmanCompression.decode(tree, encodedGenome)
 
 #reads = fileParsing.parseReads(path('Data\HumanSequencingReads.tsv.bz2').abspath())        
 reads = fileParsing.parseReads(path('Data\PhiXSequencingReads1000.fastq').abspath())
-#binaryReadsFile = path('Data\PhiXSequencingReads1000.bin').abspath()
 
 #analyseAlignment.plotTimeVsMatches(reads, decodedGenome, path('Output Test Files\AlignmentAnalysis.png').abspath())
 
