@@ -1,24 +1,26 @@
 #!/usr/bin/env python
 #This file includes functions for efficient parsing of a genome and sequencing reads.
 
+import huffmanCompression
+
 import gzip
 import bz2
 import io
  
 #To efficiently read the genome:
-def parseGenome(filename, output):
+def parseGenome(input, output):
     genome = '' 
-    outFile = open(output, 'w')
-    with open(filename, 'r') as file: #opening a file for reading
+    with open(input, 'r') as file: #opening a file for reading
     #with gzip.open(filename, 'r') as file:
         #with io.BufferedReader(gzipFile) as file:
         for line in file:
             if line and line[0] != '>': #ignore header line with genome information
                 l = line.rstrip().upper() #rstrip() removes any trailing whitespace from the ends of the string (trim off new line/tab/space)
                 genome += l #add each line of bases to the string      
-                outFile.write(l) #save encoded genome to binary file
-    outFile.close()
-    return genome
+    huffmanTree, huffmanCodes = huffmanCompression.treeCodeGeneration(genome)
+    print huffmanCodes
+    binaryGenome = huffmanCompression.encode(genome, output)
+    return huffmanTree, huffmanCodes, binaryGenome
 
 #To efficiently read the sequencing reads:        
 def parseReads(filename): #fastQ 

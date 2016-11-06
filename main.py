@@ -12,17 +12,10 @@ import pdb
 
 #pdb.set_trace()
 
-#textGenomeFile = path('Data\HumanGenome.txt').abspath()
-#genome = fileParsing.parseGenome(path('Data\HumanGenome.fa.gz').abspath(), textGenomeFile)
-textGenomeFile = path('Data\PhixGenome.txt').abspath() 
-genome = fileParsing.parseGenome(path('Data\PhixGenome.fa').abspath(), textGenomeFile)
-
-tree, codes = huffmanCompression.treeCodeGeneration(genome)
-print codes
-
 #binaryGenomeFile = path('Data\HumanGenome.bin').abspath()
+#tree, codes, binaryGenome = fileParsing.parseGenome(path('Data\HumanGenome.fa.gz').abspath(), binaryGenomeFile)
 binaryGenomeFile = path('Data\PhixGenome.bin').abspath() 
-huffmanCompression.encode(genome, binaryGenomeFile)
+tree, codes, binaryGenome = fileParsing.parseGenome(path('Data\PhixGenome.fa').abspath(), binaryGenomeFile)
 
 encodedGenome = huffmanCompression.readEncoding(binaryGenomeFile)
 
@@ -46,4 +39,4 @@ jpgFile = visualisation.visualisationJPG(genome, offsets, jpgFile)
 pngFile = path('Output Test Files\DataVisualisationTest.png').abspath()
 pngFile = visualisation.visualisationGD(genome, offsets, pngFile)
 """
-#visualisation.visualisationTkinter(genome, offsets, matches)
+#visualisation.visualisationTkinter(genome, offsets)
