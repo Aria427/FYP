@@ -12,10 +12,12 @@ import pdb
 
 #pdb.set_trace()
 
-#binaryGenomeFile = path('Data\HumanGenome.bin').abspath()
-#tree, codes, binaryGenome = fileParsing.parseGenome(path('Data\HumanGenome.fa.gz').abspath(), binaryGenomeFile)
-binaryGenomeFile = path('Data\PhixGenome.bin').abspath() 
-tree, codes, binaryGenome = fileParsing.parseGenome(path('Data\PhixGenome.fa').abspath(), binaryGenomeFile)
+#binaryGenomeFile = path('Output Data\HumanGenome.bin').abspath()
+#tree, codes = fileParsing.parseGenome(path('Data\HumanGenome.fa.gz').abspath(), binaryGenomeFile)
+binaryGenomeFile = path('Output Data\PhixGenome.bin').abspath() 
+tree, codes = fileParsing.parseGenome(path('Data\PhixGenome.fa').abspath(), binaryGenomeFile)
+
+#save tree to file so only need to parse genome once
 
 encodedGenome = huffmanCompression.readEncoding(binaryGenomeFile)
 

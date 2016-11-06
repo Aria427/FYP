@@ -19,9 +19,9 @@ def parseGenome(input, output):
                 genome += l #add each line of bases to the string      
     huffmanTree, huffmanCodes = huffmanCompression.treeCodeGeneration(genome)
     print huffmanCodes
-    binaryGenome = huffmanCompression.encode(genome, output)
-    return huffmanTree, huffmanCodes, binaryGenome
-
+    huffmanCompression.encode(genome, output)
+    return huffmanTree, huffmanCodes 
+    
 #To efficiently read the sequencing reads:        
 def parseReads(filename): #fastQ 
     readID, sequence, quality = '', '', ''
