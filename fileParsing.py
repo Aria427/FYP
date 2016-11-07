@@ -13,6 +13,7 @@ bases = {'A' : bitarray('00'),
 
 #To efficiently read the genome:
 def parseGenome(input, output):
+<<<<<<< HEAD
     #genome = ''
     binary = open(output, 'wb')
     with open(input, 'r') as file: 
@@ -29,6 +30,25 @@ def parseGenome(input, output):
     #ba.encode(bases, genome)
     #with open(output, 'wb') as b:
         #ba.tofile(b)   
+=======
+    genome = '' 
+    ba = bitarray()
+    with open(input, 'r') as file: #opening a file for reading
+    #with gzip.open(input, 'r') as file:
+        #with io.BufferedReader(gzipFile) as file:
+        for line in file:
+            if line and line[0] != '>': #ignore header line with genome information
+                l = line.rstrip().upper() #rstrip() removes any trailing whitespace from the ends of the string (trim off new line/tab/space)
+                genome += l #add each line of bases to the string  
+    ba.encode(bases, genome)
+    with open(output, 'wb') as b:
+        ba.tofile(b)
+    #huffmanTree, huffmanCodes = huffmanCompression.treeCodeGeneration(genome)
+    #print huffmanCodes
+    #huffmanCompression.encode(genome, output)
+    #return huffmanTree, huffmanCodes 
+    return ba    
+>>>>>>> 7fb4e2736fbbeb30c2a5d354644537189eeb75a4
     
 #To efficiently read the sequencing reads:        
 def parseReads(filename): #fastQ 
