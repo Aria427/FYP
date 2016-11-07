@@ -28,12 +28,11 @@ def parseGenome(input, output):
     ba.encode(bases, genome)
     with open(output, 'wb') as b:
         ba.tofile(b)
-        print ba
     #huffmanTree, huffmanCodes = huffmanCompression.treeCodeGeneration(genome)
     #print huffmanCodes
     #huffmanCompression.encode(genome, output)
     #return huffmanTree, huffmanCodes 
-    return ba
+    return ba    
     
 #To efficiently read the sequencing reads:        
 def parseReads(filename): #fastQ 
