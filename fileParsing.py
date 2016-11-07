@@ -1,30 +1,39 @@
 #!/usr/bin/env python
 #This file includes functions for efficient parsing of a genome and sequencing reads.
 
-import huffmanCompression
-
 import gzip
 import bz2
-import io
  
+from bitarray import bitarray
+
+bases = {'A' : bitarray('00'),
+         'C' : bitarray('01'),
+         'G' : bitarray('10'),
+         'T' : bitarray('11') }
+
 #To efficiently read the genome:
 def parseGenome(input, output):
-    genome = '' 
-    with open(input, 'r') as file: #opening a file for reading
-    #with gzip.open(filename, 'r') as file:
-        #with io.BufferedReader(gzipFile) as file:
+    #genome = ''
+    binary = open(output, 'wb')
+    with open(input, 'r') as file: 
+    #with gzip.open(input, 'r') as file:
         for line in file:
             if line and line[0] != '>': #ignore header line with genome information
-                l = line.rstrip().upper() #rstrip() removes any trailing whitespace from the ends of the string (trim off new line/tab/space)
-                genome += l #add each line of bases to the string      
-    huffmanTree, huffmanCodes = huffmanCompression.treeCodeGeneration(genome)
-    print huffmanCodes
-    huffmanCompression.encode(genome, output)
-    return huffmanTree, huffmanCodes 
+                l = line.rstrip().upper().replace('N', '') 
+                ba = bitarray()
+                ba.encode(bases, l)
+                ba.tofile(binary)
+                #genome += l
+    binary.close()
+    #ba = bitarray()
+    #ba.encode(bases, genome)
+    #with open(output, 'wb') as b:
+        #ba.tofile(b)   
     
 #To efficiently read the sequencing reads:        
 def parseReads(filename): #fastQ 
     readID, sequence, quality = '', '', ''
+    ba = bitarray()
     file = open(filename, 'r')
     #file = bz2.BZ2File(filename, 'r')
     while True: #runs until EOF
@@ -50,7 +59,9 @@ def parseReads(filename): #fastQ
                 sequenceLines.append(line.rstrip().replace(' ', '')) #no whitespace in sequence
                 line = file.readline()
             sequence = ''.join(sequenceLines) #merge lines to form sequence
+            ba.encode(bases, sequence)
             yield sequence
+            #yield ba #ValueError: symbol not in prefix code
         
         elif not quality:
             quality = []

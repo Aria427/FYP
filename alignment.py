@@ -21,8 +21,6 @@ def alignHamming(reads, genome):
     for read in nextReads: 
         nextReads = nextReads[:50] #prefix of read as all 100 bases have a smaller chance of matching
         nextReverseReads = reverseComplement(nextReads)
-        #encodedReads = huffmanCompression.encode(nextReads, output)
-        #encodedReverseReads = huffmanCompression.encode(nextReverseReads, output)
         matchOffsets = matching.naiveApproxHamming(nextReads, genome) #check if read matches in forward direction of genome
         matchOffsets.extend(matching.naiveApproxHamming(nextReverseReads, genome)) #add results of any matches in reverse complement of genome
         readsCount += 1
@@ -43,8 +41,6 @@ def alignEdit(reads, genome):
     for read in nextReads: 
         nextReads = nextReads[:50] #prefix of read as all 100 bases have a smaller chance of matching
         nextReverseReads = reverseComplement(nextReads)
-        #encodedReads = huffmanCompression.encode(nextReads, output)
-        #encodedReverseReads = huffmanCompression.encode(nextReverseReads, output)
         matchOffsets = matching.approxEdit(nextReads, genome) #check if read matches in forward direction of genome
         matchOffsets.extend(matching.approxEdit(nextReverseReads, genome)) #add results of any matches in reverse complement of genome
         readsCount += 1
@@ -65,8 +61,6 @@ def alignKmer(reads, genome):
     for read in nextReads: 
         nextReads = nextReads[:50] #prefix of read as all 100 bases have a smaller chance of matching
         nextReverseReads = reverseComplement(nextReads)
-        #encodedReads = huffmanCompression.encode(nextReads, output)
-        #encodedReverseReads = huffmanCompression.encode(nextReverseReads, output)
         index = matching.kmerIndex(genome, 10)
         matchOffsets = matching.queryKmerIndex(nextReads, genome, index) #check if read matches in forward direction of genome
         matchOffsets.extend(matching.queryKmerIndex(nextReverseReads, genome, index)) #add results of any matches in reverse complement of genome
@@ -88,8 +82,6 @@ def alignFM(reads, genome):#, output):
     for read in nextReads: 
         nextReads = nextReads[:50] #prefix of read as all 100 bases have a smaller chance of matching
         nextReverseReads = reverseComplement(nextReads)
-        #encodedReads = huffmanCompression.encode(nextReads, output)
-        #encodedReverseReads = huffmanCompression.encode(nextReverseReads, output)
         fm = matching.fmIndex(genome)
         matchOffsets = fm.occurrences(nextReads) #check if read matches in forward direction of genome
         matchOffsets.extend(fm.occurrences(nextReverseReads)) #add results of any matches in reverse complement of genome

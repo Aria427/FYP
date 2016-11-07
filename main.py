@@ -2,33 +2,33 @@
 #This file contains the main functionality of the program.
 
 import fileParsing
-import huffmanCompression
 import alignment
 import analyseAlignment
 import visualisation
 
 from path import path
+from bitarray import bitarray
 import pdb
 
 #pdb.set_trace()
 
 #binaryGenomeFile = path('Output Data\HumanGenome.bin').abspath()
-#tree, codes = fileParsing.parseGenome(path('Data\HumanGenome.fa.gz').abspath(), binaryGenomeFile)
+#fileParsing.parseGenome(path('Data\HumanGenome.fa.gz').abspath(), binaryGenomeFile)
 binaryGenomeFile = path('Output Data\PhixGenome.bin').abspath() 
-tree, codes = fileParsing.parseGenome(path('Data\PhixGenome.fa').abspath(), binaryGenomeFile)
+fileParsing.parseGenome(path('Data\PhixGenome.fa').abspath(), binaryGenomeFile)
 
-#save tree to file so only need to parse genome once
+ba = bitarray()
+with open(binaryGenomeFile, 'rb') as fh:
+    ba.fromfile(fh)
 
-encodedGenome = huffmanCompression.readEncoding(binaryGenomeFile)
-
-decodedGenome = huffmanCompression.decode(tree, encodedGenome)
+decodedGenome = ''.join(ba.decode(fileParsing.bases))  
 
 #reads = fileParsing.parseReads(path('Data\HumanSequencingReads.tsv.bz2').abspath())        
 reads = fileParsing.parseReads(path('Data\PhiXSequencingReads1000.fastq').abspath())
 
 #analyseAlignment.plotTimeVsMatches(reads, decodedGenome, path('Output Test Files\AlignmentAnalysis.png').abspath())
 
-matchesCount, totalCount, offsets = alignment.alignFM(reads, decodedGenome)
+matchesCount, totalCount, offsets = alignment.alignHamming(reads, decodedGenome)
 print "%d/%d reads matched the genome." % (matchesCount, totalCount) #The result is not 100% but this is to be expected due to sequencing errors. 
 
 """
