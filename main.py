@@ -14,19 +14,15 @@ import pdb
 #pdb.set_trace()
 
 #binaryGenomeFile = path('Output Data\HumanGenome.bin').abspath()
-#bitArray = fileParsing.parseGenome(path('Data\HumanGenome.fa.gz').abspath(), binaryGenomeFile)
+#ba = fileParsing.parseGenome(path('Data\HumanGenome.fa.gz').abspath(), binaryGenomeFile)
 binaryGenomeFile = path('Output Data\PhixGenome.bin').abspath() 
-#ba = fileParsing.parseGenome(path('Data\PhixGenome.fa').abspath(), binaryGenomeFile)
-
-#conversion tool
-#bitarray or array of int
+ba = fileParsing.parseGenome(path('Data\PhixGenome.fa').abspath(), binaryGenomeFile)
 
 ba = bitarray()
 with open(binaryGenomeFile, 'rb') as fh:
     ba.fromfile(fh)
 
-decodedGenome = ''.join(ba.decode(fileParsing.bases))
-print decodedGenome   
+decodedGenome = ''.join(ba.decode(fileParsing.bases))  
 
 #encodedGenome = huffmanCompression.readEncoding(binaryGenomeFile)
 #decodedGenome = huffmanCompression.decode(tree, encodedGenome)
@@ -36,7 +32,7 @@ reads = fileParsing.parseReads(path('Data\PhiXSequencingReads1000.fastq').abspat
 
 #analyseAlignment.plotTimeVsMatches(reads, decodedGenome, path('Output Test Files\AlignmentAnalysis.png').abspath())
 
-matchesCount, totalCount, offsets = alignment.alignFM(reads, decodedGenome)
+matchesCount, totalCount, offsets = alignment.alignHamming(reads, decodedGenome)
 print "%d/%d reads matched the genome." % (matchesCount, totalCount) #The result is not 100% but this is to be expected due to sequencing errors. 
 
 """
