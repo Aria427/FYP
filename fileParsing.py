@@ -7,6 +7,13 @@ import gzip
 import bz2
 import io
  
+from bitarray import bitarray
+
+bases = {'A' : bitarray('00'),
+         'C' : bitarray('01'),
+         'G' : bitarray('10'),
+         'T' : bitarray('11') }
+
 #To efficiently read the genome:
 def parseGenome(input, output):
     genome = '' 
@@ -17,10 +24,16 @@ def parseGenome(input, output):
             if line and line[0] != '>': #ignore header line with genome information
                 l = line.rstrip().upper() #rstrip() removes any trailing whitespace from the ends of the string (trim off new line/tab/space)
                 genome += l #add each line of bases to the string      
-    huffmanTree, huffmanCodes = huffmanCompression.treeCodeGeneration(genome)
-    print huffmanCodes
-    huffmanCompression.encode(genome, output)
-    return huffmanTree, huffmanCodes 
+    ba = bitarray()
+    ba.encode(bases, genome)
+    with open(output, 'wb') as b:
+        ba.tofile(b)
+        print ba
+    #huffmanTree, huffmanCodes = huffmanCompression.treeCodeGeneration(genome)
+    #print huffmanCodes
+    #huffmanCompression.encode(genome, output)
+    #return huffmanTree, huffmanCodes 
+    return ba
     
 #To efficiently read the sequencing reads:        
 def parseReads(filename): #fastQ 
