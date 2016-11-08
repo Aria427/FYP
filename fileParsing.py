@@ -1,9 +1,12 @@
 #!/usr/bin/env python
 #This file includes functions for efficient parsing of a genome and sequencing reads.
 
+import huffmanCompression
+
 import gzip
 import bz2
  
+import struct
 from bitarray import bitarray
 
 bases = {'A' : bitarray('00'),
@@ -11,44 +14,39 @@ bases = {'A' : bitarray('00'),
          'G' : bitarray('10'),
          'T' : bitarray('11') }
 
+binaryBases = {'A' : '00',
+               'C' : '01',
+               'G' : '10',
+               'T' : '11'}
+
+def baseToBinary(line):
+    for base, binary in binaryBases.items():
+        line = line.replace(base, binary)
+    return line             
+         
 #To efficiently read the genome:
 def parseGenome(input, output):
-<<<<<<< HEAD
-    #genome = ''
+    genome = ''
     binary = open(output, 'wb')
     with open(input, 'r') as file: 
     #with gzip.open(input, 'r') as file:
         for line in file:
             if line and line[0] != '>': #ignore header line with genome information
                 l = line.rstrip().upper().replace('N', '') 
+                #l = baseToBinary(l)
                 ba = bitarray()
                 ba.encode(bases, l)
                 ba.tofile(binary)
-                #genome += l
+                #genome += l 
     binary.close()
     #ba = bitarray()
     #ba.encode(bases, genome)
-    #with open(output, 'wb') as b:
-        #ba.tofile(b)   
-=======
-    genome = '' 
-    ba = bitarray()
-    with open(input, 'r') as file: #opening a file for reading
-    #with gzip.open(input, 'r') as file:
-        #with io.BufferedReader(gzipFile) as file:
-        for line in file:
-            if line and line[0] != '>': #ignore header line with genome information
-                l = line.rstrip().upper() #rstrip() removes any trailing whitespace from the ends of the string (trim off new line/tab/space)
-                genome += l #add each line of bases to the string  
-    ba.encode(bases, genome)
-    with open(output, 'wb') as b:
-        ba.tofile(b)
-    #huffmanTree, huffmanCodes = huffmanCompression.treeCodeGeneration(genome)
-    #print huffmanCodes
-    #huffmanCompression.encode(genome, output)
-    #return huffmanTree, huffmanCodes 
-    return ba    
->>>>>>> 7fb4e2736fbbeb30c2a5d354644537189eeb75a4
+    #with open(output, 'wb') as b: #smaller size 6->2KB
+        #ba.tofile(b)  
+    #x = int(genome, 2)
+    #with open('seq.bin', 'wb') as f:
+        #f.write(struct.pack('i', x)) #integer out of range for 'i' format code  
+    
     
 #To efficiently read the sequencing reads:        
 def parseReads(filename): #fastQ 

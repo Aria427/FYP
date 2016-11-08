@@ -13,27 +13,15 @@ import pdb
 #pdb.set_trace()
 
 #binaryGenomeFile = path('Output Data\HumanGenome.bin').abspath()
-<<<<<<< HEAD
 #fileParsing.parseGenome(path('Data\HumanGenome.fa.gz').abspath(), binaryGenomeFile)
 binaryGenomeFile = path('Output Data\PhixGenome.bin').abspath() 
 fileParsing.parseGenome(path('Data\PhixGenome.fa').abspath(), binaryGenomeFile)
-=======
-#ba = fileParsing.parseGenome(path('Data\HumanGenome.fa.gz').abspath(), binaryGenomeFile)
-binaryGenomeFile = path('Output Data\PhixGenome.bin').abspath() 
-ba = fileParsing.parseGenome(path('Data\PhixGenome.fa').abspath(), binaryGenomeFile)
->>>>>>> 7fb4e2736fbbeb30c2a5d354644537189eeb75a4
 
 ba = bitarray()
 with open(binaryGenomeFile, 'rb') as fh:
     ba.fromfile(fh)
 
 decodedGenome = ''.join(ba.decode(fileParsing.bases))  
-<<<<<<< HEAD
-=======
-
-#encodedGenome = huffmanCompression.readEncoding(binaryGenomeFile)
-#decodedGenome = huffmanCompression.decode(tree, encodedGenome)
->>>>>>> 7fb4e2736fbbeb30c2a5d354644537189eeb75a4
 
 #reads = fileParsing.parseReads(path('Data\HumanSequencingReads.tsv.bz2').abspath())        
 reads = fileParsing.parseReads(path('Data\PhiXSequencingReads1000.fastq').abspath())

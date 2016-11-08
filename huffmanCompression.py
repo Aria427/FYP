@@ -66,8 +66,9 @@ def encode(sequence, output):
     outFile = open(output, 'wb')
     for base in sequence: 
         encoding += codes[base]
-        #outFile.write(struct.pack('=s', codes[base]))
-        outFile.write(codes[base])
+        x = int(codes[base], 2)
+        outFile.write(struct.pack('i', x)) #returns larger size 6->22KB
+        #outFile.write(struct.pack('=s', codes[base])) #returns same size
     outFile.close()
     return encoding
  
