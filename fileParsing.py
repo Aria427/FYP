@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 #This file includes functions for efficient parsing of a genome and sequencing reads.
 
-import huffmanCompression
-
 import gzip
 import bz2
  
@@ -26,7 +24,7 @@ def baseToBinary(line):
          
 #To efficiently read the genome:
 def parseGenome(input, output):
-    genome = ''
+    #genome = ''
     binary = open(output, 'wb')
     with open(input, 'r') as file: 
     #with gzip.open(input, 'r') as file:
@@ -37,16 +35,10 @@ def parseGenome(input, output):
                 ba = bitarray()
                 ba.encode(bases, l)
                 ba.tofile(binary)
+                #x = int(l, 2)
+                #binary.write(struct.pack('i', x))
                 #genome += l 
-    binary.close()
-    #ba = bitarray()
-    #ba.encode(bases, genome)
-    #with open(output, 'wb') as b: #smaller size 6->2KB
-        #ba.tofile(b)  
-    #x = int(genome, 2)
-    #with open('seq.bin', 'wb') as f:
-        #f.write(struct.pack('i', x)) #integer out of range for 'i' format code  
-    
+    binary.close()    
     
 #To efficiently read the sequencing reads:        
 def parseReads(filename): #fastQ 

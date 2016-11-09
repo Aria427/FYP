@@ -8,6 +8,8 @@ import visualisation
 
 from path import path
 from bitarray import bitarray
+import struct
+import numpy 
 import pdb
 
 #pdb.set_trace()
@@ -17,19 +19,51 @@ import pdb
 binaryGenomeFile = path('Output Data\PhixGenome.bin').abspath() 
 fileParsing.parseGenome(path('Data\PhixGenome.fa').abspath(), binaryGenomeFile)
 
-ba = bitarray()
-with open(binaryGenomeFile, 'rb') as fh:
-    ba.fromfile(fh)
+#each line in genome file has length = 70
 
-decodedGenome = ''.join(ba.decode(fileParsing.bases))  
+with open('Output Test Files\longlong.bin', 'wb') as f:
+    l = fileParsing.baseToBinary('GAGTTTTATCGCTTCCATGACGCAGAAGTTA')
+    print len(l)
+    x = int(l, 2)
+    print x.bit_length()
+    f.write(struct.pack('q', x)) #long long
+
+with open('Output Test Files\int.bin', 'wb') as f:
+    l = fileParsing.baseToBinary('GAGTTTTATCGCTTC')
+    print len(l)
+    x = int(l, 2)
+    print x.bit_length()
+    f.write(struct.pack('i', x)) #int
+
+with open('Output Test Files\int.bin' , 'rb') as f:
+    byte = f.read(1) #read first byte
+    data = byte
+    while byte != '':
+        byte = f.read(1) #read the rest byte by byte
+        data += byte    
+    #for i in range(0, len(data), 1):
+        #byte = struct.unpack('i', data[i:i+4])[0] #[0] to remove unnecessary syntax  
+        #print byte
+
+with open('Output Test Files\int.bin' , 'rb') as f:
+    #a = numpy.fromfile(f, dtype=numpy.int)
+    #print a
+    a = struct.unpack('i', f.read(4))
+    print a
+       
+#ba = bitarray()
+#with open(binaryGenomeFile, 'rb') as fh:
+    #ba.fromfile(fh)
+
+#decodedGenome = ''.join(ba.decode(fileParsing.bases))  
 
 #reads = fileParsing.parseReads(path('Data\HumanSequencingReads.tsv.bz2').abspath())        
-reads = fileParsing.parseReads(path('Data\PhiXSequencingReads1000.fastq').abspath())
+#reads = fileParsing.parseReads(path('Data\PhiXSequencingReads1000.fastq').abspath())
 
 #analyseAlignment.plotTimeVsMatches(reads, decodedGenome, path('Output Test Files\AlignmentAnalysis.png').abspath())
 
-matchesCount, totalCount, offsets = alignment.alignHamming(reads, decodedGenome)
-print "%d/%d reads matched the genome." % (matchesCount, totalCount) #The result is not 100% but this is to be expected due to sequencing errors. 
+#matchesCount, totalCount, offsets = alignment.alignHamming(reads, decodedGenome)
+#print "%d/%d reads matched the genome." % (matchesCount, totalCount) #The result is not 100% but this is to be expected due to sequencing errors. 
 
 """
 textFile = path('Output Test Files\DataVisualisationTest.txt').abspath()
