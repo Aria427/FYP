@@ -7,38 +7,74 @@ import bz2
 import struct
 from bitarray import bitarray
 
-bases = {'A' : bitarray('00'),
-         'C' : bitarray('01'),
-         'G' : bitarray('10'),
-         'T' : bitarray('11') }
-
 binaryBases = {'A' : '00',
                'C' : '01',
                'G' : '10',
-               'T' : '11'}
+               'T' : '11' }
 
+bases = {'A' : bitarray('00'),
+         'C' : bitarray('01'),
+         'G' : bitarray('10'),
+         'T' : bitarray('11') }               
+               
 def baseToBinary(line):
     for base, binary in binaryBases.items():
         line = line.replace(base, binary)
     return line             
-         
-#To efficiently read the genome:
-def parseGenome(input, output):
-    #genome = ''
+ 
+#To read the genome into an integer:
+def parseGenomeInt(input, output):
+    binary = open(output, 'wb')
+    with open(input, 'r') as file: 
+    #with gzip.open(input, 'r') as file:
+        for line in file:
+            if line and line[0] != '>': #ignore header line with genome information
+                l = line[0:15].rstrip().upper().replace('N', '') #15 = allowed amount for int 
+                l = baseToBinary(l)
+                x = int(l, 2)
+                binary.write(struct.pack('i', x))
+                l = line[15:30].rstrip().upper().replace('N', '') #15->29, 15 included 
+                l = baseToBinary(l)
+                x = int(l, 2)
+                binary.write(struct.pack('i', x))
+                l = line[30:45].rstrip().upper().replace('N', '') #30->44, 30 included
+                l = baseToBinary(l)
+                x = int(l, 2)
+                binary.write(struct.pack('i', x))
+                l = line[45:60].rstrip().upper().replace('N', '') #45->59, 40 included
+                l = baseToBinary(l)
+                x = int(l, 2)
+                binary.write(struct.pack('i', x))
+                #each line has length = 70
+                l = line[60:71].rstrip().upper().replace('N', '') #60->70, 60 included
+                l = baseToBinary(l)
+                x = int(l, 2)
+                binary.write(struct.pack('i', x))
+    binary.close()  
+        
+#To read the genome into a bitarray:
+def parseGenomeBitArray(input, output): #file is compressed by ~200,000KB
     binary = open(output, 'wb')
     with open(input, 'r') as file: 
     #with gzip.open(input, 'r') as file:
         for line in file:
             if line and line[0] != '>': #ignore header line with genome information
                 l = line.rstrip().upper().replace('N', '') 
-                #l = baseToBinary(l)
                 ba = bitarray()
                 ba.encode(bases, l)
                 ba.tofile(binary)
-                #x = int(l, 2)
-                #binary.write(struct.pack('i', x))
-                #genome += l 
     binary.close()    
+  
+#To read the genome into a string:
+def parseGenomeString(input, output): #file is not compressed
+    genome = ''
+    with open(input, 'r') as file: 
+    #with gzip.open(input, 'r') as file:
+        for line in file:
+            if line and line[0] != '>': #ignore header line with genome information
+                l = line.rstrip().upper().replace('N', '') 
+                genome += l 
+    return genome
     
 #To efficiently read the sequencing reads:        
 def parseReads(filename): #fastQ 
