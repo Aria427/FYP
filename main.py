@@ -26,30 +26,37 @@ with open('Output Test Files\longlong.bin', 'wb') as f:
     print len(l)
     x = int(l, 2)
     print x.bit_length()
-    f.write(struct.pack('q', x)) #long long
+    f.write(struct.pack('q', x)) #long long - 8 bytes
 
 with open('Output Test Files\int.bin', 'wb') as f:
     l = fileParsing.baseToBinary('GAGTTTTATCGCTTC')
     print len(l)
     x = int(l, 2)
     print x.bit_length()
-    f.write(struct.pack('i', x)) #int
+    f.write(struct.pack('i', x)) #int - 4 bytes
 
 with open('Output Test Files\int.bin' , 'rb') as f:
-    byte = f.read(1) #read first byte
-    data = byte
-    while byte != '':
-        byte = f.read(1) #read the rest byte by byte
-        data += byte    
-    #for i in range(0, len(data), 1):
-        #byte = struct.unpack('i', data[i:i+4])[0] #[0] to remove unnecessary syntax  
-        #print byte
+    fileBytes = f.read(4) #read first 4 bytes 
+    data = fileBytes
+    while fileBytes != '':
+        fileBytes = f.read(4) #read the rest 4 bytes by 4 bytes
+        data += fileBytes    
+    for i in range(0, len(data), 4):
+        fileBytes = struct.unpack('i', data[i:i+4])[0] #[0] to remove unnecessary syntax  
+        print fileBytes
 
+with open('Output Test Files\int.bin', 'rb') as f:
+    for chunk in iter(lambda: f.read(4), ''):
+        fileBytes = struct.unpack('i', chunk)[0]        
+        print fileBytes
+        
 with open('Output Test Files\int.bin' , 'rb') as f:
-    #a = numpy.fromfile(f, dtype=numpy.int)
-    #print a
-    a = struct.unpack('i', f.read(4))
-    print a
+    fileBytes = struct.unpack('i', f.read(4))[0]
+    print fileBytes
+    
+with open('Output Test Files\int.bin', 'rb') as f:
+    fileBytes = numpy.fromfile(f, dtype=numpy.int)
+    print fileBytes
        
 #ba = bitarray()
 #with open(binaryGenomeFile, 'rb') as fh:
