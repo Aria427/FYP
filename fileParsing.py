@@ -28,10 +28,11 @@ def baseToBinary(line):
 #To read the genome into an integer:
 def parseGenomeInt(input, output):
     binary = open(output, 'wb')
-    with open(input, 'r') as file: 
-    #with gzip.open(input, 'r') as file:
+    #with open(input, 'r') as file: 
+    with gzip.open(input, 'r') as file:
         for line in file:
             if line and line[0] != '>': #ignore header line with genome information
+                #print len(line.rstrip()) 
                 l = line[0:15].rstrip().upper() #15 = allowed amount for int 
                 l = baseToBinary(l)
                 byte = int(l, 2) #create byte from base 2 integer
@@ -48,11 +49,15 @@ def parseGenomeInt(input, output):
                 l = baseToBinary(l)
                 byte = int(l, 2)
                 binary.write(struct.pack('i', byte))
-                #each line has length = 70
+                #last line in Phix has length = 67 and Human has length = 41
+                #each line has length = 70 in PhiX and length = 50 in Human
                 l = line[60:71].rstrip().upper() #60->70, 60 included
                 l = baseToBinary(l)
                 byte = int(l, 2)
                 binary.write(struct.pack('i', byte))
+                #pass
+        #last = line
+        #print len(last)
     binary.close()  
         
 #To read the genome into a bitarray:

@@ -15,10 +15,10 @@ import pdb
 
 #pdb.set_trace()
 
-#binaryGenomeFile = path('Output Data\HumanGenome.bin').abspath()
-#fileParsing.parseGenomeInt(path('Data\HumanGenome.fa.gz').abspath(), binaryGenomeFile)
-binaryGenomeFile = path('Output Data\PhixGenome.bin').abspath() 
-fileParsing.parseGenomeInt(path('Data\PhixGenome.fa').abspath(), binaryGenomeFile)
+binaryGenomeFile = path('Output Data\HumanGenome.bin').abspath()
+fileParsing.parseGenomeInt(path('Data\HumanGenome.fa.gz').abspath(), binaryGenomeFile)
+#binaryGenomeFile = path('Output Data\PhixGenome.bin').abspath() 
+#fileParsing.parseGenomeInt(path('Data\PhixGenome.fa').abspath(), binaryGenomeFile)
 
 
 print("Native byteorder: ", sys.byteorder)
