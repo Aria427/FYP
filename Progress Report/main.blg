@@ -1,0 +1,61 @@
+This is BibTeX, Version 0.99d (TeX Live 2016/W32TeX)
+Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
+The top-level auxiliary file: main.aux
+The style file: alpha.bst
+Database file #1: references.bib
+Warning--to sort, need author or key in think1
+Warning--to sort, need author or key in think2
+Warning--to sort, need author or key in think3
+Warning--empty institution in omics
+Warning--empty institution in compression
+Warning--empty institution in refcompression
+Warning--empty institution in popgen
+Warning--empty institution in bwtransform
+Warning--empty institution in cgreads
+Warning--empty institution in companalys
+Warning--empty institution in compalign
+Warning--empty author in think2
+Warning--empty author in think3
+Warning--empty author in think1
+You've used 15 entries,
+            2543 wiz_defined-function locations,
+            639 strings with 6855 characters,
+and the built_in function-call counts, 5044 in all, are:
+= -- 483
+> -- 270
+< -- 4
++ -- 98
+- -- 94
+* -- 395
+:= -- 881
+add.period$ -- 42
+call.type$ -- 15
+change.case$ -- 101
+chr.to.int$ -- 13
+cite$ -- 32
+duplicate$ -- 194
+empty$ -- 332
+format.name$ -- 108
+if$ -- 978
+int.to.chr$ -- 3
+int.to.str$ -- 0
+missing$ -- 11
+newline$ -- 76
+num.names$ -- 36
+pop$ -- 87
+preamble$ -- 1
+purify$ -- 110
+quote$ -- 0
+skip$ -- 148
+stack$ -- 0
+substring$ -- 155
+swap$ -- 7
+text.length$ -- 4
+text.prefix$ -- 4
+top$ -- 0
+type$ -- 104
+warning$ -- 14
+while$ -- 35
+width$ -- 19
+write$ -- 190
+(There were 14 warnings)
