@@ -4,13 +4,16 @@
 import gzip
 import bz2
  
+import random
 import struct
 from bitarray import bitarray
 
 binaryBases = {'A' : '00',
                'C' : '01',
                'G' : '10',
-               'T' : '11' }
+               'T' : '11',
+               'N' : random.choice(['00', '01', '10', '11']) #as N => no confidence
+               }
 
 bases = {'A' : bitarray('00'),
          'C' : bitarray('01'),
@@ -29,24 +32,24 @@ def parseGenomeInt(input, output):
     #with gzip.open(input, 'r') as file:
         for line in file:
             if line and line[0] != '>': #ignore header line with genome information
-                l = line[0:15].rstrip().upper().replace('N', '') #15 = allowed amount for int 
+                l = line[0:15].rstrip().upper() #15 = allowed amount for int 
                 l = baseToBinary(l)
                 byte = int(l, 2) #create byte from base 2 integer
                 binary.write(struct.pack('i', byte))
-                l = line[15:30].rstrip().upper().replace('N', '') #15->29, 15 included 
+                l = line[15:30].rstrip().upper() #15->29, 15 included 
                 l = baseToBinary(l)
                 byte = int(l, 2)
                 binary.write(struct.pack('i', byte))
-                l = line[30:45].rstrip().upper().replace('N', '') #30->44, 30 included
+                l = line[30:45].rstrip().upper() #30->44, 30 included
                 l = baseToBinary(l)
                 byte = int(l, 2)
                 binary.write(struct.pack('i', byte))
-                l = line[45:60].rstrip().upper().replace('N', '') #45->59, 40 included
+                l = line[45:60].rstrip().upper() #45->59, 40 included
                 l = baseToBinary(l)
                 byte = int(l, 2)
                 binary.write(struct.pack('i', byte))
                 #each line has length = 70
-                l = line[60:71].rstrip().upper().replace('N', '') #60->70, 60 included
+                l = line[60:71].rstrip().upper() #60->70, 60 included
                 l = baseToBinary(l)
                 byte = int(l, 2)
                 binary.write(struct.pack('i', byte))

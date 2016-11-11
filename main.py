@@ -10,6 +10,7 @@ from path import path
 from bitarray import bitarray
 import struct
 import numpy 
+import sys
 import pdb
 
 #pdb.set_trace()
@@ -19,6 +20,8 @@ import pdb
 binaryGenomeFile = path('Output Data\PhixGenome.bin').abspath() 
 fileParsing.parseGenomeInt(path('Data\PhixGenome.fa').abspath(), binaryGenomeFile)
 
+
+print("Native byteorder: ", sys.byteorder)
 
 with open('Output Test Files\longlong.bin', 'wb') as f:
     sequence = 'GAGTTTTATCGCTTCCATGACGCAGAAGTTA'
@@ -57,13 +60,17 @@ with open('Output Test Files\int.bin' , 'rb') as f:
         print 'Integer value of byte: %s' % i
         bin = '{0:b}'.format(i) 
         print 'Binary decoding of byte: %s' % bin
+        hex = '{0:x}'.format(i) 
+        print 'Hexadecimal decoding of byte: %s' % hex
+        oct = '{0:o}'.format(i) 
+        print 'Octal decoding of byte: %s' % oct
     for i in range(0, len(data), 4):
         fileBytes = struct.unpack('i', data[i:i+4])[0] #[0] to remove unnecessary syntax  
         print 'Unpacked data range: %s' % fileBytes
 
 with open('Output Test Files\int.bin' , 'rb') as f:
     fileBytes = struct.unpack('i', f.read(4))[0]
-    print 'Unpacked data direct: %s' % fileBytes       
+    print 'Unpacked data direct: %s' % fileBytes 
         
 with open('Output Test Files\int.bin', 'rb') as f:
     for chunk in iter(lambda: f.read(4), ''):
