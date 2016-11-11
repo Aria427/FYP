@@ -21,7 +21,7 @@ def baseToBinary(line):
     for base, binary in binaryBases.items():
         line = line.replace(base, binary)
     return line             
- 
+
 #To read the genome into an integer:
 def parseGenomeInt(input, output):
     binary = open(output, 'wb')
@@ -31,25 +31,25 @@ def parseGenomeInt(input, output):
             if line and line[0] != '>': #ignore header line with genome information
                 l = line[0:15].rstrip().upper().replace('N', '') #15 = allowed amount for int 
                 l = baseToBinary(l)
-                x = int(l, 2)
-                binary.write(struct.pack('i', x))
+                byte = int(l, 2) #create byte from base 2 integer
+                binary.write(struct.pack('i', byte))
                 l = line[15:30].rstrip().upper().replace('N', '') #15->29, 15 included 
                 l = baseToBinary(l)
-                x = int(l, 2)
-                binary.write(struct.pack('i', x))
+                byte = int(l, 2)
+                binary.write(struct.pack('i', byte))
                 l = line[30:45].rstrip().upper().replace('N', '') #30->44, 30 included
                 l = baseToBinary(l)
-                x = int(l, 2)
-                binary.write(struct.pack('i', x))
+                byte = int(l, 2)
+                binary.write(struct.pack('i', byte))
                 l = line[45:60].rstrip().upper().replace('N', '') #45->59, 40 included
                 l = baseToBinary(l)
-                x = int(l, 2)
-                binary.write(struct.pack('i', x))
+                byte = int(l, 2)
+                binary.write(struct.pack('i', byte))
                 #each line has length = 70
                 l = line[60:71].rstrip().upper().replace('N', '') #60->70, 60 included
                 l = baseToBinary(l)
-                x = int(l, 2)
-                binary.write(struct.pack('i', x))
+                byte = int(l, 2)
+                binary.write(struct.pack('i', byte))
     binary.close()  
         
 #To read the genome into a bitarray:

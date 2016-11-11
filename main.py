@@ -15,7 +15,7 @@ import pdb
 #pdb.set_trace()
 
 #binaryGenomeFile = path('Output Data\HumanGenome.bin').abspath()
-#fileParsing.parseGenome(path('Data\HumanGenome.fa.gz').abspath(), binaryGenomeFile)
+#fileParsing.parseGenomeInt(path('Data\HumanGenome.fa.gz').abspath(), binaryGenomeFile)
 binaryGenomeFile = path('Output Data\PhixGenome.bin').abspath() 
 fileParsing.parseGenomeInt(path('Data\PhixGenome.fa').abspath(), binaryGenomeFile)
 
@@ -26,7 +26,8 @@ with open('Output Test Files\longlong.bin', 'wb') as f:
     binary = fileParsing.baseToBinary(sequence)
     print 'Length of binary converted long long sequence: %d' % len(binary)
     x = int(binary, 2)
-    print 'Bit length of binary converted long long sequence: %d' % x.bit_length()
+    print 'Byte sequence: %d' % x
+    print 'Bit length of byte sequence: %d' % x.bit_length()
     f.write(struct.pack('q', x)) #long long - 8 bytes
 
 with open('Output Test Files\int.bin', 'wb') as f:
@@ -35,7 +36,8 @@ with open('Output Test Files\int.bin', 'wb') as f:
     binary = fileParsing.baseToBinary(sequence)
     print 'Length of binary converted int sequence: %d' % len(binary)
     x = int(binary, 2)
-    print 'Bit length of binary converted int sequence: %d' % x.bit_length()
+    print 'Byte sequence: %d' % x
+    print 'Bit length of byte sequence: %d' % x.bit_length()
     f.write(struct.pack('i', x)) #int - 4 bytes
 
 print '\n'
@@ -50,6 +52,11 @@ with open('Output Test Files\int.bin' , 'rb') as f:
     print 'Representation of encoded data: %s' % repr(data)
     print 'Hexadecimal format of encoded data: %s' % data.encode('hex')
     print 'Integer format of encoded data: %s' % ' '.join([str(ord(a)) for a in data])
+    for d in data:
+        i = ord(d) #integer value of byte
+        print 'Integer value of byte: %s' % i
+        bin = '{0:b}'.format(i) 
+        print 'Binary decoding of byte: %s' % bin
     for i in range(0, len(data), 4):
         fileBytes = struct.unpack('i', data[i:i+4])[0] #[0] to remove unnecessary syntax  
         print 'Unpacked data range: %s' % fileBytes
