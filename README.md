@@ -13,4 +13,6 @@ This is a repository for my final year project entitled 'The Malta Human Genome 
 
 'Paper Summaries': includes summaries of the read papers.
 
+'Progress Report': includes the progress report which is a delivarable required by my faculty.
+
 'Research Notebook': includes details of all meetings and the research accomplished.  
