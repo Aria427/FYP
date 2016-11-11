@@ -3,5 +3,4 @@
 \contentsline {section}{\numberline {3}Aims and Objectives}{2}
 \contentsline {section}{\numberline {4}Methods and Techniques Planned}{2}
 \contentsline {section}{\numberline {5}Evaluation Stategy}{2}
-\contentsline {section}{\numberline {6}Expected Deliverables}{3}
-\contentsline {section}{\numberline {7}References}{3}
+\contentsline {section}{\numberline {6}Expected Deliverables}{2}

@@ -90,7 +90,7 @@
  \singlespacing\begin{center}\begin{minipage}{0.9\textwidth}%
     \small \textbf{Abstract:}}{%
       \end{minipage}\end{center}\onehalfspacing\normalsize%
-    }
+}
 
 \AtBeginDocument{
   %\newsavebox{\CSAItitletempbox} \sbox{\CSAItitletempbox}{\parbox{\textwidth - 1.5in}{
