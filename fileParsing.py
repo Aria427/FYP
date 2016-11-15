@@ -12,7 +12,6 @@ binaryBases = {'A' : '00',
                'C' : '01',
                'G' : '10',
                'T' : '11',
-               #'N' : random.choice(['00', '01', '10', '11']) #as N => no confidence
                }
 
 bases = {'A' : bitarray('00'),
@@ -26,7 +25,7 @@ def baseToBinary(line):
     return line             
 
 #To read the genome into an integer:
-def parseGenomeInt(input, output): #file is compressed by ~10,000KB
+def parseGenomeInt(input, output): #file is compressed by ~70%
     binary = open(output, 'wb')
     #with open(input, 'r') as file: 
     with gzip.open(input, 'r') as file:
@@ -60,7 +59,7 @@ def parseGenomeInt(input, output): #file is compressed by ~10,000KB
                     pass
                     #print "Invalid string found in byte: %s" % format(byte) 
                 
-                l = line[45:60].rstrip().upper().replace('N', '')  #45->59, 40 included
+                l = line[45:51].rstrip().upper().replace('N', '')  #45->59, 40 included
                 l = baseToBinary(l)
                 try:
                     byte = int(l, 2) #create byte from base 2 integer
@@ -77,6 +76,7 @@ def parseGenomeInt(input, output): #file is compressed by ~10,000KB
                     #byte = int(l, 2) #create byte from base 2 integer
                     #binary.write(struct.pack('i', byte))
                 #except ValueError:
+                    #pass
                     #print "Invalid string found in byte: %s" % format(byte) 
             
                 #pass
@@ -85,13 +85,13 @@ def parseGenomeInt(input, output): #file is compressed by ~10,000KB
     binary.close()  
         
 #To read the genome into a bitarray:
-def parseGenomeBitArray(input, output): #file is compressed by ~200,000KB
+def parseGenomeBitArray(input, output): #file is compressed by ~75%
     binary = open(output, 'wb')
-    with open(input, 'r') as file: 
-    #with gzip.open(input, 'r') as file:
+    #with open(input, 'r') as file: 
+    with gzip.open(input, 'r') as file:
         for line in file:
             if line and line[0] != '>': #ignore header line with genome information
-                l = line.rstrip().upper().replace('N', '') 
+                l = line.rstrip().upper().replace('N', '') #N => no confidence
                 ba = bitarray()
                 ba.encode(bases, l)
                 ba.tofile(binary)
