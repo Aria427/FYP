@@ -20,10 +20,15 @@ import pdb
 binaryGenomeFile = path('Output Data\PhixGenome.bin').abspath() 
 fileParsing.parseGenomeInt(path('Data\PhixGenome.fa').abspath(), binaryGenomeFile)
 
-            
-
-#decodedGenome = ''.join(ba.decode(fileParsing.bases))  
-
+with open(binaryGenomeFile , 'rb') as f:
+    bin = ''
+    for chunk in iter(lambda: f.read(4), ''):
+        fileBytes = struct.unpack('i', chunk)[0]        
+        print 'Unpacked data lambda: %s' % fileBytes
+        bin += '{0:b}'.format(fileBytes) 
+    print 'Binary decoding of data: %s' % bin          
+ 
+    
 #reads = fileParsing.parseReads(path('Data\HumanSequencingReads.tsv.bz2').abspath())        
 #reads = fileParsing.parseReads(path('Data\PhiXSequencingReads1000.fastq').abspath())
 

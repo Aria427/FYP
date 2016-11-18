@@ -82,6 +82,9 @@ with open('Output Test Files\int.bin', 'rb') as f:
 ba = bitarray()
 with open('Output Test Files\Bitarray.bin', 'rb') as f:
     ba.fromfile(f)
-    print ba
+    print 'Bit array read from file: %s' % ba 
+    print 'Length of bit array: %d' % len(ba) #bit array appends 0s to file until either 8bit, 16bit, 32bit, ...
+    decode = ''.join(ba.decode(fileParsing.bases)) 
+    print 'Decoded sequence from bit array: %s' % decode
   
     
