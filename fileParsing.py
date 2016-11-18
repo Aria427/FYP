@@ -27,8 +27,8 @@ def baseToBinary(line):
 #To read the genome into an integer:
 def parseGenomeInt(input, output): #file is compressed by ~70%
     binary = open(output, 'wb')
-    #with open(input, 'r') as file: 
-    with gzip.open(input, 'r') as file:
+    with open(input, 'r') as file: 
+    #with gzip.open(input, 'r') as file:
         for line in file:
             if line and line[0] != '>': #ignore header line with genome information
                 #print len(line.rstrip()) 
@@ -87,8 +87,8 @@ def parseGenomeInt(input, output): #file is compressed by ~70%
 #To read the genome into a bitarray:
 def parseGenomeBitArray(input, output): #file is compressed by ~75%
     binary = open(output, 'wb')
-    #with open(input, 'r') as file: 
-    with gzip.open(input, 'r') as file:
+    with open(input, 'r') as file: 
+    #with gzip.open(input, 'r') as file:
         for line in file:
             if line and line[0] != '>': #ignore header line with genome information
                 l = line.rstrip().upper().replace('N', '') #N => no confidence
