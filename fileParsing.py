@@ -136,8 +136,9 @@ def parseReads(filename): #fastQ
                 sequenceLines.append(line.rstrip().replace(' ', '')) #no whitespace in sequence
                 line = file.readline()
             sequence = ''.join(sequenceLines) #merge lines to form sequence
-            sequence = baseToBinary(sequence)
+            sequence = baseToBinary(sequence).replace('N', '')
             bytes = int(sequence, 2)
+            #bytes = format(bytes, 'b')
             yield bytes
         
         elif not quality:

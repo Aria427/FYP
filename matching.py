@@ -22,7 +22,7 @@ def naiveExact(pattern, text):
 
 #Hamming distance = minimum no of substitutions required to change one string into another.
 #The following is also an online naive algorithm but for approximate matching using the Hamming distance:
-def naiveApproxHamming(pattern, text, maxHammingDist=1):
+def naiveApproxHamming(pattern, text, maxHammingDist=2):
     matchOffsets = []
     for i in xrange(len(text) - len(pattern) + 1):
         mismatches = 0
@@ -35,6 +35,30 @@ def naiveApproxHamming(pattern, text, maxHammingDist=1):
             matchOffsets.append(i)
     return matchOffsets
 
+def hamming_distance(x, y):
+    dist = 0
+    val = x ^ y
+
+    #count number of bits set
+    while (val != 0): #bit is set
+        dist += 1 
+        val &= val - 1 #clear bit
+
+    return dist #no of differing bits
+    
+def naiveApproxHammingInt(pattern, text, maxHammingDist=1):
+    mismatches = 0 #hamming distance - no of differing bits
+    matches = 0
+    conjuction = pattern ^ text
+    while (conjuction != 0): #bit is set
+        mismatches += 1
+        conjuction &= conjuction - 1 #clear bit
+        if mismatches > maxHammingDist:
+            break
+    if mismatches <= maxHammingDist:
+        matches += 1
+    return matches
+    
 #Edit distance = minimum no of edits (substitutions, insertions, deletions) required to change one string into another.
 def editDistance(pattern, text):
     D = [] #distance matrix
