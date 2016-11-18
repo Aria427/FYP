@@ -34,6 +34,7 @@ with open('Output Test Files\Bitarray.bin', 'wb') as f:
     sequence = 'GAGTTTTATCGCTTC'
     ba = bitarray()
     ba.encode(fileParsing.bases, sequence)
+    print 'Length of bit array encoded sequence: %d' % len(ba)
     ba.tofile(f)
 
 print '\n'
@@ -64,11 +65,15 @@ with open('Output Test Files\int.bin' , 'rb') as f:
 with open('Output Test Files\int.bin' , 'rb') as f:
     fileBytes = struct.unpack('i', f.read(4))[0]
     print 'Unpacked data direct: %s' % fileBytes 
+    bin = '{0:b}'.format(fileBytes) 
+    print 'Binary decoding of data: %s' % bin
         
 with open('Output Test Files\int.bin', 'rb') as f:
     for chunk in iter(lambda: f.read(4), ''):
         fileBytes = struct.unpack('i', chunk)[0]        
         print 'Unpacked data lambda: %s' % fileBytes
+        bin = '{0:b}'.format(fileBytes) 
+        print 'Binary decoding of data: %s' % bin
     
 with open('Output Test Files\int.bin', 'rb') as f:
     fileBytes = numpy.fromfile(f, dtype=numpy.int)
@@ -78,4 +83,5 @@ ba = bitarray()
 with open('Output Test Files\Bitarray.bin', 'rb') as f:
     ba.fromfile(f)
     print ba
+  
     
