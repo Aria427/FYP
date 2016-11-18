@@ -1,13 +1,12 @@
 #!/usr/bin/env python
-#This file includes functions for aligning reads with the reference genome by using the different matching algorithms. 
+#This file includes functions for aligning reads with the reference genome by using the different matching algorithms using strings. 
     
 import matching
 
 #The genome is double stranded and so the reads can come from one strand or the other.    
 #To match both the read and the reverse complement of the read to the genome: 
 def reverseComplement(read):
-    #complement = {'A':'T', 'T':'A', 'C':'G', 'G':'C', 'N':'N'} #each base is associated with its complementary base
-    complement = {'0':'1', '1':'0'}
+    complement = {'A':'T', 'T':'A', 'C':'G', 'G':'C', 'N':'N'} #each base is associated with its complementary base
     reverseRead = ''
     for base in read:
         reverseRead = complement[base] + reverseRead #complement added to beginning in order to reverse the read from end to start

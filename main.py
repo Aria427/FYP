@@ -2,8 +2,7 @@
 #This file contains the main functionality of the program.
 
 import fileParsing
-import matching
-import alignment
+import matchingInt
 import alignmentInt
 import analyseAlignment
 import visualisation
@@ -23,24 +22,24 @@ binaryGenomeFile = path('Output Data\PhixGenome.bin').abspath()
 #fileParsing.parseGenomeInt(path('Data\PhixGenome.fa').abspath(), binaryGenomeFile)
 
 with open(binaryGenomeFile , 'rb') as f:
-    decodedGenome = 0
-    #decodedGenome = ''
+    #decodedGenome = 0
+    decodedGenome = ''
     for chunk in iter(lambda: f.read(4), ''):
         fileBytes = struct.unpack('i', chunk)[0]     
         #print 'Unpacked data lambda: %s' % fileBytes
-        decodedGenome += fileBytes #MUST CONCATENATE NOT ADD
+        decodedGenome += str(fileBytes) #concatenate integers read
         #decodedGenome += '{0:b}'.format(fileBytes) 
         #decodedGenome += format(fileBytes, 'b')
-    print 'Integer decoding of data: %d' % decodedGenome            
+    decodedGenome = int(decodedGenome)
+    #print 'Integer decoding of data: %d' % decodedGenome    
     
 #reads = fileParsing.parseReads(path('Data\HumanSequencingReads.tsv.bz2').abspath())        
 reads = fileParsing.parseReads(path('Data\PhiXSequencingReads1000.fastq').abspath())
-print next(reads)
 
 #analyseAlignment.plotTimeVsMatches(reads, decodedGenome, path('Output Test Files\AlignmentAnalysis.png').abspath())
 
-#matchesCount, totalCount = alignmentInt.alignHamming(reads, decodedGenome)
-#print '%d/%d reads matched the genome.' % (matchesCount, totalCount) #The result is not 100% but this is to be expected due to sequencing errors. 
+matchesCount, totalCount = alignmentInt.alignHamming(reads, decodedGenome)
+print '%d/%d reads matched the genome.' % (matchesCount, totalCount) #The result is not 100% but this is to be expected due to sequencing errors. 
 
 """
 textFile = path('Output Test Files\DataVisualisationTest.txt').abspath()
