@@ -35,49 +35,49 @@ def parseGenomeInt(input, output): #file is compressed by ~70%
                 l = line[0:15].rstrip().upper().replace('N', '')  #15 = allowed amount for int 
                 l = baseToBinary(l)
                 try:
-                    byte = int(l, 2) #create byte from base 2 integer
-                    binary.write(struct.pack('i', byte))
+                    bytes = int(l, 2) #create 4 bytes from base 2 integer
+                    binary.write(struct.pack('i', bytes))
                 except ValueError:
                     pass
-                    #print "Invalid string found in byte: %s" % format(byte)  
+                    #print "Invalid string found in bytes: %s" % format(bytes)  
                 
                 l = line[15:30].rstrip().upper().replace('N', '')  #15->29, 15 included 
                 l = baseToBinary(l)
                 try:
-                    byte = int(l, 2) #create byte from base 2 integer
-                    binary.write(struct.pack('i', byte))
+                    bytes = int(l, 2) #create 4 bytes from base 2 integer
+                    binary.write(struct.pack('i', bytes))
                 except ValueError:
                     pass
-                    #print "Invalid string found in byte: %s" % format(byte) 
+                    #print "Invalid string found in bytes: %s" % format(bytes) 
                 
                 l = line[30:45].rstrip().upper().replace('N', '')  #30->44, 30 included
                 l = baseToBinary(l)
                 try:
-                    byte = int(l, 2) #create byte from base 2 integer
-                    binary.write(struct.pack('i', byte))
+                    bytes = int(l, 2) #create 4 bytes from base 2 integer
+                    binary.write(struct.pack('i', bytes))
                 except ValueError:
                     pass
-                    #print "Invalid string found in byte: %s" % format(byte) 
+                    #print "Invalid string found in bytes: %s" % format(bytes) 
                 
                 l = line[45:51].rstrip().upper().replace('N', '')  #45->59, 40 included
                 l = baseToBinary(l)
                 try:
-                    byte = int(l, 2) #create byte from base 2 integer
-                    binary.write(struct.pack('i', byte))
+                    bytes = int(l, 2) #create 4 bytes from base 2 integer
+                    binary.write(struct.pack('i', bytes))
                 except ValueError:
                     pass
-                    #print "Invalid string found in byte: %s" % format(byte) 
+                    #print "Invalid string found in bytes: %s" % format(bytes) 
                 
                 #last line in Phix has length = 67 and Human has length = 41
                 #each line has length = 70 in PhiX and length = 50 in Human
                 #l = line[60:71].rstrip().upper() #60->70, 60 included
                 #l = baseToBinary(l)
                 #try:
-                    #byte = int(l, 2) #create byte from base 2 integer
-                    #binary.write(struct.pack('i', byte))
+                    #bytes = int(l, 2) #create 4 bytes from base 2 integer
+                    #binary.write(struct.pack('i', bytes))
                 #except ValueError:
                     #pass
-                    #print "Invalid string found in byte: %s" % format(byte) 
+                    #print "Invalid string found in bytes: %s" % format(bytes) 
             
                 #pass
         #last = line
@@ -111,7 +111,6 @@ def parseGenomeString(input, output): #file is not compressed
 #To efficiently read the sequencing reads:        
 def parseReads(filename): #fastQ 
     readID, sequence, quality = '', '', ''
-    ba = bitarray()
     file = open(filename, 'r')
     #file = bz2.BZ2File(filename, 'r')
     while True: #runs until EOF
@@ -137,9 +136,9 @@ def parseReads(filename): #fastQ
                 sequenceLines.append(line.rstrip().replace(' ', '')) #no whitespace in sequence
                 line = file.readline()
             sequence = ''.join(sequenceLines) #merge lines to form sequence
-            ba.encode(bases, sequence)
-            yield sequence
-            #yield ba #ValueError: symbol not in prefix code
+            sequence = baseToBinary(sequence)
+            bytes = int(sequence, 2)
+            yield bytes
         
         elif not quality:
             quality = []

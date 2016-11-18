@@ -21,16 +21,16 @@ binaryGenomeFile = path('Output Data\PhixGenome.bin').abspath()
 fileParsing.parseGenomeInt(path('Data\PhixGenome.fa').abspath(), binaryGenomeFile)
 
 with open(binaryGenomeFile , 'rb') as f:
-    bin = ''
+    decodedGenome = ''
     for chunk in iter(lambda: f.read(4), ''):
         fileBytes = struct.unpack('i', chunk)[0]        
         print 'Unpacked data lambda: %s' % fileBytes
-        bin += '{0:b}'.format(fileBytes) 
-    print 'Binary decoding of data: %s' % bin          
- 
-    
+        decodedGenome += '{0:b}'.format(fileBytes) 
+    print 'Binary decoding of data: %s' % decodedGenome          
+   
 #reads = fileParsing.parseReads(path('Data\HumanSequencingReads.tsv.bz2').abspath())        
-#reads = fileParsing.parseReads(path('Data\PhiXSequencingReads1000.fastq').abspath())
+reads = fileParsing.parseReads(path('Data\PhiXSequencingReads1000.fastq').abspath())
+print '{0:b}'.format(next(reads))
 
 #analyseAlignment.plotTimeVsMatches(reads, decodedGenome, path('Output Test Files\AlignmentAnalysis.png').abspath())
 
