@@ -24,6 +24,11 @@ def baseToBinary(line):
         line = line.replace(base, binary)
     return line             
 
+def binaryToBase(line):
+    for base, binary in binaryBases.items():
+        line = line.replace(binary, base)
+    return line      
+    
 #To read the genome into an integer:
 def parseGenomeInt(input, output): #file is compressed by ~70%
     binary = open(output, 'wb')

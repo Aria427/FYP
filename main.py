@@ -38,7 +38,7 @@ reads = fileParsing.parseReads(path('Data\PhiXSequencingReads1000.fastq').abspat
 
 #analyseAlignment.plotTimeVsMatches(reads, decodedGenome, path('Output Test Files\AlignmentAnalysis.png').abspath())
 
-matchesCount, totalCount, offsets = alignmentInt.alignKmer(reads, decodedGenome)
+matchesCount, totalCount, offsets = alignmentInt.alignFM(reads, decodedGenome)
 print '%d/%d reads matched the genome.' % (matchesCount, totalCount) #The result is not 100% but this is to be expected due to sequencing errors. 
 
 """

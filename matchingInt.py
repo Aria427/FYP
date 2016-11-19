@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 #This file includes functions for exact & approximate matching of reads with the reference genome using integers.
 
+import fileParsing
+
 import bisect
 import sys
 import numpy
@@ -72,7 +74,7 @@ def queryKmerIndex(pattern, text, index):
 #The following generates the suffix array for some text:
 def suffixArray(text):
     #sorted() => simple but inefficient
-    satups = sorted([(text & i, i) for i in xrange(0, bitCount(text))]) #sorted list of all rotations
+    satups = sorted([(text[i:], i) for i in xrange(0, len(text))]) #sorted list of all rotations
     return map(lambda x: x[1], satups) #extract offsets from last column
 
 #The following generates the Burrows-Wheeler Transform of some text using the suffix array:
@@ -81,13 +83,13 @@ def bwtSa(text, sa=None):
     dollarRow = None
     if sa is None:
         sa = suffixArray(text)
-    for si in sa: #take characters just to the left of sorted suffixes
+    for si in sa: #take integers just to the left of sorted suffixes
         if si == 0:
             dollarRow = len(bwt)
-            #bwt.append('$')
+            bwt.append('$') 
         else:
-            bwt.append(text & si-1)
-    return (bwt, dollarRow) #string-ized version of list bw   
+            bwt.append(text[si-1])
+    return (''.join(bwt), dollarRow) #integer-ized version of list bw   
 
 #The following is an object which evaluates the rank checkpoints and the rank queries for FM indexing:
 #evaluation = O(1) time; checkpoints = O(m) space where m = length of T
@@ -121,11 +123,13 @@ class fmCheckpoints(object):
 #queries = O(n) where n = query length; search of k occurrences = O(n+k)
 class fmIndex():        
     def __init__(self, text, spacing=4, ssaIval=4):
-        #if text[-1] != '$':
-            #text += '$' #add $ if not present
+        text = format(text, 'b')
+        text = fileParsing.binaryToBase(text)
+        if (text[-1]) != '$':
+            text += '$' #add $ if not present
         sa = suffixArray(text)
         self.sa = sa
-        self.bwt, self.dollarRow = bwtSa(text, sa) #BWT string and $ offset
+        self.bwt, self.dollarRow = bwtSa(text, sa) #BWT string and 2 offset
         self.slen = len(self.bwt)
         self.checkpts = fmCheckpoints(self.bwt, spacing) #rank checkpoints
         self.first = {}
@@ -136,7 +140,7 @@ class fmIndex():
         for char, count in sorted(occurrences.iteritems()):
             self.first[char] = occCount #compact view of first column
             occCount += count
-    
+ 
     def count(self, char): #occurrences of characters < char
         if char not in self.first: #char does not occur in T (rare)
             for c in sorted(self.first.iterkeys()):
@@ -144,13 +148,13 @@ class fmIndex():
                     return self.first[c]
             return self.first[c]
         else:
-            return self.first[char]
-    
+            return self.first[char]        
+            
     def interval(self, prefix): #range of BWT rows
         l, r = 0, self.slen - 1 #closed (inclusive) interval
-        for i in xrange(bitCount(prefix)-1, -1, -1): #from right to left
-            l = self.checkpts.rank(self.bwt, prefix & i, l-1) + self.count(prefix & i)
-            r = self.checkpts.rank(self.bwt, prefix & i, r) + self.count(prefix & i) - 1
+        for i in xrange(len(prefix)-1, -1, -1): #from right to left
+            l = self.checkpts.rank(self.bwt, prefix[i], l-1) + self.count(prefix[i])
+            r = self.checkpts.rank(self.bwt, prefix[i], r) + self.count(prefix[i]) - 1
             if r < l:
                 break
         return l, r+1
@@ -160,11 +164,14 @@ class fmIndex():
         def stepLeft(row): #respective of character in BWT row, move left
             char = self.bwt[row]
             return self.checkpts.rank(self.bwt, char, row-1) + self.count(char)
+        print '3'
         while row not in self.sa:
             row = stepLeft(row)
             steps += 1
         return self.sa[row] + steps
     
     def occurrences(self, pattern): #offsets of all occurrences of P
+        pattern = format(pattern, 'b')
+        pattern = fileParsing.binaryToBase(pattern)
         l, r = self.interval(pattern)
         return [ self.resolve(x) for x in xrange(l, r) ]       
