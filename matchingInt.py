@@ -5,101 +5,48 @@ import bisect
 import sys
 import numpy
 
-def bitLength(integer):
+def bitLength(integer): #length of 1s and 0s
     length = 0
     while integer:
-        integer >>= 1
         length += 1
+        integer >>= 1
     return length
 
+def bitCount(integer): #length of 1s only
+    count = 0
+    while integer:
+        count += (integer & 1)
+        integer >>= 1
+    return count 
+
+def ffs(x): #find first set = index of LSB (set => 1) from 0
+    return (x&-x).bit_length()-1
+    
 #Hamming distance = minimum no of substitutions required to change one string into another.
 #The following is also an online naive algorithm but for approximate matching using the Hamming distance:
 def naiveApproxHamming(pattern, text, maxHammingDist=1):
-    matches = 0
+    matchOffsets = []
     mismatches = 0 #hamming distance - no of differing bits
     conjuction = pattern ^ text #bitwise exclusive or
     #Hamming weight (no of non-zero bits) found using Wegner algorithm
-    while (conjuction != 0): #bit is set
+    while (conjuction != 0): #bit is set => mismatch
         mismatches += 1
+        index = ffs(conjuction)
         conjuction &= conjuction - 1 #clear lowest order non-zero bit
         if mismatches > maxHammingDist:
+            mismatches = 0
             break
-    matches += 1
-    return matches
-    
-#Edit distance = minimum no of edits (substitutions, insertions, deletions) required to change one string into another.
-def editDistance(pattern, text):
-    D = [] #distance matrix
-    for i in xrange(len(pattern) + 1): #initialize D as x+1 by y+1 array of 0s 
-        D.append([0] * (len(text) + 1))
-    for i in xrange(len(pattern) + 1): #first row of ascending integers
-        D[i][0] = i
-    for i in xrange(len(text) + 1): #first column of ascending integers
-        D[0][i] = i
-    for i in xrange(1, len(pattern) + 1): #fill in rest of matrix row by row
-        for j in xrange(1, len(text) + 1):
-            distHorizontal = D[i][j-1] + 1
-            distVertical = D[i-1][j] + 1
-            if pattern[i-1] == text[j-1]:
-                distDiagonal = D[i-1][j-1]
-            else:
-                distDiagonal = D[i-1][j-1] + 1
-            D[i][j] = min(distHorizontal, distVertical, distDiagonal)
-    
-    return D[-1][-1] #edit distance = bottom-right
-
-#Edit distance backtrace
-def editDistanceTrace(pattern, text, D):
-    i = len(pattern)
-    j = len(text) 
-    while i > 0:
-        distDiagonal, distVertical, distHorizontal = sys.maxint, sys.maxint, sys.maxint
-        delta = None
-        if i > 0 and j > 0:
-            delta = 0 if pattern[i-1] == text[j-1] else 1
-            distDiagonal = D[i-1, j-1] + delta
-        if i > 0:
-            distVertical = D[i-1, j] + 1
-        if j > 0:
-            distHorizontal = D[i, j-1] + 1
-        if distDiagonal <= distVertical and distDiagonal <= distHorizontal: #diagonal wins
-            i -= 1; j -= 1
-        elif distVertical <= distHorizontal: #vertical win - insertion in P wrt T
-            i -= 1
-        else: #horizontal wins
-            j -= 1
-    return j #offset of leftmost character of T in match
-
-#The following is an approximate matching algorithm using the backtrace of the edit distance:
-def approxEdit(pattern, text): #if multiple alignments tie for best, report leftmost
-    matchOffsets = []
-    distanceJ = None
-    distance = len(pattern) + len(text) 
-    D = numpy.zeros((len(pattern)+1, len(text)+1), dtype=int)
-    D[1:, 0] = xrange(1, len(pattern)+1) #first row = 0s, first column = usual
-    for i in xrange(1, len(pattern)+1):
-        for j in xrange(1, len(text)+1):
-            delta = 1 if pattern[i-1] != text[j-1] else 0
-            distHorizontal = D[i][j-1] + 1
-            distVertical = D[i-1][j] + 1
-            distDiagonal = D[i-1][j-1] + delta
-            D[i, j] = min(distHorizontal, distVertical, distDiagonal) 
-    for j in xrange(0, len(text)+1):
-        if D[len(pattern), j] < distance:
-            distanceJ = j
-            distance = D[len(pattern), j] #minimum edit distance in last row
-    matchOffset = editDistanceTrace(pattern, text[:distanceJ], D) #backtrace stops as it gets to first row
-    matchOffsets.append(matchOffset) 
-    return matchOffsets  
+        if mismatches <= maxHammingDist:
+            matchOffsets.append(index)
+    return matchOffsets
     
 #The following is an index object which is applied for k-mer indexing:    
 class kmerIndex(object):
     def __init__(self, text, k): #initialise index from all k-mer length substrings - preprocesses string text
         self.k = k  #k-mer length
         self.index = []
-        for i in xrange(bitLength(text) - k + 1): #for each k-mer 
-            self.index.append((text, i)) #add (k-mer, offset) tuple
-            text >>= i+k
+        for i in xrange(bitCount(text) - k + 1): #for each k-mer 
+            self.index.append((text & i+k, i)) #add (k-mer, offset) tuple
         self.index.sort()  #sort in ascending order according to k-mer
     
     def query(self, pattern): #returns no of index hits for first k-mer of P
@@ -118,15 +65,14 @@ def queryKmerIndex(pattern, text, index):
     k = index.k #length of k
     matchOffsets = []
     for i in index.query(pattern): #returns a list of possible places where P could start (where 1st k bases of P match 1st k bases of T)
-        #if pattern[k:] == text[i+k:i+len(pattern)]:  #verify rest of P matches
-        if (pattern ^ text == 0): #verify rest of P matches
+        if ((pattern & k) == (text & i+k)):# == 0): #verify rest of P matches
             matchOffsets.append(i)
     return matchOffsets
 
 #The following generates the suffix array for some text:
 def suffixArray(text):
     #sorted() => simple but inefficient
-    satups = sorted([(text[i:], i) for i in xrange(0, len(text))]) #sorted list of all rotations
+    satups = sorted([(text & i, i) for i in xrange(0, bitCount(text))]) #sorted list of all rotations
     return map(lambda x: x[1], satups) #extract offsets from last column
 
 #The following generates the Burrows-Wheeler Transform of some text using the suffix array:
@@ -138,10 +84,10 @@ def bwtSa(text, sa=None):
     for si in sa: #take characters just to the left of sorted suffixes
         if si == 0:
             dollarRow = len(bwt)
-            bwt.append('$')
+            #bwt.append('$')
         else:
-            bwt.append(text[si-1])
-    return (''.join(bwt), dollarRow) #string-ized version of list bw   
+            bwt.append(text & si-1)
+    return (bwt, dollarRow) #string-ized version of list bw   
 
 #The following is an object which evaluates the rank checkpoints and the rank queries for FM indexing:
 #evaluation = O(1) time; checkpoints = O(m) space where m = length of T
@@ -175,8 +121,8 @@ class fmCheckpoints(object):
 #queries = O(n) where n = query length; search of k occurrences = O(n+k)
 class fmIndex():        
     def __init__(self, text, spacing=4, ssaIval=4):
-        if text[-1] != '$':
-            text += '$' #add $ if not present
+        #if text[-1] != '$':
+            #text += '$' #add $ if not present
         sa = suffixArray(text)
         self.sa = sa
         self.bwt, self.dollarRow = bwtSa(text, sa) #BWT string and $ offset
@@ -202,9 +148,9 @@ class fmIndex():
     
     def interval(self, prefix): #range of BWT rows
         l, r = 0, self.slen - 1 #closed (inclusive) interval
-        for i in xrange(len(prefix)-1, -1, -1): #from right to left
-            l = self.checkpts.rank(self.bwt, prefix[i], l-1) + self.count(prefix[i])
-            r = self.checkpts.rank(self.bwt, prefix[i], r) + self.count(prefix[i]) - 1
+        for i in xrange(bitCount(prefix)-1, -1, -1): #from right to left
+            l = self.checkpts.rank(self.bwt, prefix & i, l-1) + self.count(prefix & i)
+            r = self.checkpts.rank(self.bwt, prefix & i, r) + self.count(prefix & i) - 1
             if r < l:
                 break
         return l, r+1
