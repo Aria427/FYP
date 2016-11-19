@@ -10,6 +10,7 @@ import visualisation
 from path import path
 from bitarray import bitarray
 import struct
+import time
 import numpy 
 import sys
 import pdb
@@ -25,7 +26,7 @@ with open(binaryGenomeFile , 'rb') as f:
     #decodedGenome = 0
     decodedGenome = ''
     for chunk in iter(lambda: f.read(4), ''):
-        fileBytes = struct.unpack('i', chunk)[0]     
+        fileBytes = struct.unpack('=i', chunk)[0]     
         #print 'Unpacked data lambda: %s' % fileBytes
         decodedGenome += str(fileBytes) #concatenate integers read
         #decodedGenome += '{0:b}'.format(fileBytes) 
@@ -38,8 +39,11 @@ reads = fileParsing.parseReads(path('Data\PhiXSequencingReads1000.fastq').abspat
 
 #analyseAlignment.plotTimeVsMatches(reads, decodedGenome, path('Output Test Files\AlignmentAnalysis.png').abspath())
 
-matchesCount, totalCount, offsets = alignmentInt.alignFM(reads, decodedGenome)
+start = time.time()
+matchesCount, totalCount, offsets = alignmentInt.alignHamming(reads, decodedGenome)
 print '%d/%d reads matched the genome.' % (matchesCount, totalCount) #The result is not 100% but this is to be expected due to sequencing errors. 
+end = time.time()
+print end-start
 
 """
 textFile = path('Output Test Files\DataVisualisationTest.txt').abspath()

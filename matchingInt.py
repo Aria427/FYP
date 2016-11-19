@@ -41,7 +41,8 @@ def naiveApproxHamming(pattern, text, maxHammingDist=1):
         if mismatches <= maxHammingDist:
             matchOffsets.append(index)
     return matchOffsets
-    
+
+#This might not be possible as k-mer indexing was constructed for strings.    
 #The following is an index object which is applied for k-mer indexing:    
 class kmerIndex(object):
     def __init__(self, text, k): #initialise index from all k-mer length substrings - preprocesses string text
@@ -91,6 +92,7 @@ def bwtSa(text, sa=None):
             bwt.append(text[si-1])
     return (''.join(bwt), dollarRow) #integer-ized version of list bw   
 
+#This might not be possible as FM indexing, suffix arrays and BWT were constructed for strings.
 #The following is an object which evaluates the rank checkpoints and the rank queries for FM indexing:
 #evaluation = O(1) time; checkpoints = O(m) space where m = length of T
 class fmCheckpoints(object): 

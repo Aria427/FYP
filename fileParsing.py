@@ -41,7 +41,7 @@ def parseGenomeInt(input, output): #file is compressed by ~70%
                 l = baseToBinary(l)
                 try:
                     bytes = int(l, 2) #create 4 bytes from base 2 integer
-                    binary.write(struct.pack('i', bytes))
+                    binary.write(struct.pack('=i', bytes))
                 except ValueError:
                     pass
                     #print "Invalid string found in bytes: %s" % format(bytes)  
@@ -50,7 +50,7 @@ def parseGenomeInt(input, output): #file is compressed by ~70%
                 l = baseToBinary(l)
                 try:
                     bytes = int(l, 2) #create 4 bytes from base 2 integer
-                    binary.write(struct.pack('i', bytes))
+                    binary.write(struct.pack('=i', bytes))
                 except ValueError:
                     pass
                     #print "Invalid string found in bytes: %s" % format(bytes) 
@@ -59,7 +59,7 @@ def parseGenomeInt(input, output): #file is compressed by ~70%
                 l = baseToBinary(l)
                 try:
                     bytes = int(l, 2) #create 4 bytes from base 2 integer
-                    binary.write(struct.pack('i', bytes))
+                    binary.write(struct.pack('=i', bytes))
                 except ValueError:
                     pass
                     #print "Invalid string found in bytes: %s" % format(bytes) 
@@ -68,7 +68,7 @@ def parseGenomeInt(input, output): #file is compressed by ~70%
                 l = baseToBinary(l)
                 try:
                     bytes = int(l, 2) #create 4 bytes from base 2 integer
-                    binary.write(struct.pack('i', bytes))
+                    binary.write(struct.pack('=i', bytes))
                 except ValueError:
                     pass
                     #print "Invalid string found in bytes: %s" % format(bytes) 
