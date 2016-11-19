@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #This file includes functions for aligning reads with the reference genome by using the different matching algorithms using strings. 
     
-import matching
+import matchingString
 
 #The genome is double stranded and so the reads can come from one strand or the other.    
 #To match both the read and the reverse complement of the read to the genome: 
@@ -21,8 +21,8 @@ def alignHamming(reads, genome):
     for read in nextReads: 
         nextReads = nextReads[:50] #prefix of read as all 100 bases have a smaller chance of matching
         nextReverseReads = reverseComplement(nextReads)
-        matchOffsets = matching.naiveApproxHamming(nextReads, genome) #check if read matches in forward direction of genome
-        matchOffsets.extend(matching.naiveApproxHamming(nextReverseReads, genome)) #add results of any matches in reverse complement of genome
+        matchOffsets = matchingString.naiveApproxHamming(nextReads, genome) #check if read matches in forward direction of genome
+        matchOffsets.extend(matchingString.naiveApproxHamming(nextReverseReads, genome)) #add results of any matches in reverse complement of genome
         readsCount += 1 
         if (readsCount % 50) == 0:
             print "*"
@@ -41,8 +41,8 @@ def alignEdit(reads, genome):
     for read in nextReads: 
         nextReads = nextReads[:50] #prefix of read as all 100 bases have a smaller chance of matching
         nextReverseReads = reverseComplement(nextReads)
-        matchOffsets = matching.approxEdit(nextReads, genome) #check if read matches in forward direction of genome
-        matchOffsets.extend(matching.approxEdit(nextReverseReads, genome)) #add results of any matches in reverse complement of genome
+        matchOffsets = matchingString.approxEdit(nextReads, genome) #check if read matches in forward direction of genome
+        matchOffsets.extend(matchingString.approxEdit(nextReverseReads, genome)) #add results of any matches in reverse complement of genome
         readsCount += 1
         if (readsCount % 50) == 0:
             print "*"
@@ -61,9 +61,9 @@ def alignKmer(reads, genome):
     for read in nextReads: 
         nextReads = nextReads[:50] #prefix of read as all 100 bases have a smaller chance of matching
         nextReverseReads = reverseComplement(nextReads)
-        index = matching.kmerIndex(genome, 10)
-        matchOffsets = matching.queryKmerIndex(nextReads, genome, index) #check if read matches in forward direction of genome
-        matchOffsets.extend(matching.queryKmerIndex(nextReverseReads, genome, index)) #add results of any matches in reverse complement of genome
+        index = matchingString.kmerIndex(genome, 10)
+        matchOffsets = matchingString.queryKmerIndex(nextReads, genome, index) #check if read matches in forward direction of genome
+        matchOffsets.extend(matchingString.queryKmerIndex(nextReverseReads, genome, index)) #add results of any matches in reverse complement of genome
         readsCount += 1
         if (readsCount % 50) == 0:
             print "*"
@@ -82,7 +82,7 @@ def alignFM(reads, genome):#, output):
     for read in nextReads: 
         nextReads = nextReads[:50] #prefix of read as all 100 bases have a smaller chance of matching
         nextReverseReads = reverseComplement(nextReads)
-        fm = matching.fmIndex(genome)
+        fm = matchingString.fmIndex(genome)
         matchOffsets = fm.occurrences(nextReads) #check if read matches in forward direction of genome
         matchOffsets.extend(fm.occurrences(nextReverseReads)) #add results of any matches in reverse complement of genome
         readsCount += 1

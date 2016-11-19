@@ -5,11 +5,18 @@ import bisect
 import sys
 import numpy
 
+def bitLength(integer):
+    length = 0
+    while integer:
+        integer >>= 1
+        length += 1
+    return length
+
 #Hamming distance = minimum no of substitutions required to change one string into another.
 #The following is also an online naive algorithm but for approximate matching using the Hamming distance:
 def naiveApproxHamming(pattern, text, maxHammingDist=1):
-    mismatches = 0 #hamming distance - no of differing bits
     matches = 0
+    mismatches = 0 #hamming distance - no of differing bits
     conjuction = pattern ^ text #bitwise exclusive or
     #Hamming weight (no of non-zero bits) found using Wegner algorithm
     while (conjuction != 0): #bit is set
@@ -17,7 +24,7 @@ def naiveApproxHamming(pattern, text, maxHammingDist=1):
         conjuction &= conjuction - 1 #clear lowest order non-zero bit
         if mismatches > maxHammingDist:
             break
-        matches += 1
+    matches += 1
     return matches
     
 #Edit distance = minimum no of edits (substitutions, insertions, deletions) required to change one string into another.
@@ -90,12 +97,13 @@ class kmerIndex(object):
     def __init__(self, text, k): #initialise index from all k-mer length substrings - preprocesses string text
         self.k = k  #k-mer length
         self.index = []
-        for i in xrange(len(text) - k + 1): #for each k-mer 
-            self.index.append((text[i:i+k], i)) #add (k-mer, offset) tuple
+        for i in xrange(bitLength(text) - k + 1): #for each k-mer 
+            self.index.append((text, i)) #add (k-mer, offset) tuple
+            text >>= i+k
         self.index.sort()  #sort in ascending order according to k-mer
     
     def query(self, pattern): #returns no of index hits for first k-mer of P
-        kmer = pattern[:self.k]  #query with first k-mer
+        kmer = pattern >> self.k  #query with first k-mer
         i = bisect.bisect_left(self.index, (kmer, -1)) #binary search for 1st position in list where k-mer occurs
         indexHits = [] #all indices in T where the first k bases of P match
         while i < len(self.index): #collect matching index entries
@@ -110,7 +118,8 @@ def queryKmerIndex(pattern, text, index):
     k = index.k #length of k
     matchOffsets = []
     for i in index.query(pattern): #returns a list of possible places where P could start (where 1st k bases of P match 1st k bases of T)
-        if pattern[k:] == text[i+k:i+len(pattern)]:  #verify rest of P matches
+        #if pattern[k:] == text[i+k:i+len(pattern)]:  #verify rest of P matches
+        if (pattern ^ text == 0): #verify rest of P matches
             matchOffsets.append(i)
     return matchOffsets
 
@@ -213,5 +222,3 @@ class fmIndex():
     def occurrences(self, pattern): #offsets of all occurrences of P
         l, r = self.interval(pattern)
         return [ self.resolve(x) for x in xrange(l, r) ]       
-
-

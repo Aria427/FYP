@@ -34,8 +34,27 @@ def alignHamming(reads, genome):
     
   
 #This aligns using the k-mer indexing method:
-#def alignKmer(reads, genome):
-    
+def alignKmer(reads, genome):
+    readsMatched = 0
+    readsCount = 0
+    readsOffsets = []
+    nextReads = next(reads)
+    while nextReads: 
+        #nextReverseReads = reverseComplement(nextReads)
+        index = matchingInt.kmerIndex(genome, 10)
+        matchOffsets = matchingInt.queryKmerIndex(nextReads, genome, index) #check if read matches in forward direction of genome
+        #add results of any matches in reverse complement of genome
+        readsCount += 1
+        if (readsCount % 50) == 0:
+            print "*"
+        if len(list(matchOffsets)) > 0: #match - read aligned in at least one place
+            readsMatched += 1
+        readsOffsets.append(matchOffsets) 
+        try:
+            nextReads = next(reads)
+        except StopIteration:
+            break
+    return readsMatched, readsCount 
    
 #This aligns using the FM indexing method:
 #def alignFM(reads, genome): 

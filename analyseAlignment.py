@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #This file includes functions for calculating the time it takes to align versus the matches produced.
 
-import alignment
+import alignmentString
 
 from time import time
 from matplotlib import pyplot as plt
@@ -25,7 +25,7 @@ def plotTimeVsMatches(pattern, text, output):
     
 def analyseHamming(pattern, text):
     start = time()
-    readsMatched, readsCount, _ = alignment.alignHamming(pattern, text)
+    readsMatched, readsCount, _ = alignmentString.alignHamming(pattern, text)
     end = time()
     timeLength = (end - start)
     print 'Approximate Hamming lasted %.2f seconds to produce %d/%d matches.' % (timeLength, readsMatched, readsCount)
@@ -33,7 +33,7 @@ def analyseHamming(pattern, text):
     
 def analyseEdit(pattern, text):
     start = time()
-    readsMatched, readsCount, _ = alignment.alignEdit(pattern, text)
+    readsMatched, readsCount, _ = alignmentString.alignEdit(pattern, text)
     end = time()
     timeLength = (end - start)
     print 'Approximate Edit lasted %.2f seconds to produce %d/%d matches.' % (timeLength, readsMatched, readsCount)
@@ -41,7 +41,7 @@ def analyseEdit(pattern, text):
     
 def analyseKmer(pattern, text):
     start = time()
-    readsMatched, readsCount, _ = alignment.alignKmer(pattern, text)
+    readsMatched, readsCount, _ = alignmentString.alignKmer(pattern, text)
     end = time()
     timeLength = (end - start)
     print 'Kmer indexing lasted %.2f seconds to produce %d/%d matches.' % (timeLength, readsMatched, readsCount)
@@ -49,7 +49,7 @@ def analyseKmer(pattern, text):
     
 def analyseFM(pattern, text):
     start = time()
-    readsMatched, readsCount, _ = alignment.alignFM(pattern, text)
+    readsMatched, readsCount, _ = alignmentString.alignFM(pattern, text)
     end = time()
     timeLength = (end - start)
     print 'FM indexing lasted %.2f seconds to produce %d/%d matches.' % (timeLength, readsMatched, readsCount)
