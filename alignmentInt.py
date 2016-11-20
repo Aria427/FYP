@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 #This file includes functions for aligning reads with the reference genome by using the different matching algorithms using integers. 
     
+import fileParsing
 import matchingInt
 
 #The genome is double stranded and so the reads can come from one strand or the other.    
@@ -14,8 +15,10 @@ def alignHamming(reads, genome):
     readsMatched = 0
     readsCount = 0
     readsOffsets = []
+    print '3'
     nextReads = next(reads)
-    while nextReads: 
+    print '4'
+    for nextReads in reads: 
         nextReverseReads = reverseComplement(nextReads)
         matchOffsets = matchingInt.naiveApproxHamming(nextReads, genome) #check if read matches in forward direction of genome
         matchOffsets.extend(matchingInt.naiveApproxHamming(nextReverseReads, genome)) #add results of any matches in reverse complement of genome

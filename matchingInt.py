@@ -29,15 +29,17 @@ def ffs(x): #find first set = index of LSB (set => 1) from 0
 def naiveApproxHamming(pattern, text, maxHammingDist=1):
     matchOffsets = []
     mismatches = 0 #hamming distance - no of differing bits
-    conjuction = pattern ^ text #bitwise exclusive or
+    #conjuction = pattern ^ text #bitwise exclusive or
+    for i in xrange(len(text)):
+        bitwise = pattern ^ text[i]
     #Hamming weight (no of non-zero bits) found using Wegner algorithm
-    while (conjuction != 0): #bit is set => mismatch
-        mismatches += 1
-        index = ffs(conjuction)
-        conjuction &= conjuction - 1 #clear lowest order non-zero bit
-        if mismatches > maxHammingDist:
-            mismatches = 0
-            break
+        while (bitwise != 0): #bit is set => mismatch
+            mismatches += 1
+            index = ffs(bitwise)
+            bitwise &= bitwise - 1 #clear lowest order non-zero bit
+            if mismatches > maxHammingDist:
+                mismatches = 0
+                break
         if mismatches <= maxHammingDist:
             matchOffsets.append(index)
     return matchOffsets

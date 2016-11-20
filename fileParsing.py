@@ -116,8 +116,8 @@ def parseGenomeString(input, output): #file is not compressed
 #To efficiently read the sequencing reads:        
 def parseReads(filename): #fastQ 
     readID, sequence, quality = '', '', ''
-    file = open(filename, 'r')
-    #file = bz2.BZ2File(filename, 'r')
+    #file = open(filename, 'r')
+    file = bz2.BZ2File(filename, 'r')
     while True: #runs until EOF
         line = file.readline()
         if not line: #reached EOF
@@ -143,7 +143,6 @@ def parseReads(filename): #fastQ
             sequence = ''.join(sequenceLines) #merge lines to form sequence
             sequence = baseToBinary(sequence).replace('N', '')
             bytes = int(sequence, 2)
-            #bytes = format(bytes, 'b')
             yield bytes
         
         elif not quality:
