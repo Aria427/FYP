@@ -8,9 +8,7 @@ import analyseAlignment
 import visualisation
 
 from path import path
-from bitarray import bitarray
 import struct
-import time
 import numpy 
 import sys
 import pdb
@@ -44,11 +42,8 @@ reads = fileParsing.parseReads(path('Data\HumanSequencingReads.tsv.bz2').abspath
 
 #analyseAlignment.plotTimeVsMatches(reads, decodedGenome, path('Output Test Files\AlignmentAnalysis.png').abspath())
 
-start = time.time()
 matchesCount, totalCount, offsets = alignmentInt.alignHamming(reads, decodedGenome)
 print '%d/%d reads matched the genome.' % (matchesCount, totalCount) #The result is not 100% but this is to be expected due to sequencing errors. 
-end = time.time()
-print end-start
 
 """
 textFile = path('Output Test Files\DataVisualisationTest.txt').abspath()

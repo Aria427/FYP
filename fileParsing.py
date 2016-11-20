@@ -138,7 +138,8 @@ def parseReads(filename): #fastQ
             while not line.startswith('+'): #not placeholder line (third line)
                 #rstrip() - removes leading/trailing whitespace
                 #replace() - removes whitespace from within string
-                sequenceLines.append(line.rstrip().replace(' ', '')) #no whitespace in sequence
+                #sequenceLines.append(line.rstrip('\r\n').split('\t')) 
+                sequenceLines.append(line.rstrip('\r\n').replace(' ', '')) #no whitespace in sequence
                 line = file.readline()
             sequence = ''.join(sequenceLines) #merge lines to form sequence
             sequence = baseToBinary(sequence).replace('N', '')
