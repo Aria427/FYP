@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/W32TeX) (preloaded format=pdflatex 2016.10.6)  11 NOV 2016 16:38
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/W32TeX) (preloaded format=pdflatex 2016.10.6)  22 NOV 2016 00:14
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -130,21 +130,41 @@ Package: ltxcmds 2016/05/16 v1.23 LaTeX kernel commands for general use (HO)
 ))
 \Gin@req@height=\dimen121
 \Gin@req@width=\dimen122
+)
+(c:/texlive/2016/texmf-dist/tex/latex/enumitem/enumitem.sty
+Package: enumitem 2011/09/28 v3.5.2 Customized lists
+\labelindent=\skip46
+\enit@outerparindent=\dimen123
+\enit@toks=\toks17
+\enit@inbox=\box26
+\enitdp@description=\count97
+)
+(c:/texlive/2016/texmf-dist/tex/latex/titlesec/titlesec.sty
+Package: titlesec 2016/03/21 v2.10.2 Sectioning titles
+\ttl@box=\box27
+\beforetitleunit=\skip47
+\aftertitleunit=\skip48
+\ttl@plus=\dimen124
+\ttl@minus=\dimen125
+\ttl@toksa=\toks18
+\titlewidth=\dimen126
+\titlewidthlast=\dimen127
+\titlewidthfirst=\dimen128
 ) (./main.aux)
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 11.
-LaTeX Font Info:    ... okay on input line 11.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 11.
-LaTeX Font Info:    ... okay on input line 11.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 11.
-LaTeX Font Info:    ... okay on input line 11.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 11.
-LaTeX Font Info:    ... okay on input line 11.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 11.
-LaTeX Font Info:    ... okay on input line 11.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 11.
-LaTeX Font Info:    ... okay on input line 11.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -182,15 +202,15 @@ LaTeX Font Info:    ... okay on input line 11.
 
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
-\textwidththird=\skip46
-\topheight=\skip47
-\topleftwidth=\skip48
-\topmiddlewidth=\skip49
-\toprightwidth=\skip50
+\textwidththird=\skip49
+\topheight=\skip50
+\topleftwidth=\skip51
+\topmiddlewidth=\skip52
+\toprightwidth=\skip53
 <UOMcrest.pdf, id=1, 80.9424pt x 99.0099pt>
 File: UOMcrest.pdf Graphic file (type pdf)
  <use UOMcrest.pdf>
-Package pdftex.def Info: UOMcrest.pdf used on input line 11.
+Package pdftex.def Info: UOMcrest.pdf used on input line 16.
 (pdftex.def)             Requested size: 80.9422pt x 99.00964pt.
  [1
 
@@ -198,17 +218,17 @@ Package pdftex.def Info: UOMcrest.pdf used on input line 11.
 ]
 (c:/texlive/2016/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count97
-\scratchdimen=\dimen123
-\scratchbox=\box26
-\nofMPsegments=\count98
-\nofMParguments=\count99
-\everyMPshowfont=\toks17
-\MPscratchCnt=\count100
-\MPscratchDim=\dimen124
-\MPnumerator=\count101
-\makeMPintoPDFobject=\count102
-\everyMPtoPDFconversion=\toks18
+\scratchcounter=\count98
+\scratchdimen=\dimen129
+\scratchbox=\box28
+\nofMPsegments=\count99
+\nofMParguments=\count100
+\everyMPshowfont=\toks19
+\MPscratchCnt=\count101
+\MPscratchDim=\dimen130
+\MPnumerator=\count102
+\makeMPintoPDFobject=\count103
+\everyMPtoPDFconversion=\toks20
 ) (c:/texlive/2016/texmf-dist/tex/generic/oberdiek/pdftexcmds.sty
 Package: pdftexcmds 2016/05/21 v0.22 Utility functions of pdfTeX for LuaTeX (HO
 )
@@ -255,49 +275,59 @@ G,.JBIG2,.JB2,.eps]
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-(./main.toc)
+(./main.toc
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <12> on input line 4.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line 4.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 4.
+)
 \tf@toc=\write3
 \openout3 = `main.toc'.
 
  [1
 
 ]
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <12> on input line 27.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 27.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 27.
- [1] (./main.bbl [2]
+Missing character: There is no â in font cmr12!
+Missing character: There is no € in font cmr12!
+Missing character: There is no ™ in font cmr12!
+
+Underfull \vbox (badness 2035) has occurred while \output is active []
+
+ [1]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [2]
+(./main.bbl [3]
+! Misplaced alignment tab character &.
+l.18 ``Blood, genes, &
+                       you,'' {\em Think Magazine}, vol.~16, pp.~26--31, 4 2...
+
+? 
 Missing character: There is no â in font cmr12!
 Missing character: There is no € in font cmr12!
 Missing character: There is no “ in font cmr12!
 Missing character: There is no Ã in font cmr12!
 Missing character: There is no ¼ in font cmr12!
- [3]
-! Misplaced alignment tab character &.
-l.77 Blood, genes, &
-                     you.
-? 
 ) [4] (./main.aux) ) 
 Here is how much of TeX's memory you used:
- 3317 strings out of 493013
- 51459 string characters out of 6136993
- 112372 words of memory out of 5000000
- 6831 multiletter control sequences out of 15000+600000
+ 3864 strings out of 493013
+ 59582 string characters out of 6136993
+ 123298 words of memory out of 5000000
+ 7370 multiletter control sequences out of 15000+600000
  9156 words of font info for 32 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 43i,5n,40p,471b,243s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 43i,5n,40p,717b,246s stack positions out of 5000i,500n,10000p,200000b,80000s
 <c:/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/
 cmbx10.pfb><c:/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pf
 b><c:/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><c:/texl
 ive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb><c:/texlive/2016/t
-exmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb><c:/texlive/2016/texmf-dist/f
-onts/type1/public/amsfonts/cm/cmti12.pfb>
-Output written on main.pdf (6 pages, 100524 bytes).
+exmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb>
+Output written on main.pdf (6 pages, 96007 bytes).
 PDF statistics:
- 55 PDF objects out of 1000 (max. 8388607)
- 37 compressed objects within 1 object stream
+ 51 PDF objects out of 1000 (max. 8388607)
+ 34 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  6 words of extra memory for PDF output out of 10000 (max. 10000000)
 

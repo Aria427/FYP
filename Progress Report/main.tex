@@ -1,5 +1,10 @@
 \documentclass{csfyp}
 \usepackage{graphicx}
+\usepackage{enumitem} %for {enumerate}[nolistsep]
+\usepackage{titlesec} %for titlespacing
+
+\titlespacing*{\section}{0pt}{1\baselineskip}{\baselineskip}
+\titlespacing*{\subsection}{0pt}{1\baselineskip}{\baselineskip}
 
 \title{The Malta Human Genome Project \\
   \large Progress Report}
@@ -23,72 +28,86 @@
 
 
 \begin{abstract}
-The abstract should act as a stand-alone (very) brief description of the whole story: The context, the solution, how effective it was found to be. There is no better way to learn how to write an abstract than by carefully reading the abstracts of good papers. This is usually the last part of the report to be written.
+The abstract should act as a stand-alone (very) brief description of the whole story: The context, the solution, how effective it was found to be. There is no better way to learn how to write an abstract than by carefully reading the abstracts of good papers. This is usually the last part of the report to be written. circa 50 words
 \end{abstract}
 
 
-\section{Introduction}
+\section{Introduction \& Motivation}
 \label{s:intro}
 
-Over the years, more and more human reference genomes are being assembled.  A reference genome is a digital database consisting of DNA sequences, each individual's DNA corresponding to an arrangement of approximately 3 billion bases (made up from four nucleotide bases).  These possible bases are adenine, cytosine, guanine and thymine - oftenly referred to by the letters A, C, G and T respectively \cite{aiBk, introgenom}.  
+Over the years, more and more human reference genomes are being globally assembled.  A reference genome is a digital database consisting of DNA sequences; each individual's DNA corresponding to an arrangement of approximately 3 billion bases.  The possible nucleotide bases are adenine, cytosine, guanine and thymine - oftenly referred to by the letters A, C, G and T respectively \cite{aiBk, introgenom}.  
 
-Genome assembly/sequencing technologies are rapidly advancing and their costs are decreasing, both due to the fact that their importance is becoming more widely known.  DNA variations and mutations may correlate to diseases so discovering any approximately matching alignments between the reference genome and the DNA reads (sequencing reads) being analysed could very well help future medical diagnosis and treatments \cite{think1, think2, think3}.
+Genome assembly/sequencing technologies are rapidly advancing and their costs are decreasing; both factors being due to the fact that their importance is becoming more widely known.  DNA variations and mutations may correlate to diseases so discovering any approximately matching alignments between the reference genome and the DNA sequencing reads being analysed could very well help future medical diagnosis and treatments \cite{think1, think2, think3}.
 
-The University of Malta is developing a National Maltese Human Reference Genome for this reason whereby whole genome sequencing on certain Maltese DNA samples (provided by the Malta BioBank) will be performed.    
-   
-An amount of challenges need to be tackled, some of which are listed hereunder:
+The University of Malta is developing a National Maltese Human Reference Genome for this reason whereby whole genome sequencing on certain Maltese DNA samples (provided by the Malta BioBank) will be performed.  The American human genome sequencing facility Complete Genomics, which was founded in 2006, will be a partner in this project. 
 
-\begin{enumerate}
-
-  \item A substantial knowledge of bioinformatics - an area where computer technology is applied to biological data;
-
-  \item A collections of known algorithms relating to DNA sequencing and their performance comparisons;
-
-  \item Compression of reference genomes to improve efficiency, such studies having been already performed by Fritz et al \cite{refcompression} and Chen et al \cite{compression} among others;
-
-  \item A data visualisation tool which promotes user-friendliness for even individuals who have no prior knowledge relating to the area in question;
-
-  \item A genome browser which also promotes user-friendliness as stated previously.
-
-\end{enumerate}
+Thus, computation wise, a data visualisation tool along with a genome browser need to be constructed in order to aid in this endeavour.  
 
 
-\section{Background and Literature Review}
+\section{Reasoning for Nontriviality of Problem}
+
+Globally, large genome projects are being sequenced rapidly.  Examples of such projects include the 1000 Genomes Project and the International Cancer Genome Project \cite{bwtransform, refcompression, popgen}.  Malta should aim to be a part of this endevaour so that further studies can be conducted involving a larger variety of genes (i.e. the Maltese genes).  After all, while the reading of an individual's DNA shows the likeliness of that person developing a disease, the reading of a nation’s DNA shows why that population is more likely to develop a disease \cite{think1}.  Such analyses can therefore prove to not only medically aid global research but also nation-wide studies.             
 
 
+\section{Background Research and Literature Review}
+
+The development of a genome assembly technology consists of multiple stages; the main ones being genome compression, sequence alignment, alignment visualisation and genome browser construction; all the steps following one another.  The following points detail some research which has already been conducted in these areas.
+
+\subsection{Genome Compression Tools}
+
+\subsection{Sequence Aligners}
+
+\subsection{Read Mapping Algorithms}
 
 
 \section{Aims and Objectives}
 
-The aim of this project is to build tools for the visualization and analysis of genomes sequenced from the Malta Human Genome Project.  The research areas studied are bioinformatics, big data, data storage, data visualisation and data analysis among others.
+The aim of this project is to build tools for the analysis of sequenced genomes from the Malta Human Genome Project.  The research areas studied are bioinformatics, big data, data storage, data visualisation and data analysis among others.
 
 The main objectives of the system are as follows:
 
-\begin{enumerate}
+\begin{enumerate}[nolistsep]
 
   \item The alignment of a reference genome against a number of sequencing reads such as that done by Lee et al \cite{cgreads} and Li et al \cite{bwtransform} among others;
 
   \item The data visualiation of human genomes;
 
-  \item The construction of a genome browser using novel and established components in order to reference DNA for comparitive genomics and to analyse DNA mutations.  
+  \item The construction of a genome browser using novel and established components in order to reference DNA for comparitive genomics and to analyse DNA mutations;  
 
   \item A comparitive review of existing methods against all the above points.
 
 \end{enumerate}
 
 
-\section{Methods and Techniques Planned}
+\section{Methods and Techniques Used or Planned}
+
+This section details the components which have been implemented along with a description of future plans.
+
+\subsection{Genome Compression}
+
+\subsection{Sequence Alignment}
+
+\subsection{Alignment Visualisation}
+
+\subsection{Planned Methods}
 
 
+\section{Proposed Evaluation Stategy}
 
-\section{Evaluation Stategy}
+The main evaluation techniques proposed are as follows:
 
-The research question which should be answered is
+\begin{enumerate}[nolistsep]
+
+  \item Comparitive review of the developed human genome visualisation tool with existing methods;
+
+  \item Reference DNA and analyse DNA mutations using the constructed genome browser.
+
+\end{enumerate}
 
 
 \section{Expected Deliverables}
 
-\begin{enumerate}
+\begin{enumerate}[nolistsep]
 
   \item The Final Year Project (FYP) which will include: all the relevant background information required to understand said project, a detailed explanation of the system and the evaluation results; 
 
@@ -96,10 +115,14 @@ The research question which should be answered is
 
   \item The documentation which will explain to the users how the system should be employed. 
 
+The milestone schedule is represented in the following Gantt chart:
+
+
 \end{enumerate}
 
 
-\bibliographystyle{alpha}
+%\bibliographystyle{alpha}
+\bibliographystyle{ieeetr}
 \nocite{*}
 \bibliography{references}
 

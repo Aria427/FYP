@@ -1,6 +1,14 @@
-\contentsline {section}{\numberline {1}Introduction}{1}
-\contentsline {section}{\numberline {2}Background and Literature Review}{2}
-\contentsline {section}{\numberline {3}Aims and Objectives}{2}
-\contentsline {section}{\numberline {4}Methods and Techniques Planned}{2}
-\contentsline {section}{\numberline {5}Evaluation Stategy}{2}
-\contentsline {section}{\numberline {6}Expected Deliverables}{2}
+\contentsline {section}{\numberline {1}Introduction \& Motivation}{1}
+\contentsline {section}{\numberline {2}Reasoning for Nontriviality of Problem}{1}
+\contentsline {section}{\numberline {3}Background Research and Literature Review}{2}
+\contentsline {subsection}{\numberline {3.1}Genome Compression Tools}{2}
+\contentsline {subsection}{\numberline {3.2}Sequence Aligners}{2}
+\contentsline {subsection}{\numberline {3.3}Read Mapping Algorithms}{2}
+\contentsline {section}{\numberline {4}Aims and Objectives}{2}
+\contentsline {section}{\numberline {5}Methods and Techniques Used or Planned}{2}
+\contentsline {subsection}{\numberline {5.1}Genome Compression}{3}
+\contentsline {subsection}{\numberline {5.2}Sequence Alignment}{3}
+\contentsline {subsection}{\numberline {5.3}Alignment Visualisation}{3}
+\contentsline {subsection}{\numberline {5.4}Planned Methods}{3}
+\contentsline {section}{\numberline {6}Proposed Evaluation Stategy}{3}
+\contentsline {section}{\numberline {7}Expected Deliverables}{3}
