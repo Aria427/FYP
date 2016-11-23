@@ -51,7 +51,9 @@ def compressReads(line, lineLength):
             pass
             #print "Invalid string found in bytes: %s" % format(bytes) 
         subsequences.append(bytes)
-    sequence = int(''.join(map(str, subsequences))) #join integer array into one single integer
+    s = reduce(lambda x,y: x+str(y), subsequences, '')
+    sequence = int(s)
+    #sequence = int(''.join(map(str, subsequences))) #join integer array into one single integer
     return sequence
                        
 #To read the genome into an integer:
@@ -121,7 +123,9 @@ def parseReadsInt(filename):
                 sequenceLine = compressReads(line, 123)
                 sequenceLines.append(sequenceLine)
                 line = file.readline()
-            sequence = int(''.join(map(str, sequenceLines))) #merge lines to form sequence
+            s = reduce(lambda x,y: x+str(y), sequenceLines, '')
+            sequence = int(s)
+            #sequence = int(''.join(map(str, sequenceLines))) #merge lines to form sequence
             yield sequence
         
         elif not quality:

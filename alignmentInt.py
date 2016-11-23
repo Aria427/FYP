@@ -17,9 +17,12 @@ def alignHamming(reads, genome):
     print '1'
     nextReads = next(reads) #program is halting on this statement
     print '2'
-    for nextReads in reads: 
+    for read in nextReads: #TypeError: 'long' object is not iterable 
+        print '3'
         nextReverseReads = reverseComplement(nextReads)
+        print '4'
         matchOffsets = matchingInt.naiveApproxHamming(nextReads, genome) #check if read matches in forward direction of genome
+        print '5'    
         matchOffsets.extend(matchingInt.naiveApproxHamming(nextReverseReads, genome)) #add results of any matches in reverse complement of genome
         readsCount += 1 
         if (readsCount % 50) == 0:
