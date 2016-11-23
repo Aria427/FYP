@@ -28,7 +28,32 @@ def binaryToBase(line):
     for base, binary in binaryBases.items():
         line = line.replace(binary, base)
     return line      
-    
+  
+def compressGenome(line, lineLength, binaryFile):
+    for i in range(0, lineLength+1):
+        l = line[i:i+15].rstrip().upper().replace('N', '').replace(' ', '')  #15 = allowed amount for int 
+        l = baseToBinary(l)
+        try:
+            bytes = int(l, 2) #create 4 bytes from base 2 integer
+            binaryFile.write(struct.pack('=i', bytes))
+        except ValueError:
+            pass
+            #print "Invalid string found in bytes: %s" % format(bytes) 
+
+def compressReads(line, lineLength):
+    subsequences = [] #array of integers
+    for i in range(0, lineLength+1):
+        l = line[i:i+15].rstrip().upper().replace('N', '').replace(' ', '')  #15 = allowed amount for int 
+        l = baseToBinary(l)
+        try:
+            bytes = int(l, 2) #create 4 bytes from base 2 integer
+        except ValueError:
+            pass
+            #print "Invalid string found in bytes: %s" % format(bytes) 
+        subsequences.append(bytes)
+    sequence = int(''.join(map(str, subsequences))) #join integer array into one single integer
+    return sequence
+                       
 #To read the genome into an integer:
 def parseGenomeInt(input, output): #file is compressed by ~70%
     binary = open(output, 'wb')
@@ -36,54 +61,10 @@ def parseGenomeInt(input, output): #file is compressed by ~70%
     #with gzip.open(input, 'r') as file:
         for line in file:
             if line and line[0] != '>': #ignore header line with genome information
+                #Each line has length = 70 in PhiX and length = 50 in Human
+                #Last line has length = 67 in PhiX and length = 41 in Human
                 #print len(line.rstrip()) 
-                l = line[0:15].rstrip().upper().replace('N', '')  #15 = allowed amount for int 
-                l = baseToBinary(l)
-                try:
-                    bytes = int(l, 2) #create 4 bytes from base 2 integer
-                    binary.write(struct.pack('=i', bytes))
-                except ValueError:
-                    pass
-                    #print "Invalid string found in bytes: %s" % format(bytes)  
-                
-                l = line[15:30].rstrip().upper().replace('N', '')  #15->29, 15 included 
-                l = baseToBinary(l)
-                try:
-                    bytes = int(l, 2) #create 4 bytes from base 2 integer
-                    binary.write(struct.pack('=i', bytes))
-                except ValueError:
-                    pass
-                    #print "Invalid string found in bytes: %s" % format(bytes) 
-                
-                l = line[30:45].rstrip().upper().replace('N', '')  #30->44, 30 included
-                l = baseToBinary(l)
-                try:
-                    bytes = int(l, 2) #create 4 bytes from base 2 integer
-                    binary.write(struct.pack('=i', bytes))
-                except ValueError:
-                    pass
-                    #print "Invalid string found in bytes: %s" % format(bytes) 
-                
-                l = line[45:51].rstrip().upper().replace('N', '')  #45->59, 40 included
-                l = baseToBinary(l)
-                try:
-                    bytes = int(l, 2) #create 4 bytes from base 2 integer
-                    binary.write(struct.pack('=i', bytes))
-                except ValueError:
-                    pass
-                    #print "Invalid string found in bytes: %s" % format(bytes) 
-                
-                #last line in Phix has length = 67 and Human has length = 41
-                #each line has length = 70 in PhiX and length = 50 in Human
-                #l = line[60:71].rstrip().upper() #60->70, 60 included
-                #l = baseToBinary(l)
-                #try:
-                    #bytes = int(l, 2) #create 4 bytes from base 2 integer
-                    #binary.write(struct.pack('i', bytes))
-                #except ValueError:
-                    #pass
-                    #print "Invalid string found in bytes: %s" % format(bytes) 
-            
+                compressGenome(line, 50, binary)
                 #pass
         #last = line
         #print len(last)
@@ -113,13 +94,13 @@ def parseGenomeString(input, output): #file is not compressed
                 genome += l 
     return genome
     
-#To efficiently read the sequencing reads:        
-def parseReads(filename): #fastQ 
+#To parse the sequencing reads into an integer generator:        
+def parseReadsInt(filename):  
     readID, sequence, quality = '', '', ''
-    #file = open(filename, 'r')
-    file = bz2.BZ2File(filename, 'r')
+    file = open(filename, 'r')
+    #file = bz2.BZ2File(filename, 'r')
     while True: #runs until EOF
-        line = file.readline()
+        line = file.readline() 
         if not line: #reached EOF
             break
 
@@ -136,15 +117,53 @@ def parseReads(filename): #fastQ
         elif not sequence:
             sequenceLines = []
             while not line.startswith('+'): #not placeholder line (third line)
+                #Each line has length = 123 in Human
+                sequenceLine = compressReads(line, 123)
+                sequenceLines.append(sequenceLine)
+                line = file.readline()
+            sequence = int(''.join(map(str, sequenceLines))) #merge lines to form sequence
+            yield sequence
+        
+        elif not quality:
+            quality = []
+            while True: #collect base qualities
+                quality += line.rstrip().replace(' ', '') 
+                #if len(quality) >= len(sequence): #bases and qualities line up
+                    #break
+                #else:
+                line = file.readline()
+    file.close() 
+       
+#To parse the sequencing reads into a string generator:        
+def parseReadsString(filename):  
+    readID, sequence, quality = '', '', ''
+    file = open(filename, 'r')
+    #file = bz2.BZ2File(filename, 'r')
+    while True: #runs until EOF
+        line = file.readline() 
+        if not line: #reached EOF
+            break
+
+        if line.startswith('@'): #first line of read/record
+            #reset to default values
+            readID = line.rstrip()
+            sequence = ''
+            quality = ''   
+
+        elif not readID: #if no previous line starts with @
+            readID = line.rstrip() #get first ID
+            continue
+
+        elif not sequence:
+            sequenceLines = [] 
+            while not line.startswith('+'): #not placeholder line (third line)
                 #rstrip() - removes leading/trailing whitespace
                 #replace() - removes whitespace from within string
-                #sequenceLines.append(line.rstrip('\r\n').split('\t')) 
-                sequenceLines.append(line.rstrip('\r\n').replace(' ', '')) #no whitespace in sequence
+                line = line.rstrip().upper().replace('N', '').replace(' ', '')
+                sequenceLines.append(line) #no whitespace in sequence
                 line = file.readline()
             sequence = ''.join(sequenceLines) #merge lines to form sequence
-            sequence = baseToBinary(sequence).replace('N', '')
-            bytes = int(sequence, 2)
-            yield bytes
+            yield sequence
         
         elif not quality:
             quality = []
@@ -154,9 +173,7 @@ def parseReads(filename): #fastQ
                     break
                 else:
                     line = file.readline()
-    
     file.close() 
-       
 
 """
 The following functions were also tested but proved to be insufficient: 

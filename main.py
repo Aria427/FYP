@@ -15,9 +15,9 @@ import pdb
 
 #pdb.set_trace()
 
-binaryGenomeFile = path('Output Data\HumanGenomeZip.bin').abspath()
+#binaryGenomeFile = path('Output Data\HumanGenomeZip.bin').abspath()
 #fileParsing.parseGenomeInt(path('Data\HumanGenome.fa.gz').abspath(), binaryGenomeFile)
-#binaryGenomeFile = path('Output Data\PhixGenome.bin').abspath() 
+binaryGenomeFile = path('Output Data\PhixGenome.bin').abspath() 
 #fileParsing.parseGenomeInt(path('Data\PhixGenome.fa').abspath(), binaryGenomeFile)
 
 with open(binaryGenomeFile , 'rb') as f:
@@ -37,8 +37,8 @@ with open(binaryGenomeFile , 'rb') as f:
     decodedGenome = int(decodedGenome)
     #print 'Integer decoding of data: %d' % decodedGenome    
 """    
-reads = fileParsing.parseReads(path('Data\HumanSequencingReads.tsv.bz2').abspath())        
-#reads = fileParsing.parseReads(path('Data\PhiXSequencingReads1000.fastq').abspath())
+#reads = fileParsing.parseReadsInt(path('Data\HumanSequencingReads.tsv.bz2').abspath()) 
+reads = fileParsing.parseReadsInt(path('Data\PhiXSequencingReads1000.fastq').abspath())
 
 #analyseAlignment.plotTimeVsMatches(reads, decodedGenome, path('Output Test Files\AlignmentAnalysis.png').abspath())
 
