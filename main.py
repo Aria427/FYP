@@ -2,13 +2,11 @@
 #This file contains the main functionality of the program.
 
 import fileParsing
-import matchingInt
 import alignmentInt
 import analyseAlignment
 import visualisation
 
 from path import path
-import struct
 import numpy 
 import sys
 import pdb
@@ -23,20 +21,10 @@ binaryGenomeFile = path('Output Data\PhixGenome.bin').abspath()
 with open(binaryGenomeFile , 'rb') as f:
     decodedGenome = numpy.fromfile(f, dtype=numpy.int)
     #print decodedGenome
-
-"""
-with open(binaryGenomeFile , 'rb') as f:
-    #decodedGenome = 0
-    decodedGenome = ''
-    for chunk in iter(lambda: f.read(4), ''):
-        fileBytes = struct.unpack('=i', chunk)[0]     
-        #print 'Unpacked data lambda: %s' % fileBytes
-        decodedGenome += str(fileBytes) #concatenate integers read
-        #decodedGenome += '{0:b}'.format(fileBytes) 
-        #decodedGenome += format(fileBytes, 'b')
-    decodedGenome = int(decodedGenome)
-    #print 'Integer decoding of data: %d' % decodedGenome    
-"""    
+d = reduce(lambda x,y: x+str(y), decodedGenome, '')
+decodedGenome = int(d)
+#print decodedGenome
+    
 #reads = fileParsing.parseReadsInt(path('Data\HumanSequencingReads.tsv.bz2').abspath()) 
 reads = fileParsing.parseReadsInt(path('Data\PhiXSequencingReads1000.fastq').abspath())
 

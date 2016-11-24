@@ -21,7 +21,7 @@ def bitCount(integer): #length of 1s only
         integer >>= 1
     return count 
 
-def ffs(x): #find first set = index of LSB (set => 1) from 0
+def ffs(x): #find first set = index of LSB (set => 1) 0 bit
     return (x&-x).bit_length()-1
     
 #Hamming distance = minimum no of substitutions required to change one string into another.
@@ -29,18 +29,16 @@ def ffs(x): #find first set = index of LSB (set => 1) from 0
 def naiveApproxHamming(pattern, text, maxHammingDist=1):
     matchOffsets = []
     mismatches = 0 #hamming distance - no of differing bits
-    #conjuction = pattern ^ text #bitwise exclusive or
-    for i in xrange(len(text)):
-        bitwise = pattern ^ text[i]
+    #for i in xrange(len(text)):
+    bitwise = pattern ^ text#[i] #bitwise exclusive or
     #Hamming weight (no of non-zero bits) found using Wegner algorithm
-        while (bitwise != 0): #bit is set => mismatch
-            mismatches += 1
-            index = ffs(bitwise)
-            bitwise &= bitwise - 1 #clear lowest order non-zero bit
-            if mismatches > maxHammingDist:
-                mismatches = 0
-                break
-        if mismatches <= maxHammingDist:
+    while (bitwise != 0): #bit is set => mismatch
+        mismatches += 1
+        index = ffs(bitwise)
+        bitwise &= bitwise - 1 #clear lowest order non-zero bit
+        if mismatches > maxHammingDist: #exceeded maximum distance
+            break
+        elif mismatches <= maxHammingDist:
             matchOffsets.append(index)
     return matchOffsets
 

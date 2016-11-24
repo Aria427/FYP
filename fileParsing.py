@@ -121,7 +121,7 @@ def parseReadsInt(filename):
             while not line.startswith('+'): #not placeholder line (third line)
                 #Each line has length = 123 in Human
                 sequenceLine = compressReads(line, 123)
-                sequenceLines.append(sequenceLine)
+                sequenceLines.append(sequenceLine) #no whitespace in integer sequence
                 line = file.readline()
             s = reduce(lambda x,y: x+str(y), sequenceLines, '')
             sequence = int(s)
@@ -165,7 +165,7 @@ def parseReadsString(filename):
                 #rstrip() - removes leading/trailing whitespace
                 #replace() - removes whitespace from within string
                 line = line.rstrip().upper().replace('N', '').replace(' ', '')
-                sequenceLines.append(line) #no whitespace in sequence
+                sequenceLines.append(line) #no whitespace in string sequence
                 line = file.readline()
             sequence = ''.join(sequenceLines) #merge lines to form sequence
             yield sequence

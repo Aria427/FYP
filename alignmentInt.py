@@ -15,9 +15,9 @@ def alignHamming(reads, genome):
     readsCount = 0
     readsOffsets = []
     for read in reads: #loop over generator
-        reverseReads = reverseComplement(read)
+        #reverseRead = reverseComplement(read)
         matchOffsets = matchingInt.naiveApproxHamming(read, genome) #check if read matches in forward direction of genome 
-        matchOffsets.extend(matchingInt.naiveApproxHamming(reverseReads, genome)) #add results of any matches in reverse complement of genome
+        #matchOffsets.extend(matchingInt.naiveApproxHamming(reverseRead, genome)) #add results of any matches in reverse complement of genome
         readsCount += 1 
         if (readsCount % 100) == 0:
             print "*"
@@ -34,22 +34,17 @@ def alignKmer(reads, genome):
     readsMatched = 0
     readsCount = 0
     readsOffsets = []
-    nextReads = next(reads)
-    while nextReads: 
-        nextReverseReads = reverseComplement(nextReads)
+    for read in reads: 
+        reverseRead = reverseComplement(read)
         index = matchingInt.kmerIndex(genome, 10)
-        matchOffsets = matchingInt.queryKmerIndex(nextReads, genome, index) #check if read matches in forward direction of genome
-        matchOffsets.extend(matchingInt.queryKmerIndex(nextReverseReads, genome, index)) #add results of any matches in reverse complement of genome
+        matchOffsets = matchingInt.queryKmerIndex(read, genome, index) #check if read matches in forward direction of genome
+        matchOffsets.extend(matchingInt.queryKmerIndex(reverseRead, genome, index)) #add results of any matches in reverse complement of genome
         readsCount += 1
-        if (readsCount % 50) == 0:
+        if (readsCount % 100) == 0:
             print "*"
         if len(list(matchOffsets)) > 0: #match - read aligned in at least one place
             readsMatched += 1
         readsOffsets.append(matchOffsets) 
-        try:
-            nextReads = next(reads)
-        except StopIteration:
-            break
     return readsMatched, readsCount, readsOffsets 
    
 #This aligns using the FM indexing method:
@@ -57,20 +52,15 @@ def alignFM(reads, genome):
     readsMatched = 0
     readsCount = 0
     readsOffsets = []
-    nextReads = next(reads)
-    while nextReads: 
-        nextReverseReads = reverseComplement(nextReads)
+    for read in reads: 
+        reverseRead = reverseComplement(read)
         fm = matchingInt.fmIndex(genome)
-        matchOffsets = fm.occurrences(nextReads) #check if read matches in forward direction of genome
-        matchOffsets.extend(fm.occurrences(nextReverseReads)) #add results of any matches in reverse complement of genome
+        matchOffsets = fm.occurrences(read) #check if read matches in forward direction of genome
+        matchOffsets.extend(fm.occurrences(reverseRead)) #add results of any matches in reverse complement of genome
         readsCount += 1
-        if (readsCount % 50) == 0:
+        if (readsCount % 100) == 0:
             print "*"
         if len(list(matchOffsets)) > 0: #match - read aligned in at least one place
             readsMatched += 1
         readsOffsets.append(matchOffsets) 
-        try:
-            nextReads = next(reads)
-        except StopIteration:
-            break
     return readsMatched, readsCount, readsOffsets  
