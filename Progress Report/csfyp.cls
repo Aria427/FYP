@@ -13,9 +13,9 @@
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{article}}
 \ProcessOptions \relax
 
-\LoadClass[12pt,twoside]{article}
+\LoadClass[11pt,twoside]{article}
 \RequirePackage[onehalfspacing]{setspace}
-\RequirePackage[top=1.2in, left=2.7cm, bottom=1.2in, right=2.7cm]{geometry}
+\RequirePackage[top=1.2in, left=2.5cm, bottom=1.2in, right=2.5cm]{geometry}
 \RequirePackage{calc}
 
 \RequirePackage[bottom]{footmisc}

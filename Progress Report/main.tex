@@ -2,9 +2,13 @@
 \usepackage{graphicx}
 \usepackage{enumitem} %for {enumerate}[nolistsep]
 \usepackage{titlesec} %for titlespacing
+\usepackage{pgfgantt} %for Gantt chart
 
 \titlespacing*{\section}{0pt}{1\baselineskip}{\baselineskip}
 \titlespacing*{\subsection}{0pt}{1\baselineskip}{\baselineskip}
+
+\titleformat*{\section}{\Large\bfseries}
+\titleformat*{\subsection}{\large\bfseries}
 
 \title{The Malta Human Genome Project \\
   \large Progress Report}
@@ -28,7 +32,7 @@
 
 
 \begin{abstract}
-The abstract should act as a stand-alone (very) brief description of the whole story: The context, the solution, how effective it was found to be. There is no better way to learn how to write an abstract than by carefully reading the abstracts of good papers. This is usually the last part of the report to be written. circa 50 words
+The aim of this report is to detail the groundwork accomplished on developing the visualisation tool and the genome browser required for the Malta Human Genome Project.  The problem is introduced with the motivation behind it along with the reasoning for its nontriviality.  The reader is then provided with the required background knowledge in order to properly discern the problem, followed by the project's objectives.  The current and intended techniques and evaluation strategy are explained.  Finally, the expected deliverables are listed with an accompanying Gantt chart.   
 \end{abstract}
 
 
@@ -37,7 +41,7 @@ The abstract should act as a stand-alone (very) brief description of the whole s
 
 Over the years, more and more human reference genomes are being globally assembled.  A reference genome is a digital database consisting of DNA sequences; each individual's DNA corresponding to an arrangement of approximately 3 billion bases.  The possible nucleotide bases are adenine, cytosine, guanine and thymine - oftenly referred to by the letters A, C, G and T respectively \cite{aiBk, introgenom}.  
 
-Genome assembly/sequencing technologies are rapidly advancing and their costs are decreasing; both factors being due to the fact that their importance is becoming more widely known.  DNA variations and mutations may correlate to diseases so discovering any approximately matching alignments between the reference genome and the DNA sequencing reads being analysed could very well help future medical diagnosis and treatments \cite{think1, think2, think3}.
+Genome assembly/sequencing technologies are rapidly advancing and their costs are decreasing; both factors being due to the fact that their importance is becoming more widely known.  DNA variations and mutations may correlate to diseases so discovering any approximately matching alignments between the reference genome and the DNA sequencing reads being analysed could very well help future medical diagnosis and treatments \cite{think}.
 
 The University of Malta is developing a National Maltese Human Reference Genome for this reason whereby whole genome sequencing on certain Maltese DNA samples (provided by the Malta BioBank) will be performed.  The American human genome sequencing facility Complete Genomics, which was founded in 2006, will be a partner in this project. 
 
@@ -46,7 +50,7 @@ Thus, computation wise, a data visualisation tool along with a genome browser ne
 
 \section{Reasoning for Nontriviality of Problem}
 
-Globally, large genome projects are being sequenced rapidly.  Examples of such projects include the 1000 Genomes Project and the International Cancer Genome Project \cite{bwtransform, refcompression, popgen}.  Malta should aim to be a part of this endevaour so that further studies can be conducted involving a larger variety of genes (i.e. the Maltese genes).  After all, while the reading of an individual's DNA shows the likeliness of that person developing a disease, the reading of a nation’s DNA shows why that population is more likely to develop a disease \cite{think1}.  Such analyses can therefore prove to not only medically aid global research but also nation-wide studies.             
+Globally, large genome projects are being sequenced rapidly.  Examples of such projects include the 1000 Genomes Project and the International Cancer Genome Project \cite{bwtransform, refcompression, popgen}.  Malta should aim to be a part of this endevaour so that further studies can be conducted involving a larger variety of genes (i.e. the Maltese genes).  After all, while the reading of an individual's DNA shows the likeliness of that person developing a disease, the reading of a nation’s DNA shows why that population is more likely to develop a disease \cite{think}.  Such analyses can therefore prove to not only medically aid global research but also nation-wide studies.             
 
 
 \section{Background Research and Literature Review}
@@ -54,11 +58,13 @@ Globally, large genome projects are being sequenced rapidly.  Examples of such p
 The development of a genome assembly technology consists of multiple stages; the main ones being genome compression, sequence alignment, alignment visualisation and genome browser construction; all the steps following one another.  The following points detail some research which has already been conducted in these areas.
 
 \subsection{Genome Compression Tools}
+Genomes, particularly human ones, consist of a large amount of data.  For this reason, in order to efficiently analyse them, said genomes are compressed using various methods.  For example, Chen et al devised the lossless {\textit{GenCompress}} algorithm which implements certain established compression algorithms such as Lempel-Ziv.  By analysing approximate matches based on the evaluated edit distances, it was found that such a method not only achieves the best compression ratio but also finds common sections in DNA sequences \cite{gencompress}.  Another example would be the lossless reference-based compression algorithm devised by Fritz et al.  It implements established components such as Golomb codes and De Bruijn graphs and was found to be quite efficient for read alignments similar to the reference genome \cite{refcompression}.  Other known algorithm are {\textit{Biocompress-2}} and {\textit{Cfact}} \cite{gencompress} along with {\textit{DNACompress}} and {\textit{ DNAZip}} \cite{refcompression}.          
 
-\subsection{Sequence Aligners}
+\subsection{Read Alignment Tools}
+Next-Generation Sequencing (NGS) technologies are evolving rapidly and to keep up with evolution, multiple read aligners are being produced; the most known being BWA, Bowtie, Soapv2, MAQ, BOAT, SHRiMP2 for the NGS platforms Illumina, Roche454 and ABI SOLiD.  The majority implement Burrows-Wheeler Transform (BWT) but there are also those which use FM-indexing, Smith-Waterman,  and Needleman-Wunsch algorithms \cite{bwtransform, popgen, cgreads}.  All these mentioned aligners are quite efficient relative to the task they are given; for example, while some aligners may be more efficient with short reads, others may be the opposite \cite{companalys, compalign}. 
 
-\subsection{Read Mapping Algorithms}
-
+\subsection{Critique of Missing Studies}
+Regarding alignment visualisation and genome browser construction, there do not seem to be any concrete algorithms for such cases.  This is a fundamental area in genome assembly technology which should be researched extensively; i.e. part of this project's goals.     
 
 \section{Aims and Objectives}
 
@@ -68,7 +74,9 @@ The main objectives of the system are as follows:
 
 \begin{enumerate}[nolistsep]
 
-  \item The alignment of a reference genome against a number of sequencing reads such as that done by Lee et al \cite{cgreads} and Li et al \cite{bwtransform} among others;
+   \item The compression of a reference genome such as that done by Chen et al. \cite{gencompress} and Fritz et al. \cite{refcompression} among others;
+
+  \item The alignment of a reference genome against a number of sequencing reads such as that done by Lee et al. \cite{cgreads} and Li et al. \cite{bwtransform} among others;
 
   \item The data visualiation of human genomes;
 
@@ -115,8 +123,34 @@ The main evaluation techniques proposed are as follows:
 
   \item The documentation which will explain to the users how the system should be employed. 
 
-The milestone schedule is represented in the following Gantt chart:
+The milestone schedule is represented in the following Gantt chart: \\
 
+\noindent\resizebox{\textwidth}{!}{
+\begin{ganttchart}[
+    hgrid=true,
+    vgrid=true,
+    bar/.append style={fill=black!50},
+]{1}{30}
+\gantttitle{2016--2017}{30} \\
+\gantttitle{Sep}{3} 
+\gantttitle{Oct}{3} 
+\gantttitle{Nov}{3} 
+\gantttitle{Dec}{3} 
+\gantttitle{Jan}{3} 
+\gantttitle{Feb}{3} 
+\gantttitle{Mar}{3} 
+\gantttitle{Apr}{3} 
+\gantttitle{May}{3}  
+\gantttitle{Jun}{3}\\
+\ganttbar{Research}{1}{12} \\
+\ganttbar{Progress Report}{8}{11} \\
+\ganttbar{Implementation}{4}{21} \\
+\ganttbar{Dissertation}{21}{27} \\
+\ganttbar{Review Report}{23}{27} \\
+\ganttbar{Presentation}{27}{29} \\
+\ganttbar{Exhibition}{29}{30}
+\end{ganttchart}
+}
 
 \end{enumerate}
 
