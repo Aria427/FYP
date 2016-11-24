@@ -47,10 +47,10 @@ def compressReads(line, lineLength):
         l = baseToBinary(l)
         try:
             bytes = int(l, 2) #create 4 bytes from base 2 integer
+            subsequences.append(bytes)
         except ValueError:
             pass
-            #print "Invalid string found in bytes: %s" % format(bytes) 
-        subsequences.append(bytes)
+            #print "Invalid string found in bytes: %s" % format(bytes)  
     s = reduce(lambda x,y: x+str(y), subsequences, '')
     sequence = int(s)
     #sequence = int(''.join(map(str, subsequences))) #join integer array into one single integer
@@ -126,6 +126,7 @@ def parseReadsInt(filename):
             s = reduce(lambda x,y: x+str(y), sequenceLines, '')
             sequence = int(s)
             #sequence = int(''.join(map(str, sequenceLines))) #merge lines to form sequence
+            line = file.readline()
             yield sequence
         
         elif not quality:

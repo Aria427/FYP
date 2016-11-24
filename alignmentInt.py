@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #This file includes functions for aligning reads with the reference genome by using the different matching algorithms using integers. 
-    
+   
 import matchingInt
 
 #The genome is double stranded and so the reads can come from one strand or the other.    
@@ -14,26 +14,16 @@ def alignHamming(reads, genome):
     readsMatched = 0
     readsCount = 0
     readsOffsets = []
-    print '1'
-    nextReads = next(reads) #program is halting on this statement
-    print '2'
-    for read in nextReads: #TypeError: 'long' object is not iterable 
-        print '3'
-        nextReverseReads = reverseComplement(nextReads)
-        print '4'
-        matchOffsets = matchingInt.naiveApproxHamming(nextReads, genome) #check if read matches in forward direction of genome
-        print '5'    
-        matchOffsets.extend(matchingInt.naiveApproxHamming(nextReverseReads, genome)) #add results of any matches in reverse complement of genome
+    for read in reads: #loop over generator
+        reverseReads = reverseComplement(read)
+        matchOffsets = matchingInt.naiveApproxHamming(read, genome) #check if read matches in forward direction of genome 
+        matchOffsets.extend(matchingInt.naiveApproxHamming(reverseReads, genome)) #add results of any matches in reverse complement of genome
         readsCount += 1 
-        if (readsCount % 50) == 0:
+        if (readsCount % 100) == 0:
             print "*"
         if len(list(matchOffsets)) > 0: #match - read aligned in at least one place
             readsMatched += 1
-        readsOffsets.append(matchOffsets)     
-        try:
-            nextReads = next(reads)
-        except StopIteration:
-            break
+        readsOffsets.append(matchOffsets)  
     return readsMatched, readsCount, readsOffsets
 
 #The edit distance is not implemented using integers as there is no accurate method of 
