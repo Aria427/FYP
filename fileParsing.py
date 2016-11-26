@@ -51,10 +51,11 @@ def compressReads(line, lineLength):
         except ValueError:
             pass
             #print "Invalid string found in bytes: %s" % format(bytes)  
-    s = reduce(lambda x,y: x+str(y), subsequences, '')
-    sequence = int(s)
+    #print subsequences
+    #s = reduce(lambda x,y: x+str(y), subsequences, '')
+    #sequence = int(s)
     #sequence = int(''.join(map(str, subsequences))) #join integer array into one single integer
-    return sequence
+    return subsequences#sequence
                        
 #To read the genome into an integer:
 def parseGenomeInt(input, output): #file is compressed by ~70%
@@ -117,26 +118,26 @@ def parseReadsInt(filename):
             continue
 
         elif not sequence:
-            sequenceLines = []
+            #sequenceLines = []
             while not line.startswith('+'): #not placeholder line (third line)
                 #Each line has length = 123 in Human
                 sequenceLine = compressReads(line, 123)
-                sequenceLines.append(sequenceLine) #no whitespace in integer sequence
+                #sequenceLines.append(sequenceLine) #no whitespace in integer sequence
                 line = file.readline()
-            s = reduce(lambda x,y: x+str(y), sequenceLines, '')
-            sequence = int(s)
+            #s = reduce(lambda x,y: x+str(y), sequenceLines, '')
+            #sequence = int(s)
             #sequence = int(''.join(map(str, sequenceLines))) #merge lines to form sequence
             line = file.readline()
-            yield sequence
+            yield sequenceLine#sequence
         
         elif not quality:
             quality = []
             while True: #collect base qualities
                 quality += line.rstrip().replace(' ', '') 
-                #if len(quality) >= len(sequence): #bases and qualities line up
-                    #break
-                #else:
-                line = file.readline()
+                if len(quality) >= len(sequence): #bases and qualities line up
+                    break
+                else:
+                    line = file.readline()
     file.close() 
        
 #To parse the sequencing reads into a string generator:        

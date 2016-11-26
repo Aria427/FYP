@@ -6,7 +6,7 @@ import matchingInt
 #The genome is double stranded and so the reads can come from one strand or the other.    
 #To match both the read and the reverse complement of the read to the genome: 
 def reverseComplement(read):
-    reverseRead = ~read
+    reverseRead = read[::-1]
     return reverseRead
 
 #This aligns using the Hamming distance approximate matching method:

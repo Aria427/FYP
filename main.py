@@ -10,9 +10,9 @@ from path import path
 import numpy 
 import sys
 import pdb
+import time
 
 #pdb.set_trace()
-
 #binaryGenomeFile = path('Output Data\HumanGenomeZip.bin').abspath()
 #fileParsing.parseGenomeInt(path('Data\HumanGenome.fa.gz').abspath(), binaryGenomeFile)
 binaryGenomeFile = path('Output Data\PhixGenome.bin').abspath() 
@@ -20,13 +20,14 @@ binaryGenomeFile = path('Output Data\PhixGenome.bin').abspath()
 
 with open(binaryGenomeFile , 'rb') as f:
     decodedGenome = numpy.fromfile(f, dtype=numpy.int)
-    #print decodedGenome
-d = reduce(lambda x,y: x+str(y), decodedGenome, '')
-decodedGenome = int(d)
-#print decodedGenome
-    
+    #print len(decodedGenome)
+#d = reduce(lambda x,y: x+str(y), decodedGenome, '')
+#decodedGenome = int(d)
+#decodedGenome = int(''.join(map(str, decodedGenome)))
+
 #reads = fileParsing.parseReadsInt(path('Data\HumanSequencingReads.tsv.bz2').abspath()) 
 reads = fileParsing.parseReadsInt(path('Data\PhiXSequencingReads1000.fastq').abspath())
+#print len(next(reads))
 
 #analyseAlignment.plotTimeVsMatches(reads, decodedGenome, path('Output Test Files\AlignmentAnalysis.png').abspath())
 

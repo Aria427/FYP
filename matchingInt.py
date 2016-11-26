@@ -5,7 +5,7 @@ import fileParsing
 
 import bisect
 import sys
-import numpy
+import numpy as np
 
 def bitLength(integer): #length of 1s and 0s
     length = 0
@@ -26,20 +26,20 @@ def ffs(x): #find first set = index of LSB (set => 1) 0 bit
     
 #Hamming distance = minimum no of substitutions required to change one string into another.
 #The following is also an online naive algorithm but for approximate matching using the Hamming distance:
-def naiveApproxHamming(pattern, text, maxHammingDist=1):
+def naiveApproxHamming(pattern, text, maxHammingDist=10):
     matchOffsets = []
     mismatches = 0 #hamming distance - no of differing bits
-    #for i in xrange(len(text)):
-    bitwise = pattern ^ text#[i] #bitwise exclusive or
-    #Hamming weight (no of non-zero bits) found using Wegner algorithm
-    while (bitwise != 0): #bit is set => mismatch
-        mismatches += 1
-        index = ffs(bitwise)
-        bitwise &= bitwise - 1 #clear lowest order non-zero bit
-        if mismatches > maxHammingDist: #exceeded maximum distance
-            break
-        elif mismatches <= maxHammingDist:
-            matchOffsets.append(index)
+    for i in xrange(len(text)):
+        bitwise = pattern ^ text[i] #bitwise exclusive or
+        #Hamming weight (no of non-zero bits) found using Wegner algorithm
+        while np.all(bitwise != 0): #bit is set => mismatch
+            mismatches += 1
+            #index = ffs(bitwise)
+            bitwise &= bitwise - 1 #clear lowest order non-zero bit
+            if mismatches > maxHammingDist: #exceeded maximum distance
+                break
+        if mismatches <= maxHammingDist:
+            matchOffsets.append(i)
     return matchOffsets
 
 #This might not be possible as k-mer indexing was constructed for strings.    
