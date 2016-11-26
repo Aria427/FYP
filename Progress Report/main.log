@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/W32TeX) (preloaded format=pdflatex 2016.10.6)  25 NOV 2016 00:26
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/W32TeX) (preloaded format=pdflatex 2016.10.6)  26 NOV 2016 23:15
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -640,9 +640,7 @@ Missing character: There is no ™ in font cmr10!
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [1]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [2]
+[2]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [3]
@@ -666,7 +664,7 @@ Missing character: There is no ¼ in font cmr10!
 Here is how much of TeX's memory you used:
  15832 strings out of 493013
  325850 string characters out of 6136993
- 372715 words of memory out of 5000000
+ 372717 words of memory out of 5000000
  19094 multiletter control sequences out of 15000+600000
  8858 words of font info for 31 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
@@ -676,7 +674,7 @@ cmbx10.pfb><c:/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pf
 b><c:/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><c:/texl
 ive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb><c:/texlive/2016/t
 exmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb>
-Output written on main.pdf (7 pages, 109053 bytes).
+Output written on main.pdf (7 pages, 109195 bytes).
 PDF statistics:
  59 PDF objects out of 1000 (max. 8388607)
  41 compressed objects within 1 object stream
