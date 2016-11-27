@@ -3,19 +3,18 @@ Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
 The top-level auxiliary file: main.aux
 The style file: ieeetr.bst
 Database file #1: references.bib
-Warning--I didn't find a database entry for "think1"
+Warning--empty author in think
 Warning--empty institution in bwtransform
 Warning--empty institution in refcompression
 Warning--empty institution in popgen
-Warning--empty author in think
 Warning--empty institution in gencompress
 Warning--empty institution in cgreads
-Warning--empty institution in omics
 Warning--empty institution in companalys
 Warning--empty institution in compalign
+Warning--empty institution in omics
 You've used 13 entries,
             1876 wiz_defined-function locations,
-            552 strings with 5836 characters,
+            551 strings with 5830 characters,
 and the built_in function-call counts, 2180 in all, are:
 = -- 185
 > -- 126
@@ -54,4 +53,4 @@ warning$ -- 9
 while$ -- 14
 width$ -- 15
 write$ -- 117
-(There were 10 warnings)
+(There were 9 warnings)

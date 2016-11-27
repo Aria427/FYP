@@ -4,8 +4,8 @@
 \usepackage{titlesec} %for titlespacing
 \usepackage{pgfgantt} %for Gantt chart
 
-\titlespacing*{\section}{0pt}{1\baselineskip}{\baselineskip}
-\titlespacing*{\subsection}{0pt}{1\baselineskip}{\baselineskip}
+\titlespacing*{\section}{0pt}{0.5\baselineskip}{\baselineskip}
+\titlespacing*{\subsection}{0pt}{0.5\baselineskip}{\baselineskip}
 
 \titleformat*{\section}{\Large\bfseries}
 \titleformat*{\subsection}{\large\bfseries}
@@ -92,12 +92,16 @@ The main objectives of the system are as follows:
 This section details the components which have been implemented along with a description of future plans.
 
 \subsection{Genome Compression}
+The genome compression method implemented makes use of certain in-built Python modules in order to compress the genome into a binary file by means of integers (each integer being of length 4 bytes).  Each nucleotide base is assigned two bits to represent it as there are only 4 possible bases. Chen et al. used the same deduction when developing {\textit{GenCompress}} \cite{gencompress}.  
 
 \subsection{Sequence Alignment}
+Four possible alignment methods were then taken into consideration - Hamming distance, Levenshtein/Edit distance, k-mer indexing and the most frequently used: FM-indexing with BWT.  These were first implemented and tested on string inputs; i.e. on an uncompressed genome of marginally less size than the human genome to confirm their applicability.  These same functions were then converted in order to instead support integer inputs due to the previously mentioned genome compression.  Analysing each algorithms' resulting match rate with the corresponding time taken led to the deduction that the ... algorithm performed best with ... matches done in ... seconds.     
 
 \subsection{Alignment Visualisation}
+The data visualisation tool's initial construction is based on {\textit{Tkinter}}, Python's standard Graphical User Interface (GUI) package.  The result is a depiction of the reads aligned with the genome, with lines repsresnting the position and length of each alignment/match.  As of now, its interactivity is in the form of clicking a line at a certain position to output the offset of the match at said point of clicking.     
 
 \subsection{Planned Methods}
+As for future development, firstly, the data visualisation tool needs to be further refined; i.e. become more interactive in terms of genome analysis.  Secondly, the genome browser tool also needs to be constructed using established technologies for efficient comparitive genomics.  Each method developed will be analysed and discussed to deduce the most feasible implementation.   
 
 
 \section{Proposed Evaluation Stategy}

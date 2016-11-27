@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/W32TeX) (preloaded format=pdflatex 2016.10.6)  26 NOV 2016 23:15
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/W32TeX) (preloaded format=pdflatex 2016.10.6)  27 NOV 2016 22:29
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -636,45 +636,41 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 Missing character: There is no â in font cmr10!
 Missing character: There is no € in font cmr10!
 Missing character: There is no ™ in font cmr10!
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [1]
-[2]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [3]
-Underfull \hbox (badness 10000) in paragraph at lines 126--127
+ [1] [2] [3]
+Underfull \hbox (badness 10000) in paragraph at lines 130--131
 
  []
 
 
-Overfull \hbox (27.38239pt too wide) in paragraph at lines 128--154
+Overfull \hbox (27.38239pt too wide) in paragraph at lines 132--158
 [] 
  []
 
 (./main.bbl
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [4]
 Missing character: There is no â in font cmr10!
 Missing character: There is no € in font cmr10!
 Missing character: There is no “ in font cmr10!
- [4]
 Missing character: There is no Ã in font cmr10!
 Missing character: There is no ¼ in font cmr10!
-) [5] (./main.aux) ) 
+)
+[5] (./main.aux) ) 
 Here is how much of TeX's memory you used:
  15832 strings out of 493013
  325850 string characters out of 6136993
- 372717 words of memory out of 5000000
+ 373721 words of memory out of 5000000
  19094 multiletter control sequences out of 15000+600000
  8858 words of font info for 31 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  62i,9n,71p,1048b,873s stack positions out of 5000i,500n,10000p,200000b,80000s
-<c:/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/
-cmbx10.pfb><c:/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pf
-b><c:/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><c:/texl
-ive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb><c:/texlive/2016/t
-exmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb>
-Output written on main.pdf (7 pages, 109195 bytes).
+<c:/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cm
+bx10.pfb><c:/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
+<c:/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><c:/texliv
+e/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb><c:/texlive/2016/tex
+mf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb>
+Output written on main.pdf (7 pages, 110602 bytes).
 PDF statistics:
  59 PDF objects out of 1000 (max. 8388607)
  41 compressed objects within 1 object stream

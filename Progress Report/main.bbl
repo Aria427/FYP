@@ -10,6 +10,10 @@ A.~M. Lesk, {\em Introduction to Genomics}.
 \newblock Great Claredon Street, Oxford, OX2 6DP, UK: Oxford University Press,
   2~ed., 2012.
 
+\bibitem{think}
+``The hidden history of the maltese genome,'' {\em Think Magazine}, vol.~16,
+  pp.~19--25, 4 2016.
+
 \bibitem{bwtransform}
 H.~Li and R.~Durbin, ``Fast and accurate short read alignment with
   burrows–wheeler transform,'' tech. rep., Wellcome Trust Sanger Institute,
@@ -24,10 +28,6 @@ M.~H.-Y. Fritz, R.~Leinonen, G.~Cochrane, and E.~Birney, ``Efficient storage of
 L.~Huang, V.~Popic, and S.~Batzoglou, ``Short read alignment with populations
   of genomes,'' tech. rep., 2013.
 
-\bibitem{think}
-``The hidden history of the maltese genome,'' {\em Think Magazine}, vol.~16,
-  pp.~19--25, 4 2016.
-
 \bibitem{gencompress}
 X.~Chen, S.~Kwong, and M.~Li, ``A compression algorithm for dna sequences and
   its applications in genome comparison,'' tech. rep., New York, NY, USA, 4
@@ -36,10 +36,6 @@ X.~Chen, S.~Kwong, and M.~Li, ``A compression algorithm for dna sequences and
 \bibitem{cgreads}
 D.~Lee, F.~Hormozdiari, H.~Xin, F.~Hach, O.~Mutlu, and C.~Alkan, ``Fast and
   accurate mapping of complete genomics reads,'' tech. rep., 10 2014.
-
-\bibitem{omics}
-B.~Berger, J.~Peng, and M.~Singh, ``Computational solutions for omics data,''
-  tech. rep., USA, 3 2014.
 
 \bibitem{companalys}
 M.~Ruffalo, T.~LaFramboise, and M.~Koyutürk, ``Comparative analysis of
@@ -50,6 +46,10 @@ M.~Ruffalo, T.~LaFramboise, and M.~Koyutürk, ``Comparative analysis of
 J.~Shang, F.~Zhu, W.~Vongsangnak, Y.~Tang, W.~Zhang, , and B.~Shen,
   ``Evaluation and comparison of multiple aligners for next-generation
   sequencing data analysis,'' tech. rep., 3 20114.
+
+\bibitem{omics}
+B.~Berger, J.~Peng, and M.~Singh, ``Computational solutions for omics data,''
+  tech. rep., USA, 3 2014.
 
 \bibitem{introbio}
 A.~M. Lesk, {\em Introduction to Bioinformatics}.
