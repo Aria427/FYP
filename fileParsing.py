@@ -100,8 +100,8 @@ def parseGenomeString(input, output): #file is not compressed
 #To parse the sequencing reads into an integer generator:        
 def parseReadsInt(filename):  
     readID, sequence, quality = '', '', ''
-    file = open(filename, 'r')
-    #file = bz2.BZ2File(filename, 'r')
+    #file = open(filename, 'r')
+    file = bz2.BZ2File(filename, 'r') 
     while True: #runs until EOF
         line = file.readline() 
         if not line: #reached EOF
