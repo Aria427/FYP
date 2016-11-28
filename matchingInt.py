@@ -6,6 +6,7 @@ import fileParsing
 import bisect
 import sys
 import numpy as np
+#import gmpy
 
 def bitLength(integer): #length of 1s and 0s
     length = 0
@@ -23,14 +24,18 @@ def bitCount(integer): #length of 1s only
 
 def ffs(x): #find first set = index of LSB (set => 1) 0 bit
     return (x&-x).bit_length()-1
-    
+
+#def hammingWeight(x, y):
+#    return gmpy.popcount(x ^ y)
+ 
 #Hamming distance = minimum no of substitutions required to change one string into another.
 #The following is also an online naive algorithm but for approximate matching using the Hamming distance:
 def naiveApproxHamming(pattern, text, maxHammingDist=10):
     matchOffsets = []
     mismatches = 0 #hamming distance - no of differing bits
-    for i in xrange(len(text)):
-        bitwise = pattern ^ text[i] #bitwise exclusive or
+    for i in xrange(len(pattern)):
+        bitwise = pattern[i] ^ text #bitwise exclusive or
+        #mismatches = hammingWeight(pattern[i], text)
         #Hamming weight (no of non-zero bits) found using Wegner algorithm
         while np.all(bitwise != 0): #bit is set => mismatch
             mismatches += 1

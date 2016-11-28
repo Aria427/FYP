@@ -10,6 +10,7 @@ from path import path
 import numpy 
 import sys
 import pdb
+import time
 
 #pdb.set_trace()
 binaryGenomeFile = path('Output Data\HumanGenomeZip.bin').abspath()
@@ -19,20 +20,21 @@ binaryGenomeFile = path('Output Data\HumanGenomeZip.bin').abspath()
 
 with open(binaryGenomeFile , 'rb') as f:
     decodedGenome = numpy.fromfile(f, dtype=numpy.int)
-    #print len(decodedGenome)
+    print len(decodedGenome) #161856144
 #d = reduce(lambda x,y: x+str(y), decodedGenome, '')
 #decodedGenome = int(d)
 
 reads = fileParsing.parseReadsInt(path('Data\HumanSequencingReads.tsv.bz2').abspath()) 
-#reads = fileParsing.parseReadsInt(path('Data\PhiXSequencingReads1000.fastq').abspath())
-for r in reads:
-    print r
-
+#reads = fileParsing.parseReadsPhiXInt(path('Data\PhiXSequencingReads1000.fastq').abspath())
+#print len(next(reads)) #60
 #analyseAlignment.plotTimeVsMatches(reads, decodedGenome, path('Output Test Files\AlignmentAnalysis.png').abspath())
 
-#matchesCount, totalCount, offsets = alignmentInt.alignHamming(reads, decodedGenome)
-#print '%d/%d reads matched the genome.' % (matchesCount, totalCount) #The result is not 100% but this is to be expected due to sequencing errors. 
+start = time.time()
+matchesCount, totalCount, offsets = alignmentInt.alignHamming(reads, decodedGenome)
+print '%d/%d reads matched the genome.' % (matchesCount, totalCount) #The result is not 100% but this is to be expected due to sequencing errors. 
 #print offsets
+end = time.time()
+print end-start
 
 """
 textFile = path('Output Test Files\DataVisualisationTest.txt').abspath()

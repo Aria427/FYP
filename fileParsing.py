@@ -99,7 +99,6 @@ def parseGenomeString(input, output): #file is not compressed
 #To parse the Human sequencing reads into an integer generator:   
 def parseReadsInt(filename):  
     flag, sequence, quality = '', '', ''
-    #file = open(filename, 'r')
     file = bz2.BZ2File(filename, 'r') 
     while True: #runs until EOF
         line = file.readline() 
@@ -126,7 +125,9 @@ def parseReadsInt(filename):
             
             else:
                 #Each read has length = 60
-                #sequence = compressReads(sequence, 60)
+                sequence = compressReads(sequence, 60)
+                #seq = reduce(lambda x,y: x+str(y), sequence, '')
+                #s = int(seq) #merge lines to form sequence
                 yield sequence
         
     file.close()     
@@ -134,8 +135,7 @@ def parseReadsInt(filename):
 #To parse the PhiX sequencing reads into an integer generator:        
 def parseReadsPhiXInt(filename):  
     readID, sequence, quality = '', '', ''
-    #file = open(filename, 'r')
-    file = bz2.BZ2File(filename, 'r') 
+    file = open(filename, 'r')
     while True: #runs until EOF
         line = file.readline() 
         if not line: #reached EOF
@@ -158,19 +158,19 @@ def parseReadsPhiXInt(filename):
                 sequenceLine = compressReads(line, 123)
                 #sequenceLines.append(sequenceLine) #no whitespace in integer sequence
                 line = file.readline()
-            #s = reduce(lambda x,y: x+str(y), sequenceLines, '')
+            #s = reduce(lambda x,y: x+str(y), sequenceLine, '')
             #sequence = int(s) #merge lines to form sequence
             line = file.readline()
-            yield sequenceLine#sequence
+            yield sequenceLine
         
         elif not quality:
             quality = []
             while True: #collect base qualities
                 quality += line.rstrip().replace(' ', '') 
-                if len(quality) >= len(sequence): #bases and qualities line up
-                    break
-                else:
-                    line = file.readline()
+                #if len(quality) >= len(sequence): #bases and qualities line up
+                    #break
+                #else:
+                line = file.readline()
     file.close() 
        
 #To parse the Phix sequencing reads into a string generator:        
