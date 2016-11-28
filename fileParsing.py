@@ -53,8 +53,7 @@ def compressReads(line, lineLength):
             #print "Invalid string found in bytes: %s" % format(bytes)  
     #print subsequences
     #s = reduce(lambda x,y: x+str(y), subsequences, '')
-    #sequence = int(s)
-    #sequence = int(''.join(map(str, subsequences))) #join integer array into one single integer
+    #sequence = int(s) #join integer array into one single integer
     return subsequences#sequence
                        
 #To read the genome into an integer:
@@ -96,9 +95,44 @@ def parseGenomeString(input, output): #file is not compressed
                 l = line.rstrip().upper().replace('N', '') 
                 genome += l 
     return genome
-    
-#To parse the sequencing reads into an integer generator:        
+  
+#To parse the Human sequencing reads into an integer generator:   
 def parseReadsInt(filename):  
+    flag, sequence, quality = '', '', ''
+    #file = open(filename, 'r')
+    file = bz2.BZ2File(filename, 'r') 
+    while True: #runs until EOF
+        line = file.readline() 
+        if not line: #reached EOF
+            break
+        
+        if line.startswith('#'): #read details
+            line = file.readline()
+            pass
+        
+        elif line.startswith('>'): #>flags reads scores
+            line = file.readline()
+            pass
+        
+        else:
+            line = line.split()
+            flag = line[0]
+            sequence = line[1]
+            quality = line[2]
+            
+            if sequence == 'NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN':
+                line = file.readline()
+                pass
+            
+            else:
+                #Each read has length = 60
+                #sequence = compressReads(sequence, 60)
+                yield sequence
+        
+    file.close()     
+    
+#To parse the PhiX sequencing reads into an integer generator:        
+def parseReadsPhiXInt(filename):  
     readID, sequence, quality = '', '', ''
     #file = open(filename, 'r')
     file = bz2.BZ2File(filename, 'r') 
@@ -125,8 +159,7 @@ def parseReadsInt(filename):
                 #sequenceLines.append(sequenceLine) #no whitespace in integer sequence
                 line = file.readline()
             #s = reduce(lambda x,y: x+str(y), sequenceLines, '')
-            #sequence = int(s)
-            #sequence = int(''.join(map(str, sequenceLines))) #merge lines to form sequence
+            #sequence = int(s) #merge lines to form sequence
             line = file.readline()
             yield sequenceLine#sequence
         
@@ -140,8 +173,8 @@ def parseReadsInt(filename):
                     line = file.readline()
     file.close() 
        
-#To parse the sequencing reads into a string generator:        
-def parseReadsString(filename):  
+#To parse the Phix sequencing reads into a string generator:        
+def parseReadsPhiXString(filename):  
     readID, sequence, quality = '', '', ''
     file = open(filename, 'r')
     #file = bz2.BZ2File(filename, 'r')

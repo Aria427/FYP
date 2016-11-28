@@ -3,8 +3,8 @@
 
 import fileParsing
 import alignmentInt
-import analyseAlignment
-import visualisation
+#import analyseAlignment
+#import visualisation
 
 from path import path
 import numpy 
@@ -22,16 +22,16 @@ with open(binaryGenomeFile , 'rb') as f:
     #print len(decodedGenome)
 #d = reduce(lambda x,y: x+str(y), decodedGenome, '')
 #decodedGenome = int(d)
-#decodedGenome = int(''.join(map(str, decodedGenome)))
 
 reads = fileParsing.parseReadsInt(path('Data\HumanSequencingReads.tsv.bz2').abspath()) 
 #reads = fileParsing.parseReadsInt(path('Data\PhiXSequencingReads1000.fastq').abspath())
-#print len(next(reads))
+for r in reads:
+    print r
 
 #analyseAlignment.plotTimeVsMatches(reads, decodedGenome, path('Output Test Files\AlignmentAnalysis.png').abspath())
 
-matchesCount, totalCount, offsets = alignmentInt.alignHamming(reads, decodedGenome)
-print '%d/%d reads matched the genome.' % (matchesCount, totalCount) #The result is not 100% but this is to be expected due to sequencing errors. 
+#matchesCount, totalCount, offsets = alignmentInt.alignHamming(reads, decodedGenome)
+#print '%d/%d reads matched the genome.' % (matchesCount, totalCount) #The result is not 100% but this is to be expected due to sequencing errors. 
 #print offsets
 
 """
