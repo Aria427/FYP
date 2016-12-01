@@ -19,7 +19,7 @@ def alignHamming(reads, genome):
         matchOffsets = matchingInt.naiveApproxHamming(read, genome) #check if read matches in forward direction of genome 
         #matchOffsets.extend(matchingInt.naiveApproxHamming(reverseRead, genome)) #add results of any matches in reverse complement of genome
         readsCount += 1 
-        if (readsCount % 1) == 0:
+        if (readsCount % 100) == 0:
             print "*"
         if len(list(matchOffsets)) > 0: #match - read aligned in at least one place
             readsMatched += 1

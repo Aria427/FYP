@@ -38,9 +38,13 @@ def naiveApproxHamming(pattern, text, maxHammingDist=10):
         #mismatches = hammingWeight(pattern[i], text)
         #Hamming weight (no of non-zero bits) found using Wegner algorithm
         while np.all(bitwise != 0): #bit is set => mismatch
-            mismatches += 1
-            #index = ffs(bitwise)
             bitwise &= bitwise - 1 #clear lowest order non-zero bit
+            if np.all(bitwise != 0): #i.e. 11 = T
+                mismatches += 1
+                bitwise &= bitwise - 1
+            else:
+                mismatches += 1
+            #index = ffs(bitwise)
             if mismatches > maxHammingDist: #exceeded maximum distance
                 break
         if mismatches <= maxHammingDist:

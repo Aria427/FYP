@@ -152,11 +152,11 @@ def parseReadsPhiXInt(filename):
             continue
 
         elif not sequence:
-            #sequenceLines = []
+            sequenceLines = []
             while not line.startswith('+'): #not placeholder line (third line)
                 #Each line has length = 123 in Human
                 sequenceLine = compressReads(line, 123)
-                #sequenceLines.append(sequenceLine) #no whitespace in integer sequence
+                sequenceLines.append(sequenceLine) #no whitespace in integer sequence
                 line = file.readline()
             #s = reduce(lambda x,y: x+str(y), sequenceLine, '')
             #sequence = int(s) #merge lines to form sequence
