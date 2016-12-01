@@ -14,7 +14,7 @@
   \large Progress Report}
 
 \author{Sara Ann Abdilla (188396M)}
-\supervisor{Jean Paul Ebejer}
+\supervisor{Dr Jean Paul Ebejer}
 \date{December 2016}
 
 \begin{document}
@@ -39,18 +39,18 @@ The aim of this report is to detail the groundwork accomplished on developing th
 \section{Introduction \& Motivation}
 \label{s:intro}
 
-Over the years, more and more human reference genomes are being globally assembled.  A reference genome is a digital database consisting of DNA sequences; each individual's DNA corresponding to an arrangement of approximately 3 billion bases.  The possible nucleotide bases are adenine, cytosine, guanine and thymine - oftenly referred to by the letters A, C, G and T respectively \cite{aiBk, introgenom}.  
+Over the years, more people's genomes are being sequenced in order to identify diseases.  A reference genome is a digital database consisting of DNA sequences; each individual's DNA corresponding to an arrangement of approximately 3 billion bases.  The possible nucleotide bases are adenine, cytosine, guanine and thymine - oftenly referred to by the letters A, C, G and T respectively \cite{aiBk, introgenom}.  
 
 Genome assembly/sequencing technologies are rapidly advancing and their costs are decreasing; both factors being due to the fact that their importance is becoming more widely known.  DNA variations and mutations may correlate to diseases so discovering any approximately matching alignments between the reference genome and the DNA sequencing reads being analysed could very well help future medical diagnosis and treatments \cite{think}.
 
-The University of Malta is developing a National Maltese Human Reference Genome for this reason whereby whole genome sequencing on certain Maltese DNA samples (provided by the Malta BioBank) will be performed.  The American human genome sequencing facility Complete Genomics, which was founded in 2006, will be a partner in this project. 
+The University of Malta is developing a National Maltese Human Reference Genome for this reason whereby whole genome sequencing on certain Maltese DNA samples (provided by the Malta BioBank) will be performed.  The American human genome sequencing facility Complete Genomics, which was founded in 2006, is a partner in this project. 
 
 Thus, computation wise, a data visualisation tool along with a genome browser need to be constructed in order to aid in this endeavour.  
 
 
 \section{Reasoning for Nontriviality of Problem}
 
-Globally, large genome projects are being sequenced rapidly.  Examples of such projects include the 1000 Genomes Project and the International Cancer Genome Project \cite{bwtransform, refcompression, popgen}.  Malta should aim to be a part of this endevaour so that further studies can be conducted involving a larger variety of genes (i.e. the Maltese genes).  After all, while the reading of an individual's DNA shows the likeliness of that person developing a disease, the reading of a nation’s DNA shows why that population is more likely to develop a disease \cite{think}.  Such analyses can therefore prove to not only medically aid global research but also nation-wide studies.             
+Globally, large genome projects are being sequenced rapidly.  Examples of such projects include the 1000 Genomes Project (now known as the 100,000 Genomes Project in the UK) and the International Cancer Genome Project \cite{bwtransform, refcompression, popgen}.  Malta should aim to be a part of this endeavour so that further studies can be conducted involving a larger variety of genes (i.e. the Maltese genes).  After all, while the reading of an individual's DNA shows the likeliness of that person developing a disease, the reading of a nation’s DNA shows why that population is more likely to develop a disease \cite{think}.  Such analyses can therefore prove to not only medically aid global research but also nation-wide studies.             
 
 
 \section{Background Research and Literature Review}
@@ -61,7 +61,7 @@ The development of a genome assembly technology consists of multiple stages; the
 Genomes, particularly human ones, consist of a large amount of data.  For this reason, in order to efficiently analyse them, said genomes are compressed using various methods.  For example, Chen et al devised the lossless {\textit{GenCompress}} algorithm which implements certain established compression algorithms such as Lempel-Ziv.  By analysing approximate matches based on the evaluated edit distances, it was found that such a method not only achieves the best compression ratio but also finds common sections in DNA sequences \cite{gencompress}.  Another example would be the lossless reference-based compression algorithm devised by Fritz et al.  It implements established components such as Golomb codes and De Bruijn graphs and was found to be quite efficient for read alignments similar to the reference genome \cite{refcompression}.  Other known algorithm are {\textit{Biocompress-2}} and {\textit{Cfact}} \cite{gencompress} along with {\textit{DNACompress}} and {\textit{ DNAZip}} \cite{refcompression}.          
 
 \subsection{Read Alignment Tools}
-Next-Generation Sequencing (NGS) technologies are evolving rapidly and to keep up with evolution, multiple read aligners are being produced; the most known being BWA, Bowtie, Soapv2, MAQ, BOAT, SHRiMP2 for the NGS platforms Illumina, Roche454 and ABI SOLiD.  The majority implement Burrows-Wheeler Transform (BWT) but there are also those which use FM-indexing, Smith-Waterman,  and Needleman-Wunsch algorithms \cite{bwtransform, popgen, cgreads}.  All these mentioned aligners are quite efficient relative to the task they are given; for example, while some aligners may be more efficient with short reads, others may be the opposite \cite{companalys, compalign}.  Other known algorithms which assist in approximate read mapping are the Hamming distance as well as the Levenshtein distance, both of which return a measure of the similarity between two sequences.
+Next-Generation Sequencing (NGS) technologies are evolving rapidly and to keep up with evolution, multiple read aligners are being produced; the most known being BWA, Bowtie, Soapv2, MAQ, BOAT, SHRiMP2 for the NGS platforms Illumina, Roche454 and ABI SOLiD.  The majority implement Burrows-Wheeler Transform (BWT) but there are also those which use FM-indexing, Smith-Waterman,  and Needleman-Wunsch algorithms \cite{bwtransform, popgen, cgreads}.  All these mentioned aligners are quite efficient relative to the task they are given; for example, while some aligners may be more efficient with short reads, others may be more efficient with longer reads \cite{companalys, compalign}.  Other known algorithms which assist in approximate read mapping are the Hamming distance as well as the Levenshtein distance, both of which return a measure of the similarity between two sequences.
 
 \subsection{Critique of Missing Studies}
 Regarding alignment visualisation and genome browser construction, there do not seem to be any concrete algorithms for such cases.  This is a fundamental area in genome assembly technology which should be researched extensively; i.e. part of this project's goals.     
@@ -87,7 +87,7 @@ The main objectives of the system are as follows:
 \end{enumerate}
 
 
-\section{Methods and Techniques Used or Planned}
+\section{Materials and Methods}
 
 This section details the components which have been implemented along with a description of future plans.
 
@@ -100,7 +100,7 @@ Four possible alignment methods were then taken into consideration - Hamming dis
 \subsection{Alignment Visualisation}
 The data visualisation tool's initial construction is based on {\textit{Tkinter}}, Python's standard Graphical User Interface (GUI) package.  The result is a depiction of the reads aligned with the genome, with lines repsresnting the position and length of each alignment/match.  As of now, its interactivity is in the form of clicking a line at a certain position to output the offset of the match at said point of clicking.     
 
-\subsection{Planned Methods}
+\subsection{Future Plans}
 As for future development, firstly, the data visualisation tool needs to be further refined; i.e. become more interactive in terms of genome analysis.  Secondly, the genome browser tool also needs to be constructed using established technologies for efficient comparitive genomics.  Each method developed will be analysed and discussed to deduce the most feasible implementation.   
 
 
@@ -149,10 +149,10 @@ The milestone schedule is represented in the following Gantt chart: \\
 \ganttbar{Research}{1}{12} \\
 \ganttbar{Progress Report}{8}{11} \\
 \ganttbar{Implementation}{4}{21} \\
-\ganttbar{Dissertation}{21}{27} \\
+\ganttbar{Documentation}{21}{27} \\
 \ganttbar{Review Report}{23}{27} \\
-\ganttbar{Presentation}{27}{29} \\
-\ganttbar{Exhibition}{29}{30}
+\ganttbar{Presentation}{28}{29} \\
+\ganttbar{Exhibition}{30}{30}
 \end{ganttchart}
 }
 
