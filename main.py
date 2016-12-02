@@ -27,7 +27,9 @@ with open(binaryGenomeFile , 'rb') as f:
 #decodedGenome = int(d)
 
 #integers, integersCount = intGenomePatternTesting.countIntegers(decodedGenome)
-integerGroups, groupsCount = intGenomePatternTesting.countConsecutiveIntegers(decodedGenome)    
+pairsCount = intGenomePatternTesting.countIntegerPairs(decodedGenome) 
+#triplesCount = intGenomePatternTesting.countIntegerTriples(decodedGenome)    
+print pairsCount
 
 #intGenomePatternTesting.createHistogram(integersCount)
 

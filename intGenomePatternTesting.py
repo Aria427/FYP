@@ -2,8 +2,9 @@
 #This file contains some testing functions with regards to finding repetitive patterns in the compressed integer genome.
 
 import numpy as np
-from itertools import groupby
+from itertools import groupby, combinations
 from operator import itemgetter
+from collections import Counter
 import matplotlib.pyplot as plt
 import matplotlib.ticker as plticker
 
@@ -19,16 +20,33 @@ def identifyConsecutiveIntegers(genome):
         group = map(itemgetter(1), g) 
         yield group
     
-#This function returns the frequency of each group of consecutive integers found in the genome:
-def countConsecutiveIntegers(genome):
+#This function returns the frequency of each pair of consecutive integers found in the genome:
+def countIntegerPairs(genome):
     pairs = []
+    counter  = Counter()
     group = identifyConsecutiveIntegers(genome)
     for g in group:
-        if len(g) > 1: #if pair of integers is observed
+        if len(g) > 1 & len(g) < 3: #if pair of integers is observed
             pairs.append(g)
-    unique, counts = np.unique(pairs, return_counts=True)
-    #frequencyArray = np.asarray((unique, counts)).T
-    return unique, counts  
+    for p in pairs:
+        p.sort()
+        for c in combinations(p, 2):
+            counter[c] += 1
+    return counter
+
+#This function returns the frequency of each triple of consecutive integers found in the genome:
+def countIntegerTriples(genome):
+    triples = []
+    counter  = Counter()
+    group = identifyConsecutiveIntegers(genome)
+    for g in group:
+        if len(g) > 2 & len(g) < 4: #if triple of integers is observed
+            triples.append(g)
+    for t in triples:
+        t.sort()
+        for c in combinations(t, 3):
+            counter[c] += 1
+    return counter
  
 #This function creates a histogram displaying the frequencies of the relative integers:
 def createHistogram(counts):
