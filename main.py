@@ -26,11 +26,12 @@ with open(binaryGenomeFile , 'rb') as f:
 #d = reduce(lambda x,y: x+str(y), decodedGenome, '')
 #decodedGenome = int(d)
 
-u, c = intGenomePatternTesting.countIntegers(decodedGenome)
-#print intgen.countIntegerPairs(decodedGenome)
-#print intgen.countIntegerTriples(decodedGenome)
+#integers, integersCount = intGenomePatternTesting.countIntegers(decodedGenome)
+integerGroups, groupsCount = intGenomePatternTesting.countConsecutiveIntegers(decodedGenome)    
 
-intGenomePatternTesting.createHistogram(c)
+#intGenomePatternTesting.createHistogram(integersCount)
+
+sys.exit()
 
 reads = fileParsing.parseReadsInt(path('Data\HumanSequencingReads.tsv.bz2').abspath()) 
 #reads = fileParsing.parseReadsPhiXInt(path('Data\PhiXSequencingReads1000.fastq').abspath())
