@@ -19,6 +19,10 @@ H.~Li and R.~Durbin, ``Fast and accurate short read alignment with
   burrows–wheeler transform,'' tech. rep., Wellcome Trust Sanger Institute,
   Wellcome Trust Genome Campus, Cambridge, CB10 1SA, UK, 5 2009.
 
+\bibitem{cgreads}
+D.~Lee, F.~Hormozdiari, H.~Xin, F.~Hach, O.~Mutlu, and C.~Alkan, ``Fast and
+  accurate mapping of complete genomics reads,'' tech. rep., 10 2014.
+
 \bibitem{refcompression}
 M.~H.-Y. Fritz, R.~Leinonen, G.~Cochrane, and E.~Birney, ``Efficient storage of
   high throughput dna sequencing data using reference-based compression,''
@@ -33,10 +37,6 @@ X.~Chen, S.~Kwong, and M.~Li, ``A compression algorithm for dna sequences and
   its applications in genome comparison,'' tech. rep., New York, NY, USA, 4
   2000.
 
-\bibitem{cgreads}
-D.~Lee, F.~Hormozdiari, H.~Xin, F.~Hach, O.~Mutlu, and C.~Alkan, ``Fast and
-  accurate mapping of complete genomics reads,'' tech. rep., 10 2014.
-
 \bibitem{companalys}
 M.~Ruffalo, T.~LaFramboise, and M.~Koyutürk, ``Comparative analysis of
   algorithms for next-generation sequencing read alignment,'' tech. rep., 7
@@ -45,7 +45,7 @@ M.~Ruffalo, T.~LaFramboise, and M.~Koyutürk, ``Comparative analysis of
 \bibitem{compalign}
 J.~Shang, F.~Zhu, W.~Vongsangnak, Y.~Tang, W.~Zhang, , and B.~Shen,
   ``Evaluation and comparison of multiple aligners for next-generation
-  sequencing data analysis,'' tech. rep., 3 20114.
+  sequencing data analysis,'' tech. rep., 3 2014.
 
 \bibitem{omics}
 B.~Berger, J.~Peng, and M.~Singh, ``Computational solutions for omics data,''
@@ -60,5 +60,15 @@ A.~M. Lesk, {\em Introduction to Bioinformatics}.
 D.~W. Mount, {\em Bioinformatics: Sequence and Genome Analysis}.
 \newblock Cold Spring Harbor Laboratory Press, Cold Spring Harbor, New York,
   USA: Cold Spring Harbor Laboratory Press, 2001.
+
+\bibitem{webbrowser}
+JunWang, L.~Kong, G.~Gao, and J.~Luo, ``A brief introduction to web-based
+  genome browsers,'' tech. rep., 7 2012.
+
+\bibitem{genericbrowser}
+L.~D. Stein, C.~Mungall, S.~Shu, M.~Caudy, M.~Mangone, A.~Day, E.~Nickerson,
+  J.~E. Stajich, T.~W. Harris, A.~Arva, and S.~Lewis, ``The generic genome
+  browser: A building block for a model organism system database,'' tech. rep.,
+  12 2002.
 
 \end{thebibliography}

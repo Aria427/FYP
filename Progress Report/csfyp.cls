@@ -13,7 +13,7 @@
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{article}}
 \ProcessOptions \relax
 
-\LoadClass[11pt,twoside]{article}
+\LoadClass[10pt,twoside]{article}
 \RequirePackage[onehalfspacing]{setspace}
 \RequirePackage[top=1.2in, left=2.5cm, bottom=1.2in, right=2.5cm]{geometry}
 \RequirePackage{calc}
