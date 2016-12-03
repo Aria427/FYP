@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/W32TeX) (preloaded format=pdflatex 2016.10.6)  2 DEC 2016 15:07
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/W32TeX) (preloaded format=pdflatex 2016.10.6)  3 DEC 2016 18:18
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -635,39 +635,57 @@ Missing character: There is no â in font cmr10!
 Missing character: There is no € in font cmr10!
 Missing character: There is no ™ in font cmr10!
  [1] [2] [3]
-Underfull \hbox (badness 10000) in paragraph at lines 153--154
+Underfull \hbox (badness 10000) in paragraph at lines 145--146
 
  []
 
-[4]
-Overfull \hbox (25.01689pt too wide) in paragraph at lines 155--181
+
+Overfull \hbox (25.01689pt too wide) in paragraph at lines 148--174
 [] 
  []
 
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [4]
+! Undefined control sequence.
+<argument> \bibsep 
+                   
+l.182     \setlength{\bibsep}{10pt}
+                                   
+? 
+! Missing number, treated as zero.
+<to be read again> 
+                   \def 
+l.183     \setstretch{0.85}
+                           
+? 
+! Illegal unit of measure (pt inserted).
+<to be read again> 
+                   \def 
+l.183     \setstretch{0.85}
+                           
+? 
 (./main.bbl
 Missing character: There is no â in font cmr10!
 Missing character: There is no € in font cmr10!
 Missing character: There is no “ in font cmr10!
 Missing character: There is no Ã in font cmr10!
 Missing character: There is no ¼ in font cmr10!
- [5]) [6] (./main.aux)
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
- )
+) [5] (./main.aux) )
 (\end occurred inside a group at level 2)
 
-### simple group (level 2) entered at line 115 ({)
-### simple group (level 1) entered at line 115 ({)
+### simple group (level 2) entered at line 109 ({)
+### simple group (level 1) entered at line 109 ({)
 ### bottom level 
 Here is how much of TeX's memory you used:
- 15817 strings out of 493013
- 325635 string characters out of 6136993
- 371690 words of memory out of 5000000
- 19083 multiletter control sequences out of 15000+600000
+ 15818 strings out of 493013
+ 325641 string characters out of 6136993
+ 377698 words of memory out of 5000000
+ 19084 multiletter control sequences out of 15000+600000
  5813 words of font info for 21 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 62i,9n,71p,1046b,943s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 62i,9n,71p,1103b,993s stack positions out of 5000i,500n,10000p,200000b,80000s
 <c:/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx
 10.pfb><c:/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb><c
 :/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb><c:/texlive/
@@ -675,10 +693,10 @@ Here is how much of TeX's memory you used:
 -dist/fonts/type1/public/amsfonts/cm/cmr12.pfb><c:/texlive/2016/texmf-dist/font
 s/type1/public/amsfonts/cm/cmr9.pfb><c:/texlive/2016/texmf-dist/fonts/type1/pub
 lic/amsfonts/cm/cmti10.pfb>
-Output written on main.pdf (8 pages, 139567 bytes).
+Output written on main.pdf (7 pages, 141128 bytes).
 PDF statistics:
- 70 PDF objects out of 1000 (max. 8388607)
- 49 compressed objects within 1 object stream
+ 67 PDF objects out of 1000 (max. 8388607)
+ 47 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  18 words of extra memory for PDF output out of 10000 (max. 10000000)
 

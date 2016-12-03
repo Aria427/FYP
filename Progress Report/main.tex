@@ -32,11 +32,11 @@
 
 
 \begin{abstract}
-The aim of this report is to detail the groundwork accomplished on developing the visualisation tool and the genome browser required for the Malta Human Genome Project.  The problem is introduced with the motivation behind it along with the reasoning for its nontriviality.  The reader is then provided with the required background knowledge in order to properly discern the problem, followed by the project's objectives.  The current and intended techniques and evaluation strategy are explained.  Finally, the expected deliverables are listed with an accompanying Gantt chart.   
+Human genomes are being globally assembled in order to aid in medical diagnosis, forensic research, genealogy and bioinformatics among other areas.  While many countries have already had a reference genome constructed for their population, Malta is still in the process of accomplishing this - a National Maltese Human Reference Genome.  In this dissertation, I propose to aid in this project  (computation wise) by developing a data visualisation tool along with a genome browser for DNA analysis.    
 \end{abstract}
 
 
-\section{Introduction \& Motivation}
+\section{Introduction \& Motivation}\vspace{-2ex}
 \label{s:intro}
 
 Over the years, more people's genomes are being sequenced in order to identify diseases.  This sequencing is stored in a reference genome which is a digital database consisting of DNA sequences; each individual's DNA corresponding to an arrangement of approximately 3 billion bases.  DNA (deoxyribonucleic acid) could be described as a model of biological life which encompasses genetic information/genes whereby its possible nucleotide bases are adenine, cytosine, guanine and thymine - oftenly referred to by the letters A, C, G and T respectively \cite{aiBk, introgenom}.  
@@ -47,85 +47,77 @@ The University of Malta is developing a National Maltese Human Reference Genome 
 
 The problem of aligning genomes comes into play here.  In order to accurately and efficiently match alignments between a human reference genome and the respective DNA sequencing reads, different algorithms must be applied.  The most common ones use Burrows-Wheeler Transform \cite{bwtransform, cgreads} but there are multiple other variations; all of these being explained further on.  
 
-Thus, computation wise, a data visualisation tool along with a genome browser need to be constructed in order to aid in this endeavour.  These developments are only possible after the required alignment as discussed above.  
+Thus, computation wise, a data visualisation tool along with a genome browser need to be constructed in order to aid in this endeavour.  These developments are only possible after the required alignment is completed, as discussed above.  
 
 
-\section{Reasoning for Nontriviality of Problem}
+\section{Reasoning for Nontriviality of Problem}\vspace{-2ex}
 
 Globally, large genome projects are being sequenced rapidly.  Examples of such projects include the 1000 Genomes Project (now known as the 100,000 Genomes Project in the UK) and the International Cancer Genome Project \cite{bwtransform, refcompression, popgen}.  Malta should aim to be a part of this endeavour so that further studies can be conducted involving a larger variety of genes (i.e. the Maltese genes).  
 
 DNA is analogous to a storage device of genetic information so it aids in multiple research areas such as genealogy, forensics, medical diagnosis and bioinformatics among others.  After all, while the reading of an individual's DNA shows the likeliness of that person developing a disease, the reading of a nation’s DNA shows why that population is more likely to develop a disease \cite{think}.  Such analyses can therefore prove to not only medically aid global research but also nation-wide studies.
 
-Hence the problem is non-trivial as Malta has such a diverse history and gene pool.  By developing a National Maltese Human Reference Genome, Maltese medial research will surely take a step forward in the right direction.              
+Hence the problem is non-trivial as Malta has a diverse history and gene pool.  By developing the tools required for the Malta Human Genome Project to be a success, Maltese medical research will surely take a step forward in the right direction.              
 
 
-\section{Background Research and Literature Review}
+\section{Background Research and Literature Review}\vspace{-2ex}
 
-The development of a genome assembly technology consists of multiple stages; the main ones being genome compression, sequence alignment, alignment visualisation and genome browser construction; all the steps following one another.  The following points detail some research which has already been conducted in these areas.
+The development of a genome assembly technology consists of multiple stages; the main ones being genome compression, sequence alignment, alignment visualisation and genome browser construction (successively).  The following points detail some research which has already been conducted in these areas.
 
-\subsection{Genome Compression Tools}
+\subsection{Genome Compression Tools}\vspace{-2ex}
 Genomes, particularly human ones, consist of a large amount of data.  For this reason, in order to efficiently analyse them, said genomes are compressed using various methods.  For example, Chen et al devised the lossless {\textit{GenCompress}} algorithm which implements certain established compression algorithms such as Lempel-Ziv.  By analysing approximate matches based on the evaluated edit distances, it was found that such a method not only achieves the best compression ratio but also finds common sections in DNA sequences \cite{gencompress}.  Another example would be the lossless reference-based compression algorithm devised by Fritz et al.  It implements established components such as Golomb codes and De Bruijn graphs and was found to be quite efficient for read alignments similar to the reference genome \cite{refcompression}.  Other known algorithm are {\textit{Biocompress-2}} and {\textit{Cfact}} \cite{gencompress} along with {\textit{DNACompress}} and {\textit{ DNAZip}} \cite{refcompression}.          
 
-\subsection{Read Alignment Tools}
+\subsection{Read Alignment Tools}\vspace{-2ex}
 Next-Generation Sequencing (NGS) technologies are evolving rapidly and to keep up with this evolution, multiple read aligners are being produced; the most known being BWA, Bowtie, Soapv2, MAQ, BOAT, SHRiMP2 for the NGS platforms Illumina, Roche454 and ABI SOLiD \cite{bwtransform, popgen, cgreads}.  Reads are parts of DNA which are gathered by sequencers from people who wished to contribute to the area.  They are given such importance as without them, not only can analysis of genomes not be performed but the actual reference genome would not even exist in the first place.   
 
 The majority of read aligners implement Burrows-Wheeler Transform (BWT) but there are also those which use FM-indexing, Smith-Waterman,  and Needleman-Wunsch algorithms \cite{bwtransform, popgen, cgreads}.  All these mentioned aligners are quite efficient relative to the task they are given; for example, while some aligners may be more efficient with short reads, others may be more efficient with longer reads \cite{companalys, compalign}.  Other known algorithms which assist in approximate read mapping are the Hamming distance as well as the Levenshtein distance, both of which return a measure of the similarity between two sequences.  These are not as commonly used due to their time complexity but they can still be implemented if reasoned about accordingly.
 
-\subsection{Genome Browser Construction}
-
-
-\subsection{Critique of Missing Studies}
-Regarding the genome compression tools discussed above, it is clear that a lot of research has already been done in the area.  However specific implementations have not be studied; i.e. using in-built programming language modules as done in this project.
-  
-Regarding the read alignment tools discussed above, it is again clear that a large amount of research has been conducted in the area.  However, as mentioned previously, most aligners do not use Hamming or Levenshtein distance so this approach will be analysed in this project. 
+\subsection{Genome Browser Construction}\vspace{-2ex}
+Genome browsers are graphical interfaces which are used in conjuction with genomic databases.  They display the information found such that individuals are able to not only browse the stored genomes but also to visualise them, leading to easier data seaching and analysis.  Most browsers are web-based applications which allow certain customisations according to the user's requirements, but stand-alone browsers exist as well \cite{webbrowser, genericbrowser}.  An example of a web-based genome browser is {\textit{GBrowse}} which was constructed by Stein et. al \cite{genericbrowser}. 
  
-Regarding alignment visualisation, there do not seem to be any concrete algorithms for such cases.  This is a fundamental area in genome assembly technology which should be researched extensively; i.e. part of this project's goals.
+Genome browser construction is very labour-intensive.  Fortunately, many genome browser frameworks have already been constructed such as the most popular {\textit{GBrowse}} (which was mentioned previously) as well as {\textit{Ensembl}}, {\textit{JBrowse}} and {\textit{LookSeq}} among others.  It should also be noted that there are two types of web-based genome browsers, multiple-species and species-specific browsers \cite{webbrowser}.  As this project deals with a human genome, a species-specific browser must be implemented.  Following the Generic Model Organism Database (GMOD) project, there are multiple open-source tools for this type of browser; {\textit{GBrowse}}, again, being one of the most used frameworks \cite{webbrowser}.              
 
-Finally, regarding genome browser construction, it is again clear that a lot of research has already been conducted in the area.  However not a lot has been done in relation to comparing them against each other and so, this project will analyse this aspect as well.      
+\subsection{Critique of Missing Studies}\vspace{-2ex}
+Firstly, regarding the genome compression tools discussed above, it is clear that a lot of research has already been done in the area.  However specific implementations have not be studied; i.e. using in-built programming language modules as done in this project.  Secondly, regarding the read alignment tools also discussed above, it is again clear that a large amount of research has been conducted in the area.  However, as mentioned previously, most aligners do not use Hamming or Levenshtein distance so this approach will be one of the methods analysed in this project.  Thirdly, regarding alignment visualisation, there do not seem to be any concrete algorithms for such cases.  This is a fundamental area in genome assembly technology which should be researched extensively; i.e. part of this project's goals.  Finally, regarding genome browser construction, it is again clear that a lot of research has already been conducted in the area.  However not a lot has been done in relation to comparing them against each other and so, this project will analyse this aspect as well.      
 
-\section{Aims and Objectives}
+\section{Aims and Objectives}\vspace{-2ex}
 
-The aim of this project is to build tools for the analysis of sequenced genomes from the Malta Human Genome Project.  The research areas studied are bioinformatics, big data, data storage, data visualisation and data analysis among others.
-
-The main objectives of the system are as follows:
+The aim of this project is to build tools for the analysis of sequenced genomes from the Malta Human Genome Project.  The research areas studied are bioinformatics, big data, data storage, data visualisation and data analysis among others.  The main objectives of the system are as follows:
 
 \begin{enumerate}[nolistsep]
 
-   \item The compression of a reference genome such as that done by Chen et al. \cite{gencompress} and Fritz et al. \cite{refcompression} among others;
+   \item The compression of a reference genome such as that done by Chen et al. \cite{gencompress} and Fritz et al. \cite{refcompression};
 
-  \item The alignment of a reference genome against a number of sequencing reads such as that done by Lee et al. \cite{cgreads} and Li et al. \cite{bwtransform} among others;
+  \item The alignment of a reference genome against a number of sequencing reads such as that done by Lee et al. \cite{cgreads} and Li et al. \cite{bwtransform};
 
   \item The data visualiation of human genomes;
 
-  \item The construction of a genome browser using novel and established components in order to reference DNA for comparitive genomics and to analyse DNA mutations;  
+  \item The construction of a genome browser using novel and established components (such as that done by Stein et al. \cite{genericbrowser}) in order to reference DNA for comparitive genomics and to analyse DNA mutations;  
 
   \item A comparitive review of existing methods against all the above points.
 
 \end{enumerate}
 
 
-\section{Materials and Methods}
+\section{Materials and Methods}\vspace{-2ex}
 
 This section details the components which have been implemented along with a description of future plans.
 
-\subsection{Genome Compression}
+\subsection{Genome Compression}\vspace{-2ex}
 The genome compression method implemented makes use of certain in-built Python modules in order to compress the genome into a binary file by means of integers (each integer being of length 4 bytes).  Each nucleotide base is assigned two bits to represent it as there are only 4 possible bases. Chen et al. used the same deduction when developing {\textit{GenCompress}} \cite{gencompress}.  
 
-\subsection{Sequence Alignment}
-Four possible alignment methods were then taken into consideration - Hamming distance (evaluates the number of mismatches between two sequences with regards to substitutions), Levenshtein/Edit distance (evaluates the number of mismatches between two sequences with regards to substitutions, insertions and deletions),  {\textit{k}-mer indexing (evaluates all the possible subsequences of a sequence of length {\textit{k} into an index) and the most frequently used: FM-indexing (evaluates all the possible subsequences of a sequence using Burrows-Wheeler Transform or BWT into an index).  BWT transforms a character sequences into multiple runs having similar characters.  
-         
-These were first implemented and tested on string inputs; i.e. on an uncompressed genome of marginally less size than the human genome to confirm their applicability.  These same functions were then converted in order to instead support integer inputs due to the previously mentioned genome compression.    
+\subsection{Sequence Alignment}\vspace{-2ex}
+Four possible alignment methods were then taken into consideration - Hamming distance (evaluates the number of mismatches between two sequences with regards to substitutions), Levenshtein/Edit distance (evaluates the number of mismatches between two sequences with regards to substitutions, insertions and deletions),  {\textit{k}-mer indexing (evaluates all the possible subsequences of a sequence of length {\textit{k} into an index) and the most frequently used: FM-indexing (evaluates all the possible subsequences of a sequence using Burrows-Wheeler Transform or BWT into an index).  BWT transforms a character sequences into multiple runs having similar characters.  These were first implemented and tested on string inputs; i.e. on an uncompressed genome of marginally less size than the human genome to confirm their applicability.  These same functions were then converted in order to instead support integer inputs due to the previously mentioned genome compression.    
 
-\subsection{Alignment Visualisation}
+\subsection{Alignment Visualisation}\vspace{-2ex}
 The data visualisation tool's initial construction is based on {\textit{Tkinter}}, Python's standard Graphical User Interface (GUI) package.  The result is a depiction of the reads aligned with the genome, with lines repsresnting the position and length of each alignment/match.  As of now, its interactivity is in the form of clicking a line at a certain position to output the offset of the match at said point of clicking.     
 
-\subsection{Future Plans}
+\subsection{Future Plans}\vspace{-2ex}
 As for future development, firstly, the read alignment methods need to be compared in order to deduced the most efficient in terms of the match rate with the corresponding time taken.  
 Secondly, the data visualisation tool needs to be further refined; i.e. become more interactive in terms of genome analysis.  This could be accomplished by outputting the complete character match at the point of clicking instead of just the offset, or perhaps even both.       
 Thirdly, the genome browser tool also needs to be constructed using the established technologies (described in section 3) for efficient comparitive genomics.  Each method developed will be analysed and compared to deduce the most feasible implementation.   
 
 
-\section{Proposed Evaluation Stategy}
+\section{Proposed Evaluation Stategy}\vspace{-2ex}
 
 The main evaluation techniques proposed are as follows:
 
@@ -140,7 +132,7 @@ The main evaluation techniques proposed are as follows:
 \end{enumerate}
 
 
-\section{Expected Deliverables}
+\section{Expected Deliverables}\vspace{-2ex}
 
 \begin{enumerate}[nolistsep]
 
@@ -152,6 +144,7 @@ The main evaluation techniques proposed are as follows:
 
 The milestone schedule is represented in the following Gantt chart: \\
 
+\tikzset{every picture/.style={yscale=0.8,transform shape}}
 \noindent\resizebox{\textwidth}{!}{
 \begin{ganttchart}[
     hgrid=true,
@@ -185,6 +178,11 @@ The milestone schedule is represented in the following Gantt chart: \\
 %\bibliographystyle{alpha}
 \bibliographystyle{ieeetr}
 \nocite{*}
-\bibliography{references}
+\begingroup
+    \setlength{\bibsep}{10pt}
+    \setstretch{0.85}
+    \bibliography{references}
+\endgroup
+%\bibliography{references}
 
 \end{document}
