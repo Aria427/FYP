@@ -1,15 +1,17 @@
-\contentsline {section}{\numberline {1}Introduction \& Motivation}{1}
-\contentsline {section}{\numberline {2}Reasoning for Nontriviality of Problem}{1}
-\contentsline {section}{\numberline {3}Background Research and Literature Review}{2}
-\contentsline {subsection}{\numberline {3.1}Genome Compression Tools}{2}
-\contentsline {subsection}{\numberline {3.2}Read Alignment Tools}{2}
-\contentsline {subsection}{\numberline {3.3}Genome Browser Construction}{2}
-\contentsline {subsection}{\numberline {3.4}Critique of Missing Studies}{3}
-\contentsline {section}{\numberline {4}Aims and Objectives}{3}
-\contentsline {section}{\numberline {5}Materials and Methods}{3}
-\contentsline {subsection}{\numberline {5.1}Genome Compression}{3}
-\contentsline {subsection}{\numberline {5.2}Sequence Alignment}{3}
-\contentsline {subsection}{\numberline {5.3}Alignment Visualisation}{4}
-\contentsline {subsection}{\numberline {5.4}Future Plans}{4}
-\contentsline {section}{\numberline {6}Proposed Evaluation Stategy}{4}
-\contentsline {section}{\numberline {7}Expected Deliverables}{4}
+\contentsline {section}{\numberline {1}Introduction}{1}
+\contentsline {subsection}{\numberline {1.1}Motivation}{2}
+\contentsline {subsection}{\numberline {1.2}Why is this a non-trivial problem?}{2}
+\contentsline {section}{\numberline {2}Background Research and Literature Review}{2}
+\contentsline {subsection}{\numberline {2.1}Genome Compression Tools}{2}
+\contentsline {subsection}{\numberline {2.2}Read Alignment Tools}{3}
+\contentsline {subsection}{\numberline {2.3}Genome Browser Construction}{3}
+\contentsline {subsection}{\numberline {2.4}Gaps in Current Research}{3}
+\contentsline {section}{\numberline {3}Aims and Objectives}{4}
+\contentsline {section}{\numberline {4}Methods Development}{4}
+\contentsline {subsection}{\numberline {4.1}Genome Compression}{4}
+\contentsline {subsection}{\numberline {4.2}Sequence Alignment}{4}
+\contentsline {subsection}{\numberline {4.3}Alignment Visualisation}{5}
+\contentsline {subsection}{\numberline {4.4}Future Plans}{5}
+\contentsline {section}{\numberline {5}Evaluation Stategy}{5}
+\contentsline {section}{\numberline {6}Deliverables}{5}
+\contentsline {subsection}{\numberline {6.1}Project Timeline}{5}

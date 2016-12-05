@@ -11,12 +11,12 @@ Warning--empty institution in popgen
 Warning--empty institution in gencompress
 Warning--empty institution in companalys
 Warning--empty institution in compalign
-Warning--empty institution in omics
 Warning--empty institution in webbrowser
 Warning--empty institution in genericbrowser
+Warning--empty institution in omics
 You've used 15 entries,
             1876 wiz_defined-function locations,
-            560 strings with 6349 characters,
+            557 strings with 6344 characters,
 and the built_in function-call counts, 2599 in all, are:
 = -- 209
 > -- 175

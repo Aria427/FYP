@@ -120,7 +120,7 @@
     \textbf{\large\@author\\[0.25in]}
     {\large \textbf{Supervisor(s):} \@supervisor\\[0.65in]}
     \vfill
-    \scalebox{0.8}{\includegraphics{UOMcrest.pdf}}
+    \scalebox{0.8}{\includegraphics{UOM.png}}
     \vspace{0.25in}\\
     \textbf{\large Faculty of ICT\\[0.05in]}
     \textbf{\large University of Malta\\[0.25in]}

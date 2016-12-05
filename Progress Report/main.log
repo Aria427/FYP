@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/W32TeX) (preloaded format=pdflatex 2016.10.6)  3 DEC 2016 18:18
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/W32TeX) (preloaded format=pdflatex 2016.10.6)  5 DEC 2016 23:27
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -539,11 +539,11 @@ Package caption Info: End \AtBeginDocument code.
 \topleftwidth=\skip51
 \topmiddlewidth=\skip52
 \toprightwidth=\skip53
-<UOMcrest.pdf, id=4, 80.9424pt x 99.0099pt>
-File: UOMcrest.pdf Graphic file (type pdf)
- <use UOMcrest.pdf>
-Package pdftex.def Info: UOMcrest.pdf used on input line 20.
-(pdftex.def)             Requested size: 80.9422pt x 99.00964pt.
+<UOM.png, id=4, 150.5625pt x 150.5625pt>
+File: UOM.png Graphic file (type png)
+ <use UOM.png>
+Package pdftex.def Info: UOM.png used on input line 20.
+(pdftex.def)             Requested size: 150.56212pt x 150.56212pt.
 
 ! Undefined control sequence.
 \set@color ...\@pdfcolorstack push{\current@color 
@@ -559,8 +559,8 @@ l.20 \begin{document}
 ? 
 [1
 
-{c:/texlive/2016/texmf-var/fonts/map/pdftex/updmap/pdftex.map} <./UOMcrest.pdf>
-] (c:/texlive/2016/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+{c:/texlive/2016/texmf-var/fonts/map/pdftex/updmap/pdftex.map} <./UOM.png>]
+(c:/texlive/2016/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count132
 \scratchdimen=\dimen176
@@ -621,49 +621,65 @@ e
 ))
 ABD: EveryShipout initializing macros (./main.toc
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 4.
+(Font)              <7> on input line 2.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 4.
+(Font)              <5> on input line 2.
 )
 \tf@toc=\write4
 \openout4 = `main.toc'.
 
  [1
 
-]
+] (./main.lof)
+\tf@lof=\write5
+\openout5 = `main.lof'.
+
+ [2]
+<dnareads.jpg, id=23, 660.21657pt x 212.29312pt>
+! Illegal unit of measure (pt inserted).
+<to be read again> 
+                   !
+l.52 ...idth=\linewidth, height=125]{dnareads.jpg}
+                                                  
+? 
+File: dnareads.jpg Graphic file (type jpg)
+<use dnareads.jpg>
+Package pdftex.def Info: dnareads.jpg used on input line 52.
+(pdftex.def)             Requested size: 472.04118pt x 124.99918pt.
+ [1 <./dnareads.jpg>]
 Missing character: There is no â in font cmr10!
 Missing character: There is no € in font cmr10!
 Missing character: There is no ™ in font cmr10!
- [1] [2] [3]
-Underfull \hbox (badness 10000) in paragraph at lines 145--146
+ [2] [3] [4]
+Underfull \hbox (badness 10000) in paragraph at lines 168--169
 
  []
 
 
-Overfull \hbox (25.01689pt too wide) in paragraph at lines 148--174
+Overfull \hbox (25.01923pt too wide) in paragraph at lines 171--197
 [] 
  []
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [4]
+ [5]
 ! Undefined control sequence.
 <argument> \bibsep 
                    
-l.182     \setlength{\bibsep}{10pt}
+l.205     \setlength{\bibsep}{10pt}
                                    
 ? 
 ! Missing number, treated as zero.
 <to be read again> 
                    \def 
-l.183     \setstretch{0.85}
+l.206     \setstretch{0.85}
                            
 ? 
 ! Illegal unit of measure (pt inserted).
 <to be read again> 
                    \def 
-l.183     \setstretch{0.85}
+l.206     \setstretch{0.85}
                            
 ? 
 (./main.bbl
@@ -672,20 +688,20 @@ Missing character: There is no € in font cmr10!
 Missing character: There is no “ in font cmr10!
 Missing character: There is no Ã in font cmr10!
 Missing character: There is no ¼ in font cmr10!
-) [5] (./main.aux) )
+) [6] (./main.aux) )
 (\end occurred inside a group at level 2)
 
-### simple group (level 2) entered at line 109 ({)
-### simple group (level 1) entered at line 109 ({)
+### simple group (level 2) entered at line 128 ({)
+### simple group (level 1) entered at line 128 ({)
 ### bottom level 
 Here is how much of TeX's memory you used:
- 15818 strings out of 493013
- 325641 string characters out of 6136993
- 377698 words of memory out of 5000000
- 19084 multiletter control sequences out of 15000+600000
+ 15828 strings out of 493013
+ 325704 string characters out of 6136993
+ 377693 words of memory out of 5000000
+ 19088 multiletter control sequences out of 15000+600000
  5813 words of font info for 21 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 62i,9n,71p,1103b,993s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 62i,9n,68p,1276b,982s stack positions out of 5000i,500n,10000p,200000b,80000s
 <c:/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx
 10.pfb><c:/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb><c
 :/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb><c:/texlive/
@@ -693,10 +709,10 @@ Here is how much of TeX's memory you used:
 -dist/fonts/type1/public/amsfonts/cm/cmr12.pfb><c:/texlive/2016/texmf-dist/font
 s/type1/public/amsfonts/cm/cmr9.pfb><c:/texlive/2016/texmf-dist/fonts/type1/pub
 lic/amsfonts/cm/cmti10.pfb>
-Output written on main.pdf (7 pages, 141128 bytes).
+Output written on main.pdf (9 pages, 192711 bytes).
 PDF statistics:
- 67 PDF objects out of 1000 (max. 8388607)
+ 69 PDF objects out of 1000 (max. 8388607)
  47 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 18 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 23 words of extra memory for PDF output out of 10000 (max. 10000000)
 
