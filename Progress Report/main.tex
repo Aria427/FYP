@@ -92,7 +92,7 @@ Genome browser construction has an intricate development process.  Fortunately, 
 
 \subsection{Gaps in Current Research}\vspace{-2ex}
 Firstly, regarding the genome compression tools discussed above, research about specific compression algorithms has been conducted however compression using primitive techniques such as integer conversion have not been researched.
-Secondly, regarding the read alignment tools also discussed above,  most aligners do not use Hamming or Levenshtein distance due to their shortcomings so this will be analysed.  Finally, regarding genome browser construction (which also deals with alignment visualisation), not a lot has been done in relation to comparing genome browsers against each other.     
+Secondly, regarding the read alignment tools also discussed above,  most aligners do not use Hamming or Levenshtein distance due to their shortcomings so this will be analysed.  Finally, regarding genome browser construction (which also deals with alignment visualisation), not a lot has been done in relation to comparing genome browsers against each other in terms of their features and applicability.       
 
 \section{Aims and Objectives}\vspace{-2ex}
 
@@ -125,15 +125,15 @@ The genome compression method implemented makes use of certain in-built Python m
 Two possible implementations were considered.  One compressed the genome into an integer and the other compressed it into a bit array.  The former acheived a compression rate of 70\% while the latter achieved a 75\% rate.  However, when analysing the accuracy of the compression, the former proved to be more accurate as the latter innately appends 0s to the integers produced in the bit array.  The implementation chosen was thus the one which compresses the genome into an integer (the former one) as it is more accurate and it achieves a relatively similar compression rate (from 3GB to 1GB).  
 
 \subsection{Sequence Alignment}\vspace{-2ex}
-Four possible alignment methods were then taken into consideration; the number of human sequencing reads being ... with each read having a length of 60 bases; i.e. 30 base-pairs/bp.  The Hamming distance method evaluates the number of mismatches between two sequences with regards to substitutions,  the Levenshtein/Edit distance method evaluates the number of mismatches between two sequences with regards to substitutions, insertions and deletions,  {\textit{k}-mer indexing evaluates all the possible subsequences of a sequence of length {\textit{k} into an index and the most frequently used FM-indexing evaluates all the possible subsequences of a sequence using BWT into an index.  BWT transforms a base sequence into multiple runs having similar bases.  
+Four possible alignment methods were then taken into consideration; the number of human sequencing reads being 28,094,847 with each read having a length of 60 bases; i.e. 30 base-pairs/bp.  The Hamming distance method evaluates the number of mismatches between two sequences with regards to substitutions,  the Levenshtein/Edit distance method evaluates the number of mismatches between two sequences with regards to substitutions, insertions and deletions,  {\textit{k}-mer indexing evaluates all the possible subsequences of a sequence of length {\textit{k} into an index and the most frequently used FM-indexing evaluates all the possible subsequences of a sequence using BWT into an index.  BWT transforms a base sequence into multiple runs having similar bases.  
 
-These aligners were first implemented and tested on string inputs; i.e. on an uncompressed genome of marginally less size than the human genome to confirm their applicability.  These same functions were then converted in order to instead support integer inputs due to the previously mentioned genome compression.    
+These aligners were first implemented and tested on string inputs; i.e. on an uncompressed genome of marginally less size than the human genome to confirm their applicability.  Some of these functions were then converted in order to instead support integer inputs due to the previously mentioned genome compression.  This was done by using bitwise operations and by finding any patterns in the integer sequence; i.e. any repetitive integers or pairs of integers or triples and so on in the compressed reference genome.        
 
 \subsection{Alignment Visualisation}\vspace{-2ex}
-The data visualisation tool's initial construction is based on {\textit{Tkinter}}, Python's standard Graphical User Interface (GUI) package.  The result is a depiction of the reads aligned with the genome, with lines repsresnting the position and length of each alignment/match.  As of now, its interactivity is in the form of clicking a line at a certain position to output the offset of the match at said point of clicking.     
+The data visualisation tool's initial construction is based on {\textit{Tkinter}}, Python's standard Graphical User Interface (GUI) package.  The result is a depiction of the reads aligned with the genome, with lines representing the position and length of each alignment/match.  As of now, its interactivity is in the form of clicking a line at a certain position to output the offset of the match at said point of clicking.     
 
 \subsection{Future Plans}\vspace{-2ex}
-As for future developments, firstly, the read alignment methods need to be compared in order to deduced the most efficient in terms of the match rate with the corresponding time taken.  
+As for future developments, firstly, the read alignment methods need to all be converted to support integer inputs and then compared in order to deduce the most efficient one in terms of the match rate with the corresponding time taken.  A possible improvement on the BWT implementation could be done by incorporating the MapReduce parallel programming model, as described by Menon et al. \cite{mapreduce}, in order to accelerate said transformation.  This model was originally produced by Google to query trillions of web pages, but it has started to be included in multiple other areas which involve large datasets due to its parallelisation feature; i.e. simultaneous process execution.     
 Secondly, the data visualisation tool needs to be further refined; i.e. become more interactive in terms of genome analysis.  This could be accomplished by outputting the DNA mutation found at the point of clicking instead of just the offset, or perhaps even both.       
 Optionally, depending on the project's time constraints, the genome browser tool could also be constructed using the established technologies (described in section 3) for efficient comparitive genomics; the visualisation tool being incorporated in this.  Each method developed will be analysed and compared to deduce the most feasible implementation.   
 
@@ -172,7 +172,7 @@ The milestone schedule is represented in the following Gantt chart: \\
 \begin{ganttchart}[
     hgrid=true,
     vgrid=true,
-    bar/.style={fill=red!80}
+    bar/.style={fill=black!50}
 ]{1}{30}
 \gantttitle{2016--2017}{30} \\
 \gantttitle{Sep}{3} 

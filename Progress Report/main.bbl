@@ -71,4 +71,8 @@ D.~W. Mount, {\em Bioinformatics: Sequence and Genome Analysis}.
 \newblock Cold Spring Harbor Laboratory Press, Cold Spring Harbor, New York,
   USA: Cold Spring Harbor Laboratory Press, 2001.
 
+\bibitem{mapreduce}
+R.~K. Menon, G.~P. Bhat, and M.~C. Schatz, ``Rapid parallel genome indexing
+  with mapreduce,'' tech. rep., June 2011.
+
 \end{thebibliography}
