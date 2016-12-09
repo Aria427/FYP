@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/W32TeX) (preloaded format=pdflatex 2016.10.6)  6 DEC 2016 15:21
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/W32TeX) (preloaded format=pdflatex 2016.10.6)  9 DEC 2016 14:45
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -639,44 +639,42 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 ! Illegal unit of measure (pt inserted).
 <to be read again> 
                    !
-l.52 ...idth=\linewidth, height=125]{dnareads.jpg}
+l.52 ...idth=\linewidth, height=120]{dnareads.jpg}
                                                   
 ? 
 File: dnareads.jpg Graphic file (type jpg)
 <use dnareads.jpg>
 Package pdftex.def Info: dnareads.jpg used on input line 52.
-(pdftex.def)             Requested size: 472.04118pt x 124.99918pt.
- [1 <./dnareads.jpg>]
+(pdftex.def)             Requested size: 472.04118pt x 120.0009pt.
 Missing character: There is no â in font cmr10!
 Missing character: There is no € in font cmr10!
 Missing character: There is no ™ in font cmr10!
- [2] [3] [4]
-Underfull \hbox (badness 10000) in paragraph at lines 168--169
+ [1 <./dnareads.jpg>] [2] [3] [4] [5]
+Underfull \hbox (badness 10000) in paragraph at lines 165--166
 
  []
 
 
-Overfull \hbox (25.01923pt too wide) in paragraph at lines 171--197
+Overfull \hbox (25.01923pt too wide) in paragraph at lines 168--195
 [] 
  []
 
-[5]
 ! Undefined control sequence.
 <argument> \bibsep 
                    
-l.205     \setlength{\bibsep}{10pt}
+l.203     \setlength{\bibsep}{10pt}
                                    
 ? 
 ! Missing number, treated as zero.
 <to be read again> 
                    \def 
-l.206     \setstretch{0.85}
+l.204     \setstretch{0.85}
                            
 ? 
 ! Illegal unit of measure (pt inserted).
 <to be read again> 
                    \def 
-l.206     \setstretch{0.85}
+l.204     \setstretch{0.85}
                            
 ? 
 (./main.bbl
@@ -686,19 +684,20 @@ Missing character: There is no “ in font cmr10!
 Missing character: There is no Ã in font cmr10!
 Missing character: There is no ¼ in font cmr10!
  [6]) [7] (./main.aux) )
-(\end occurred inside a group at level 2)
+(\end occurred inside a group at level 3)
 
-### simple group (level 2) entered at line 128 ({)
-### simple group (level 1) entered at line 128 ({)
+### simple group (level 3) entered at line 121 ({)
+### simple group (level 2) entered at line 121 ({)
+### simple group (level 1) entered at line 118 ({)
 ### bottom level 
 Here is how much of TeX's memory you used:
- 15829 strings out of 493013
- 325715 string characters out of 6136993
- 378697 words of memory out of 5000000
- 19089 multiletter control sequences out of 15000+600000
+ 15845 strings out of 493013
+ 326011 string characters out of 6136993
+ 374705 words of memory out of 5000000
+ 19105 multiletter control sequences out of 15000+600000
  5813 words of font info for 21 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 62i,9n,68p,1276b,982s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 62i,9n,68p,1477b,1018s stack positions out of 5000i,500n,10000p,200000b,80000s
 <c:/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx
 10.pfb><c:/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb><c
 :/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb><c:/texlive/
@@ -706,7 +705,7 @@ Here is how much of TeX's memory you used:
 -dist/fonts/type1/public/amsfonts/cm/cmr12.pfb><c:/texlive/2016/texmf-dist/font
 s/type1/public/amsfonts/cm/cmr9.pfb><c:/texlive/2016/texmf-dist/fonts/type1/pub
 lic/amsfonts/cm/cmti10.pfb>
-Output written on main.pdf (10 pages, 193744 bytes).
+Output written on main.pdf (10 pages, 193886 bytes).
 PDF statistics:
  72 PDF objects out of 1000 (max. 8388607)
  49 compressed objects within 1 object stream

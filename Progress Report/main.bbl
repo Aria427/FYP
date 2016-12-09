@@ -1,5 +1,9 @@
 \begin{thebibliography}{10}
 
+\bibitem{omics}
+B.~Berger, J.~Peng, and M.~Singh, ``Computational solutions for omics data,''
+  tech. rep., USA, Mar. 2014.
+
 \bibitem{aiBk}
 L.~Hunter, {\em Artificial Intelligence and Molecular Biology}.
 \newblock AAAI Press, 445 Burgess Drive, Menlo Park, California 94025, USA: MIT
@@ -19,10 +23,6 @@ H.~Li and R.~Durbin, ``Fast and accurate short read alignment with
   burrows–wheeler transform,'' tech. rep., Wellcome Trust Sanger Institute,
   Wellcome Trust Genome Campus, Cambridge, CB10 1SA, UK, May 2009.
 
-\bibitem{cgreads}
-D.~Lee, F.~Hormozdiari, H.~Xin, F.~Hach, O.~Mutlu, and C.~Alkan, ``Fast and
-  accurate mapping of complete genomics reads,'' tech. rep., Oct. 2014.
-
 \bibitem{refcompression}
 M.~H.-Y. Fritz, R.~Leinonen, G.~Cochrane, and E.~Birney, ``Efficient storage of
   high throughput dna sequencing data using reference-based compression,''
@@ -31,6 +31,10 @@ M.~H.-Y. Fritz, R.~Leinonen, G.~Cochrane, and E.~Birney, ``Efficient storage of
 \bibitem{popgen}
 L.~Huang, V.~Popic, and S.~Batzoglou, ``Short read alignment with populations
   of genomes,'' tech. rep., 2013.
+
+\bibitem{cgreads}
+D.~Lee, F.~Hormozdiari, H.~Xin, F.~Hach, O.~Mutlu, and C.~Alkan, ``Fast and
+  accurate mapping of complete genomics reads,'' tech. rep., Oct. 2014.
 
 \bibitem{gencompress}
 X.~Chen, S.~Kwong, and M.~Li, ``A compression algorithm for dna sequences and
@@ -47,6 +51,14 @@ J.~Shang, F.~Zhu, W.~Vongsangnak, Y.~Tang, W.~Zhang, , and B.~Shen,
   ``Evaluation and comparison of multiple aligners for next-generation
   sequencing data analysis,'' tech. rep., Mar. 2014.
 
+\bibitem{mapreduce}
+J.~Dean and S.~Ghemawat, ``Mapreduce: Simplified data processing on large
+  clusters,'' tech. rep., Jan. 2008.
+
+\bibitem{mapredgen}
+R.~K. Menon, G.~P. Bhat, and M.~C. Schatz, ``Rapid parallel genome indexing
+  with mapreduce,'' tech. rep., June 2011.
+
 \bibitem{webbrowser}
 JunWang, L.~Kong, G.~Gao, and J.~Luo, ``A brief introduction to web-based
   genome browsers,'' tech. rep., July 2012.
@@ -56,23 +68,5 @@ L.~D. Stein, C.~Mungall, S.~Shu, M.~Caudy, M.~Mangone, A.~Day, E.~Nickerson,
   J.~E. Stajich, T.~W. Harris, A.~Arva, and S.~Lewis, ``The generic genome
   browser: A building block for a model organism system database,'' tech. rep.,
   Dec. 2002.
-
-\bibitem{omics}
-B.~Berger, J.~Peng, and M.~Singh, ``Computational solutions for omics data,''
-  tech. rep., USA, Mar. 2014.
-
-\bibitem{introbio}
-A.~M. Lesk, {\em Introduction to Bioinformatics}.
-\newblock Great Claredon Street, Oxford, OX2 6DP, UK: Oxford University Press,
-  4~ed., 2014.
-
-\bibitem{bioinfo}
-D.~W. Mount, {\em Bioinformatics: Sequence and Genome Analysis}.
-\newblock Cold Spring Harbor Laboratory Press, Cold Spring Harbor, New York,
-  USA: Cold Spring Harbor Laboratory Press, 2001.
-
-\bibitem{mapreduce}
-R.~K. Menon, G.~P. Bhat, and M.~C. Schatz, ``Rapid parallel genome indexing
-  with mapreduce,'' tech. rep., June 2011.
 
 \end{thebibliography}

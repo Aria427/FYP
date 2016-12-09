@@ -4,14 +4,15 @@
 \contentsline {section}{\numberline {2}Background Research and Literature Review}{2}
 \contentsline {subsection}{\numberline {2.1}Genome Compression Tools}{2}
 \contentsline {subsection}{\numberline {2.2}Read Alignment Tools}{3}
-\contentsline {subsection}{\numberline {2.3}Genome Browser Construction}{3}
-\contentsline {subsection}{\numberline {2.4}Gaps in Current Research}{3}
+\contentsline {subsection}{\numberline {2.3}MapReduce Framework}{3}
+\contentsline {subsection}{\numberline {2.4}Genome Browsers}{3}
+\contentsline {subsection}{\numberline {2.5}Gaps in Current Research}{4}
 \contentsline {section}{\numberline {3}Aims and Objectives}{4}
 \contentsline {section}{\numberline {4}Methods Development}{4}
 \contentsline {subsection}{\numberline {4.1}Genome Compression}{4}
 \contentsline {subsection}{\numberline {4.2}Sequence Alignment}{4}
 \contentsline {subsection}{\numberline {4.3}Alignment Visualisation}{5}
 \contentsline {subsection}{\numberline {4.4}Future Plans}{5}
-\contentsline {section}{\numberline {5}Evaluation Stategy}{5}
+\contentsline {section}{\numberline {5}Evaluation}{5}
 \contentsline {section}{\numberline {6}Deliverables}{5}
-\contentsline {subsection}{\numberline {6.1}Project Timeline}{5}
+\contentsline {subsection}{\numberline {6.1}Project Timeline}{6}
