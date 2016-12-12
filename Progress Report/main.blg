@@ -18,7 +18,7 @@ Warning--empty institution in webbrowser
 Warning--empty institution in genericbrowser
 You've used 15 entries,
             1876 wiz_defined-function locations,
-            561 strings with 6576 characters,
+            561 strings with 6567 characters,
 and the built_in function-call counts, 2588 in all, are:
 = -- 204
 > -- 186
