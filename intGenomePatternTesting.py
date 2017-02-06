@@ -11,10 +11,17 @@ import matplotlib.ticker as plticker
 #This function returns the frequency of each integer found in the genome.
 #Integer 0 occurs most with frequency 319594 in human genome (total integers = 83203868).
 def countIntegers(genome):
-    unique, counts = np.unique(genome, return_counts=True)
-    #frequencyArray = np.asarray((unique, counts)).T
-    return unique, counts
+    uniqueKeys, counts = np.unique(genome, return_counts=True) 
+    #frequencyArray = np.asarray((uniqueKeys, counts)).T
+    return uniqueKeys, counts
 
+def createHist(genome):
+    hist, bins = np.histogram(genome, density=True)
+    width = 0.7*(bins[1]-bins[0])
+    centre = (bins[:-1]+bins[1:])/2
+    plt.bar(centre, hist, align='center', width=width)
+    plt.show() 
+    
 #This function identifies each integer and pair/triple/... of integers found in the genome.
 def identifyConsecutiveIntegers(genome):
     for k, g in groupby(enumerate(genome), lambda (i, x): i-x):

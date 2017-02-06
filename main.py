@@ -27,7 +27,11 @@ with open(binaryGenomeFile , 'rb') as f:
 #decodedGenome = int(d)
 
 integers, integersCount = intGenomePatternTesting.countIntegers(decodedGenome)
-pairsCount = intGenomePatternTesting.countIntegerPairs(decodedGenome) 
+#pairsCount = intGenomePatternTesting.countIntegerPairs(decodedGenome) 
+print integers
+print integersCount
+
+intGenomePatternTesting.createHist(decodedGenome)
 
 #intGenomePatternTesting.createIntegerHistogram(integersCount)
 #intGenomePatternTesting.createPairHistogram(pairsCount)
@@ -35,11 +39,18 @@ pairsCount = intGenomePatternTesting.countIntegerPairs(decodedGenome)
 reads = fileParsing.parseReadsInt(path('Data\HumanSequencingReads.tsv.bz2').abspath()) 
 #reads = fileParsing.parseReadsPhiXInt(path('Data\PhiXSequencingReads1000.fastq').abspath())
 #print len(next(reads)) #60
+
+#i = 0
+#for r in reads:
+#    print i
+#    i += 1
+#print i
+
 #analyseAlignment.plotTimeVsMatches(reads, decodedGenome, path('Output Test Files\AlignmentAnalysis.png').abspath())
 
 #start = time.time()
-matchesCount, totalCount, offsets = alignmentInt.alignHamming(reads, decodedGenome)
-print '%d/%d reads matched the genome.' % (matchesCount, totalCount) #The result is not 100% but this is to be expected due to sequencing errors. 
+#matchesCount, totalCount, offsets = alignmentInt.alignHamming(reads, decodedGenome)
+#print '%d/%d reads matched the genome.' % (matchesCount, totalCount) #The result is not 100% but this is to be expected due to sequencing errors. 
 #print offsets
 #end = time.time()
 #print end-start
