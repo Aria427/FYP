@@ -34,7 +34,10 @@ genomeFile = path('Data\TenMB.fa').abspath()
 #intGenomePatternTesting.createIntegerHistogram(integersCount)
 #intGenomePatternTesting.createPairHistogram(pairsCount)
 
+genomePatternTesting.countIntWordsChunks(genomeFile)
+genomePatternTesting.countIntWordsBytes(genomeFile)
 genomePatternTesting.countIntWords(genomeFile)
+
 
 reads = fileParsing.parseReadsInt(path('Data\HumanSequencingReads.tsv.bz2').abspath()) 
 #reads = fileParsing.parseReadsPhiXInt(path('Data\PhiXSequencingReads1000.fastq').abspath())
