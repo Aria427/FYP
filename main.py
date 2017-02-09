@@ -16,7 +16,7 @@ import pdb
 import time
 
 #pdb.set_trace()
-genomeFile = path('Data\TenMB.fa').abspath()
+genomeFile = path('Data\HumanGenome.fa.gz').abspath()
 #binaryGenomeFile = path('Output Data\HumanGenomeZip.bin').abspath()
 #fileParsing.parseGenomeInt(genomeFile, binaryGenomeFile)
 #binaryGenomeFile = path('Output Data\PhixGenome.bin').abspath() 
@@ -31,12 +31,21 @@ genomeFile = path('Data\TenMB.fa').abspath()
 #integers, integersCount = intGenomePatternTesting.countIntegers(decodedGenome)
 #pairsCount = intGenomePatternTesting.countIntegerPairs(decodedGenome) 
 #histogram, bins = intGenomePatternTesting.createHist(decodedGenome)
-#intGenomePatternTesting.createIntegerHistogram(integersCount)
-#intGenomePatternTesting.createPairHistogram(pairsCount)
 
-genomePatternTesting.countIntWordsChunks(genomeFile)
-genomePatternTesting.countIntWordsBytes(genomeFile)
-genomePatternTesting.countIntWords(genomeFile)
+start = time.time()
+genomePatternTesting.countIntWordsChunks(genomeFile) 
+#Counter({'TTTT': 298456206, 'AAAA': 295878805, 'AAAT': 233204521, 'TTTG': 221603116, 
+#'CCCA': 220519406, 'AAAG': 213147885, 'CCCT': 212879264, 'TTTA': 196975835, 
+#'GGGA': 182228315, 'TTTC': 181239017, 'GGGG': 158825594, 'CCCC': 157575620, 
+#'GGGT': 153734106, 'AAAC': 153370668, 'GGGC': 129676917, 'CCCG': 30886900, 
+#'CCCH': 433, 'HHHR': 430, 'IIIV': 325, 'KKKI': 325, 'VVVA': 291, 'AAAL': 259, 
+#'LLLT': 259, 'RRRK': 212, 'RRRU': 125, 'UUUK': 112, 'GGGL': 88, 'LLLV': 88, 
+#'RRRG': 79, 'VVVG': 45, 'AAAD': 42, 'VVVR': 42, 'OOOM': 42, 'DDDO': 42, 
+#'RRRA': 42, 'VVVT': 26, 'MMMG': 25, 'VVVC': 21, 'UUUG': 9, 'MMMC': 7, 'JJJH': 6, 
+#'HHHV': 6, 'MMMA': 6, 'RRRJ': 6, 'MMMT': 5, 'XXXK': 3, 'RRRX': 3, 'BBBV': 2, 
+#'KKKB': 2, 'YYYK': 1, 'RRRY': 1, 'RRRM': 1}
+end = time.time()
+print end-start
 
 
 reads = fileParsing.parseReadsInt(path('Data\HumanSequencingReads.tsv.bz2').abspath()) 
