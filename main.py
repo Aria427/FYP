@@ -6,6 +6,7 @@ import alignmentInt
 #import analyseAlignment
 #import visualisation
 import intGenomePatternTesting
+import genomePatternTesting
 
 from path import path
 import numpy as np
@@ -15,36 +16,29 @@ import pdb
 import time
 
 #pdb.set_trace()
-binaryGenomeFile = path('Output Data\HumanGenomeZip.bin').abspath()
-#fileParsing.parseGenomeInt(path('Data\HumanGenome.fa.gz').abspath(), binaryGenomeFile)
+genomeFile = path('Data\TenMB.fa').abspath()
+#binaryGenomeFile = path('Output Data\HumanGenomeZip.bin').abspath()
+#fileParsing.parseGenomeInt(genomeFile, binaryGenomeFile)
 #binaryGenomeFile = path('Output Data\PhixGenome.bin').abspath() 
 #fileParsing.parseGenomeInt(path('Data\PhixGenome.fa').abspath(), binaryGenomeFile)
 
-with open(binaryGenomeFile , 'rb') as f:
-    decodedGenome = np.fromfile(f, dtype=np.int)
-    print decodedGenome #length = 161856144
+#with open(binaryGenomeFile , 'rb') as f:
+    #decodedGenome = np.fromfile(f, dtype=np.int)
+    #print decodedGenome #length = 161856144
 #d = reduce(lambda x,y: x+str(y), decodedGenome, '')
 #decodedGenome = int(d)
 
-integers, integersCount = intGenomePatternTesting.countIntegers(decodedGenome)
+#integers, integersCount = intGenomePatternTesting.countIntegers(decodedGenome)
 #pairsCount = intGenomePatternTesting.countIntegerPairs(decodedGenome) 
-print integers
-print integersCount
-
-intGenomePatternTesting.createHist(decodedGenome)
-
+#histogram, bins = intGenomePatternTesting.createHist(decodedGenome)
 #intGenomePatternTesting.createIntegerHistogram(integersCount)
 #intGenomePatternTesting.createPairHistogram(pairsCount)
 
+genomePatternTesting.countIntWords(genomeFile)
+
 reads = fileParsing.parseReadsInt(path('Data\HumanSequencingReads.tsv.bz2').abspath()) 
 #reads = fileParsing.parseReadsPhiXInt(path('Data\PhiXSequencingReads1000.fastq').abspath())
-#print len(next(reads)) #60
 
-#i = 0
-#for r in reads:
-#    print i
-#    i += 1
-#print i
 
 #analyseAlignment.plotTimeVsMatches(reads, decodedGenome, path('Output Test Files\AlignmentAnalysis.png').abspath())
 
