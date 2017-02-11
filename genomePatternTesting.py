@@ -22,14 +22,36 @@ def readInChunks(genomeFile, chunkSize=1024):
 def countIntWordsChunks(genome):
     wordCount = Counter()
     for piece in readInChunks(genome):
-        nucleotides = filter(str.isalpha, piece)
+        nucleotides = filter(str.isalpha, piece) #isalpha -> only alphabetic characters
+        #nucleotides = [base in nucleotides for base in 'ACGT']
         int1 = nucleotides[:-3] 
         int2 = nucleotides[:-2]
         int3 = nucleotides[:-1]
         int4 = nucleotides[1:]
-        wordCount += Counter([i1+i2+i3+i4 for i1, i2, i3, i4 in zip(int1, int2, int3, int4)])
+        wordCount += Counter([i1+i2+i3+i4 
+                              for i1, i2, i3, i4 
+                              in zip(int1, int2, int3, int4)])
     print wordCount
 
+#This function returns the frequency of each 8-letter (long) word found in the genome.
+#The implementation is based on the readInChunks() function defined above.
+def countLongWordsChunks(genome):
+    wordCount = Counter()
+    for piece in readInChunks(genome):
+        nucleotides = filter(str.isalpha, piece) #isalpha -> only alphabetic characters
+        int1 = nucleotides[:-7] 
+        int2 = nucleotides[:-6]
+        int3 = nucleotides[:-5]
+        int4 = nucleotides[:-4]
+        int5 = nucleotides[:-3] 
+        int6 = nucleotides[:-2]
+        int7 = nucleotides[:-1]
+        int8 = nucleotides[1:]   
+        wordCount += Counter([i1+i2+i3+i4+i5+i6+i7+i8 
+                              for i1, i2, i3, i4, i5, i6, i7, i8 
+                              in zip(int1, int2, int3, int4, int5, int6, int7, int8)])
+    print wordCount   
+    
 #This function returns the frequency of each 4-letter (int) word found in the genome.
 #The implementation is based on the readBytes() function defined within this one. 
 #This function lasts 2614.78399992 seconds when run on the human genome;
@@ -61,7 +83,7 @@ def countIntWords(genome):
         int4 = nucleotides[1:]
         wordCount = Counter([i1+i2+i3+i4 for i1, i2, i3, i4 in zip(int1, int2, int3, int4)])
         print wordCount
-
+     
 """
 from collections import Counter
 from itertools import chain

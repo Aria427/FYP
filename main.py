@@ -44,6 +44,7 @@ genomePatternTesting.countIntWordsChunks(genomeFile)
 #'RRRA': 42, 'VVVT': 26, 'MMMG': 25, 'VVVC': 21, 'UUUG': 9, 'MMMC': 7, 'JJJH': 6, 
 #'HHHV': 6, 'MMMA': 6, 'RRRJ': 6, 'MMMT': 5, 'XXXK': 3, 'RRRX': 3, 'BBBV': 2, 
 #'KKKB': 2, 'YYYK': 1, 'RRRY': 1, 'RRRM': 1}
+#genomePatternTesting.countLongWordsChunks(genomeFile) 
 end = time.time()
 print end-start
 
