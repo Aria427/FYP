@@ -32,7 +32,7 @@ genomeFile = path('Data\HumanGenome.fa.gz').abspath()
 #pairsCount = intGenomePatternTesting.countIntegerPairs(decodedGenome) 
 #histogram, bins = intGenomePatternTesting.createHist(decodedGenome)
 
-start = time.time()
+
 genomePatternTesting.countIntWordsChunks(genomeFile) 
 #Counter({'TTTT': 298456206, 'AAAA': 295878805, 'AAAT': 233204521, 'TTTG': 221603116, 
 #'CCCA': 220519406, 'AAAG': 213147885, 'CCCT': 212879264, 'TTTA': 196975835, 
@@ -44,9 +44,21 @@ genomePatternTesting.countIntWordsChunks(genomeFile)
 #'RRRA': 42, 'VVVT': 26, 'MMMG': 25, 'VVVC': 21, 'UUUG': 9, 'MMMC': 7, 'JJJH': 6, 
 #'HHHV': 6, 'MMMA': 6, 'RRRJ': 6, 'MMMT': 5, 'XXXK': 3, 'RRRX': 3, 'BBBV': 2, 
 #'KKKB': 2, 'YYYK': 1, 'RRRY': 1, 'RRRM': 1}
-#genomePatternTesting.countLongWordsChunks(genomeFile) 
-end = time.time()
-print end-start
+
+genomePatternTesting.countLongWordsChunks(genomeFile) 
+#Counter({'TTTTTTTT': 297263469, 'AAAAAAAA': 294698011, 'AAAAAAAT': 232272322, 
+#'TTTTTTTG': 220718195, 'CCCCCCCA': 219638990, 'AAAAAAAG': 212295859, 
+#'CCCCCCCT': 212028425, 'TTTTTTTA': 196188540, 'GGGGGGGA': 181499174, 
+#'TTTTTTTC': 180514796, 'GGGGGGGG': 158190458, 'CCCCCCCC': 156944851, 
+#'GGGGGGGT': 153119333, 'AAAAAAAC': 152756329, 'GGGGGGGC': 129158522, 
+#'CCCCCCCG': 30763035, 'CCCCCCCH': 421, 'HHHHHHHR': 419, 'IIIIIIIV': 321, 
+#'KKKKKKKI': 321, 'VVVVVVVA': 290, 'LLLLLLLT': 259, 'AAAAAAAL': 259, 
+#'RRRRRRRK': 209, 'RRRRRRRU': 118, 'UUUUUUUK': 109, 'LLLLLLLV': 88, 
+#'GGGGGGGL': 88, 'RRRRRRRG': 79, 'VVVVVVVG': 44, 'OOOOOOOM': 42, 'RRRRRRRA': 42, 
+#'VVVVVVVR': 42, 'DDDDDDDO': 42, 'AAAAAAAD': 42, 'VVVVVVVT': 26, 'MMMMMMMG': 25, 
+#'VVVVVVVC': 21, 'UUUUUUUG': 9, 'MMMMMMMC': 7, 'RRRRRRRJ': 6, 'MMMMMMMA': 6, 
+#'HHHHHHHV': 6, 'JJJJJJJH': 6, 'MMMMMMMT': 5, 'RRRRRRRX': 3, 'XXXXXXXK': 3, 
+#'KKKKKKKB': 2, 'BBBBBBBV': 2, 'RRRRRRRM': 1, 'RRRRRRRY': 1, 'YYYYYYYK': 1})
 
 
 reads = fileParsing.parseReadsInt(path('Data\HumanSequencingReads.tsv.bz2').abspath()) 
