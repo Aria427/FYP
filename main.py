@@ -7,16 +7,20 @@ import alignmentInt
 #import visualisation
 import intGenomePatternTesting
 import genomePatternTesting
+import lz77
+import lz78
+import lzw
 
 from path import path
 import numpy as np
+import gzip
 
 import sys
 import pdb
 import time
 
 #pdb.set_trace()
-genomeFile = path('Data\OneMB.fa').abspath()
+genomeFile = path('Data\HumanGenome.fa.gz').abspath()
 #binaryGenomeFile = path('Output Data\HumanGenomeZip.bin').abspath()
 #fileParsing.parseGenomeInt(genomeFile, binaryGenomeFile)
 #binaryGenomeFile = path('Output Data\PhixGenome.bin').abspath() 
@@ -32,12 +36,18 @@ genomeFile = path('Data\OneMB.fa').abspath()
 #pairsCount = intGenomePatternTesting.countIntegerPairs(decodedGenome) 
 #histogram, bins = intGenomePatternTesting.createHist(decodedGenome)
 
+
 start = time.time()
 intCount = genomePatternTesting.countIntWords(genomeFile)      
 end = time.time()
 print end-start
 print intCount
 
+
+#with gzip.open(genomeFile, 'r') as f:
+    #data = f.read().rstrip().upper().replace('N', '').replace(' ', '')
+  
+  
 reads = fileParsing.parseReadsInt(path('Data\HumanSequencingReads.tsv.bz2').abspath()) 
 #reads = fileParsing.parseReadsPhiXInt(path('Data\PhiXSequencingReads1000.fastq').abspath())
 

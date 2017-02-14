@@ -4,31 +4,42 @@
 import gzip
 from collections import Counter
 
-#This function uses the sliding window approach with the aid of an iterator 
+#This function reads a file in pieces using a lazy approach (generator).
+def readInParts(genomeFile, partSize=1024):
+    with gzip.open(genomeFile, 'r') as f:
+        while True:
+            data = f.read(partSize).rstrip().upper().replace('N', '').replace(' ', '')
+            if not data:
+                break
+            yield data
+    #return iter(lambda: genomeFile.read(chunkSize), '')
+
+#This function uses the sliding window approach with the aid of a generator
 #in order to process the genome sequence bit-by-bit (handling overlapping regions). 
 def slidingWindow(sequence, windowSize, stepSize):
     chunksCount = ( (len(sequence) - windowSize) / stepSize) + 1
     for i in xrange(0, chunksCount*stepSize, stepSize):
         yield sequence[i:i+windowSize]
 
+#The below two functions proved to be inefficient.  
+#A more efficient approach must be considered.
+
 #This function returns the frequency of each 4-letter (int) word found in the genome.
 #The implementation is based on the slidingWindow() function defined above.
 def countIntWords(genome):
-    intWords = []
-    with gzip.open(genome) as f:
-        for line in f:
-            line = line.rstrip().upper().replace('N', '').replace(' ', '')
-            #window size = 4 as int (4-letter matches) is considered
-            #step size = 1 to consider each nucleotide
-            chunks = slidingWindow(line, 4, 1)
-            for c in chunks:
-                intWords.append(c)
-    return Counter(intWords) 
+    wordCount = Counter()
+    for piece in readInParts(genome, 4096):
+        #window size = 4 as int (4-letter matches) is considered
+        #step size = 1 to consider each nucleotide
+        chunks = slidingWindow(piece, 4, 1)
+        for c in chunks:
+            wordCount += Counter(c)
+    return wordCount
 
 #This function returns the frequency of each 8-letter (long) word found in the genome.
 #The implementation is based on the slidingWindow() function defined above.
 def countLongWords(genome):
-    longWords = []
+    wordCount = Counter()
     with gzip.open(genome) as f:
         for line in f:
             line = line.rstrip().upper().replace('N', '').replace(' ', '')
@@ -36,8 +47,8 @@ def countLongWords(genome):
             #step size = 1 to consider each nucleotide
             chunks = slidingWindow(line, 8, 1) 
             for c in chunks:
-                longWords.append(c)
-    return Counter(longWords) 
+                wordCount += Counter(c)
+    return wordCount
 
     
 """
@@ -49,7 +60,7 @@ import mmap
 def readInChunks(genomeFile, chunkSize=1024):
     with gzip.open(genomeFile, 'r') as f:
         while True:
-            data = f.read(chunkSize).upper().replace('N', '').replace(' ', '')
+            data = f.read(chunkSize).rstrip().upper().replace('N', '').replace(' ', '')
             if not data:
                 break
             yield data
