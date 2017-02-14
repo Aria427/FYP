@@ -3,12 +3,13 @@
 
 import gzip
 from collections import Counter
+from itertools import chain
 
 #This function reads a file in pieces using a lazy approach (generator).
 def readInParts(genomeFile, partSize=1024):
     with gzip.open(genomeFile, 'r') as f:
         while True:
-            data = f.read(partSize).rstrip().upper().replace('N', '').replace(' ', '')
+            data = f.read(partSize).rstrip().upper().replace('N', '').replace('\n', '').replace(' ', '')
             if not data:
                 break
             yield data
@@ -20,6 +21,23 @@ def slidingWindow(sequence, windowSize, stepSize):
     chunksCount = ( (len(sequence) - windowSize) / stepSize) + 1
     for i in xrange(0, chunksCount*stepSize, stepSize):
         yield sequence[i:i+windowSize]
+
+#This function returns a list of k-mers, similar to the sliding window approach.
+def kmerList(sequence, k):
+    kmers = []
+    for i in xrange(0, len(sequence) + 1 - k):
+        kmers.append( sequence[i:i+k] )
+    return kmers
+
+def countInt(genome):
+    words = []
+    for piece in readInParts(genome):    
+        fourmers = kmerList(piece, 4)
+        print fourmers
+        words.append(fourmers)
+    print words
+    words = list(chain(*words)) #flatten list
+    return Counter(words)
 
 #The below two functions proved to be inefficient.  
 #A more efficient approach must be considered.
@@ -42,7 +60,7 @@ def countLongWords(genome):
     wordCount = Counter()
     with gzip.open(genome) as f:
         for line in f:
-            line = line.rstrip().upper().replace('N', '').replace(' ', '')
+            line = line.rstrip().upper().replace('N', '').replace('\n', '').replace(' ', '')
             #window size = 8 as long (8-letter matches) is considered
             #step size = 1 to consider each nucleotide
             chunks = slidingWindow(line, 8, 1) 
