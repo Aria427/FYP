@@ -16,7 +16,7 @@ import pdb
 import time
 
 #pdb.set_trace()
-genomeFile = path('Data\HumanGenome.fa.gz').abspath()
+genomeFile = path('Data\OneMB.fa').abspath()
 #binaryGenomeFile = path('Output Data\HumanGenomeZip.bin').abspath()
 #fileParsing.parseGenomeInt(genomeFile, binaryGenomeFile)
 #binaryGenomeFile = path('Output Data\PhixGenome.bin').abspath() 
@@ -32,34 +32,11 @@ genomeFile = path('Data\HumanGenome.fa.gz').abspath()
 #pairsCount = intGenomePatternTesting.countIntegerPairs(decodedGenome) 
 #histogram, bins = intGenomePatternTesting.createHist(decodedGenome)
 
-
-genomePatternTesting.countIntWordsChunks(genomeFile) 
-#Counter({'TTTT': 298456206, 'AAAA': 295878805, 'AAAT': 233204521, 'TTTG': 221603116, 
-#'CCCA': 220519406, 'AAAG': 213147885, 'CCCT': 212879264, 'TTTA': 196975835, 
-#'GGGA': 182228315, 'TTTC': 181239017, 'GGGG': 158825594, 'CCCC': 157575620, 
-#'GGGT': 153734106, 'AAAC': 153370668, 'GGGC': 129676917, 'CCCG': 30886900, 
-#'CCCH': 433, 'HHHR': 430, 'IIIV': 325, 'KKKI': 325, 'VVVA': 291, 'AAAL': 259, 
-#'LLLT': 259, 'RRRK': 212, 'RRRU': 125, 'UUUK': 112, 'GGGL': 88, 'LLLV': 88, 
-#'RRRG': 79, 'VVVG': 45, 'AAAD': 42, 'VVVR': 42, 'OOOM': 42, 'DDDO': 42, 
-#'RRRA': 42, 'VVVT': 26, 'MMMG': 25, 'VVVC': 21, 'UUUG': 9, 'MMMC': 7, 'JJJH': 6, 
-#'HHHV': 6, 'MMMA': 6, 'RRRJ': 6, 'MMMT': 5, 'XXXK': 3, 'RRRX': 3, 'BBBV': 2, 
-#'KKKB': 2, 'YYYK': 1, 'RRRY': 1, 'RRRM': 1}
-
-genomePatternTesting.countLongWordsChunks(genomeFile) 
-#Counter({'TTTTTTTT': 297263469, 'AAAAAAAA': 294698011, 'AAAAAAAT': 232272322, 
-#'TTTTTTTG': 220718195, 'CCCCCCCA': 219638990, 'AAAAAAAG': 212295859, 
-#'CCCCCCCT': 212028425, 'TTTTTTTA': 196188540, 'GGGGGGGA': 181499174, 
-#'TTTTTTTC': 180514796, 'GGGGGGGG': 158190458, 'CCCCCCCC': 156944851, 
-#'GGGGGGGT': 153119333, 'AAAAAAAC': 152756329, 'GGGGGGGC': 129158522, 
-#'CCCCCCCG': 30763035, 'CCCCCCCH': 421, 'HHHHHHHR': 419, 'IIIIIIIV': 321, 
-#'KKKKKKKI': 321, 'VVVVVVVA': 290, 'LLLLLLLT': 259, 'AAAAAAAL': 259, 
-#'RRRRRRRK': 209, 'RRRRRRRU': 118, 'UUUUUUUK': 109, 'LLLLLLLV': 88, 
-#'GGGGGGGL': 88, 'RRRRRRRG': 79, 'VVVVVVVG': 44, 'OOOOOOOM': 42, 'RRRRRRRA': 42, 
-#'VVVVVVVR': 42, 'DDDDDDDO': 42, 'AAAAAAAD': 42, 'VVVVVVVT': 26, 'MMMMMMMG': 25, 
-#'VVVVVVVC': 21, 'UUUUUUUG': 9, 'MMMMMMMC': 7, 'RRRRRRRJ': 6, 'MMMMMMMA': 6, 
-#'HHHHHHHV': 6, 'JJJJJJJH': 6, 'MMMMMMMT': 5, 'RRRRRRRX': 3, 'XXXXXXXK': 3, 
-#'KKKKKKKB': 2, 'BBBBBBBV': 2, 'RRRRRRRM': 1, 'RRRRRRRY': 1, 'YYYYYYYK': 1})
-
+start = time.time()
+intCount = genomePatternTesting.countIntWords(genomeFile)      
+end = time.time()
+print end-start
+print intCount
 
 reads = fileParsing.parseReadsInt(path('Data\HumanSequencingReads.tsv.bz2').abspath()) 
 #reads = fileParsing.parseReadsPhiXInt(path('Data\PhiXSequencingReads1000.fastq').abspath())
@@ -67,12 +44,11 @@ reads = fileParsing.parseReadsInt(path('Data\HumanSequencingReads.tsv.bz2').absp
 
 #analyseAlignment.plotTimeVsMatches(reads, decodedGenome, path('Output Test Files\AlignmentAnalysis.png').abspath())
 
-#start = time.time()
+
 #matchesCount, totalCount, offsets = alignmentInt.alignHamming(reads, decodedGenome)
 #print '%d/%d reads matched the genome.' % (matchesCount, totalCount) #The result is not 100% but this is to be expected due to sequencing errors. 
 #print offsets
-#end = time.time()
-#print end-start
+
 
 """
 textFile = path('Output Test Files\DataVisualisationTest.txt').abspath()

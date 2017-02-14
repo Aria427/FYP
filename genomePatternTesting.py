@@ -2,8 +2,48 @@
 #This file contains some testing functions with regards to finding repetitive patterns in the original genome.
 
 import gzip
-import mmap
 from collections import Counter
+
+#This function uses the sliding window approach with the aid of an iterator 
+#in order to process the genome sequence bit-by-bit (handling overlapping regions). 
+def slidingWindow(sequence, windowSize, stepSize):
+    chunksCount = ( (len(sequence) - windowSize) / stepSize) + 1
+    for i in xrange(0, chunksCount*stepSize, stepSize):
+        yield sequence[i:i+windowSize]
+
+#This function returns the frequency of each 4-letter (int) word found in the genome.
+#The implementation is based on the slidingWindow() function defined above.
+def countIntWords(genome):
+    intWords = []
+    with gzip.open(genome) as f:
+        for line in f:
+            line = line.rstrip().upper().replace('N', '').replace(' ', '')
+            #window size = 4 as int (4-letter matches) is considered
+            #step size = 1 to consider each nucleotide
+            chunks = slidingWindow(line, 4, 1)
+            for c in chunks:
+                intWords.append(c)
+    return Counter(intWords) 
+
+#This function returns the frequency of each 8-letter (long) word found in the genome.
+#The implementation is based on the slidingWindow() function defined above.
+def countLongWords(genome):
+    longWords = []
+    with gzip.open(genome) as f:
+        for line in f:
+            line = line.rstrip().upper().replace('N', '').replace(' ', '')
+            #window size = 8 as long (8-letter matches) is considered
+            #step size = 1 to consider each nucleotide
+            chunks = slidingWindow(line, 8, 1) 
+            for c in chunks:
+                longWords.append(c)
+    return Counter(longWords) 
+
+    
+"""
+#The below functions lead to certain ambiguities in the data.
+
+import mmap
 
 #This function reads a file in pieces/chunks using a lazy approach (generator).
 def readInChunks(genomeFile, chunkSize=1024):
@@ -110,19 +150,4 @@ def countIntWords(genome):
         int4 = nucleotides[1:]
         wordCount = Counter([i1+i2+i3+i4 for i1, i2, i3, i4 in zip(int1, int2, int3, int4)])
         print wordCount
-     
-"""
-from collections import Counter
-from itertools import chain
-
-with open(genomeFile, 'r') as f:
-    prev = f.read(1)
-    c = Counter()
-    for ch in filter(str.isalpha, chain.from_iterable(f)): #filter to remove new line characters
-        next1 = f.read(1)
-        next2 = f.read(1)
-        c[prev + ch + next1 + next2] += 1
-        prev = ch
-print c 
-"""
-        
+"""        
