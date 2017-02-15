@@ -7,7 +7,7 @@ from itertools import chain
 
 #This function reads a file in pieces using a lazy approach (generator).
 def readInParts(genomeFile, partSize=1024):
-    with gzip.open(genomeFile, 'r') as f:
+    with open(genomeFile, 'r') as f:
         while True:
             data = f.read(partSize).rstrip().upper().replace('N', '').replace('\n', '').replace(' ', '')
             if not data:
@@ -28,7 +28,7 @@ def kmerList(sequence, k):
     for i in xrange(0, len(sequence) + 1 - k):
         kmers.append( sequence[i:i+k] )
     return kmers
-
+    
 def countInt(genome):
     words = []
     for piece in readInParts(genome):    
@@ -39,6 +39,7 @@ def countInt(genome):
     words = list(chain(*words)) #flatten list
     return Counter(words)
 
+        
 #The below two functions proved to be inefficient.  
 #A more efficient approach must be considered.
 
