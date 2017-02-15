@@ -4,7 +4,6 @@
 import gzip
 import bz2
  
-import random
 import struct
 from bitarray import bitarray
 
@@ -34,7 +33,7 @@ def binaryToBase(line):
 #This function compresses the genome sequence using int's.      
 def compressGenomeInt(line, lineLength, binaryFile):
     for i in range(0, lineLength+1):
-        l = line[i:i+15].rstrip().upper().replace('N', '').replace(' ', '')  #15 = allowed amount for int 
+        l = line[i:i+15].rstrip().upper().replace('N', '').replace('\n', '')  #15 = allowed amount for int 
         l = baseToBinary(l)
         try:
             bytes = int(l, 2) #create 4 bytes from base 2 integer
@@ -46,7 +45,7 @@ def compressGenomeInt(line, lineLength, binaryFile):
 #This function compresses the genome sequence using long's.            
 def compressGenomeLong(line, lineLength, binaryFile):
     for i in range(0, lineLength+1):
-        l = line[i:i+15].rstrip().upper().replace('N', '').replace(' ', '')  #15 = allowed amount for int 
+        l = line[i:i+15].rstrip().upper().replace('N', '').replace('\n', '')  #15 = allowed amount for int 
         l = baseToBinary(l)
         try:
             bytes = long(l, 2) #create 8 bytes from base 2 integer
@@ -55,7 +54,7 @@ def compressGenomeLong(line, lineLength, binaryFile):
             pass      
 
 #This function compresses the sequencing reads in the same manner as the genome sequence is compressed.            
-def compressReads(line, lineLength):
+def compressReadsInt(line, lineLength):
     subsequences = [] #array of integers
     for i in range(0, lineLength+1):
         l = line[i:i+15].rstrip().upper().replace('N', '').replace(' ', '')  #15 = allowed amount for int 
@@ -159,12 +158,46 @@ def parseReadsInt(filename):
             
             else:
                 #Each read has length = 60
-                sequence = compressReads(sequence, 60)
+                sequence = compressReadsInt(sequence, 60)
                 #seq = reduce(lambda x,y: x+str(y), sequence, '')
                 #s = int(seq) #merge lines to form sequence
                 yield sequence
         
     file.close()     
+ 
+#This function parses the Human sequencing reads into a string generator.   
+def parseReadsString(filename):  
+    flag, sequence, quality = '', '', ''
+    file = bz2.BZ2File(filename, 'r') 
+    while True: #runs until EOF
+        line = file.readline() 
+        if not line: #reached EOF
+            break
+        
+        if line.startswith('#'): #read details
+            line = file.readline()
+            pass
+        
+        elif line.startswith('>'): #>flags reads scores
+            line = file.readline()
+            pass
+        
+        else:
+            line = line.split()
+            flag = line[0]
+            sequence = line[1]
+            quality = line[2]
+            
+            if sequence == 'NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN':
+                line = file.readline()
+                pass
+            
+            else:
+                #Each read has length = 60
+                sequence = sequence.rstrip().upper().replace('N', '').replace(' ', '')
+                yield sequence
+        
+    file.close()       
     
 #This function parses the PhiX sequencing reads into an integer generator.        
 def parseReadsPhiXInt(filename):  
