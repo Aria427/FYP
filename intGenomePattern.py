@@ -15,12 +15,16 @@ def countIntegers(genome):
     #frequencyArray = np.asarray((uniqueKeys, counts)).T
     return uniqueKeys, counts
 
-def createHist(genome):
+#This function plots genome (set of numbers) and fits it into bins.
+def createHist(genome): 
     hist, bins = np.histogram(genome, density=True)
+    xBins = (bins[:-1]+bins[1:])/2
     width = 0.7*(bins[1]-bins[0])
-    centre = (bins[:-1]+bins[1:])/2
-    plt.bar(centre, hist, align='center', width=width)
+    plt.bar(xBins, hist, align='center', width=width)
+    plt.xlabel('Genome Encoded Integer/s')
+    plt.ylabel('Frequency')
     plt.show() 
+    return hist, bins
     
 #This function identifies each integer and pair/triple/... of integers found in the genome.
 def identifyConsecutiveIntegers(genome):
