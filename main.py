@@ -2,14 +2,18 @@
 #This file contains the main functionality of the program.
 
 import fileParsing
-import alignmentInt
-#import analyseAlignment
-#import visualisation
+import genomeCompressionComparison
+
 import intGenomePattern
 import genomePattern
+
 import lz77
 import lz78
 import lzw
+
+import alignmentInt
+#import analyseAlignment
+#import visualisation
 
 from path import path
 import numpy as np
@@ -21,10 +25,10 @@ import time
 
 #pdb.set_trace()
 genomeFile = path('Data\HumanGenome.fa.gz').abspath()
-#binaryGenomeFile = path('Output Data\HumanGenomeZip.bin').abspath()
-#fileParsing.parseGenomeInt(genomeFile, binaryGenomeFile)
-#binaryGenomeFile = path('Output Data\PhixGenome.bin').abspath() 
-#fileParsing.parseGenomeInt(path('Data\PhixGenome.fa').abspath(), binaryGenomeFile)
+#binaryGenomeFile = path('Output Data\HumanGenomeLong.bin').abspath()
+#fileParsing.parseGenomeLong(genomeFile, binaryGenomeFile)
+#binaryGenomeFile = path('Output Data\PhixGenomeLongZip.bin').abspath() 
+#fileParsing.parseGenomeLong(path('Data\PhixGenome.fa').abspath(), binaryGenomeFile)
 
 #with open(binaryGenomeFile , 'rb') as f:
     #decodedGenome = np.fromfile(f, dtype=np.int)
@@ -32,15 +36,12 @@ genomeFile = path('Data\HumanGenome.fa.gz').abspath()
 #d = reduce(lambda x,y: x+str(y), decodedGenome, '')
 #decodedGenome = int(d)
 
-
-count = genomePattern.countIntWords(genomeFile)    
-with open('Output Test Files\intWordsCount.txt', 'w') as out:
-    out.write(str(count))
-
-count = genomePattern.countLongWords(genomeFile)    
-with open('Output Test Files\longWordsCount.txt', 'w') as out:
-    out.write(str(count))    
-    
+#count = genomePattern.countIntWords(genomeFile)    
+#with open('Output Test Files\intWordsCount.txt', 'w') as out:
+#    out.write(str(count))
+   
+genomeCompressionComparison.compressionComparison(path('Output Test Files\GenomeCompressionAnalysis.png').abspath()) 
+   
 
 reads = fileParsing.parseReadsInt(path('Data\HumanSequencingReads.tsv.bz2').abspath()) 
 #reads = fileParsing.parseReadsPhiXInt(path('Data\PhiXSequencingReads1000.fastq').abspath())
