@@ -8,7 +8,7 @@ def compressionComparison(output):
     unzippedSize = 3040 #3273481150
     gzippedSize = 938 #983659424
     intSize = 930 #975782472  #fileParsing.parseGenomeInt() 
-    longSize = 930 #975782472  #fileParsing.parseGenomeLong()
+    longSize = 1810 #1951564944  #fileParsing.parseGenomeLong()
     
     dictionary = {u'Unzipped': unzippedSize, u'G-zipped': gzippedSize,  \
                   u'Int Compression': intSize, u'Long Compression': longSize} #key:value

@@ -45,7 +45,7 @@ def compressLong(sequence, binaryFile):
     s = baseToBinary(sequence)
     try:
         byte = long(s, 2) #create 8 bytes from base 2 integer
-        binaryFile.write(struct.pack('=l', byte)) #= => native byte-order
+        binaryFile.write(struct.pack('=q', byte)) #= => native byte-order
     except ValueError:
         pass      
                        
