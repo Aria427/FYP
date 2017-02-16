@@ -13,10 +13,10 @@ def main():
   
     for word, count in data:
         try:
-            if count == 1:
+            if count == '1':
                 pass #ignore words which occur only once
             else:
-                print "%s\t%d" % (word, count) #write result to STDOUT
+                print "%s\t%s" % (word, count) #write result to STDOUT
         except ValueError:
             pass #when count not a number
 
