@@ -29,86 +29,76 @@ def binaryToBase(line):
     for base, binary in binaryBases.items():
         line = line.replace(binary, base)
     return line      
+    
+#This function compresses a sequence using int's into a binary file.      
+def compressInt(sequence, binaryFile):
+    s = baseToBinary(sequence)
+    try:
+        byte = int(s, 2) #create 4 bytes from base 2 integer
+        binaryFile.write(struct.pack('=i', byte)) #= => native byte-order
+    except ValueError:
+        pass
+        #print "Invalid string found in bytes: %s" % format(byte) 
 
-#This function compresses the genome sequence using int's.      
-def compressGenomeInt(line, lineLength, binaryFile):
-    for i in range(0, lineLength+1):
-        l = line[i:i+15].rstrip().upper().replace('N', '').replace('\n', '')  #15 = allowed amount for int 
-        l = baseToBinary(l)
-        try:
-            bytes = int(l, 2) #create 4 bytes from base 2 integer
-            binaryFile.write(struct.pack('=i', bytes))
-        except ValueError:
-            pass
-            #print "Invalid string found in bytes: %s" % format(bytes) 
-
-#This function compresses the genome sequence using long's.            
-def compressGenomeLong(line, lineLength, binaryFile):
-    for i in range(0, lineLength+1):
-        l = line[i:i+15].rstrip().upper().replace('N', '').replace('\n', '')  #15 = allowed amount for int 
-        l = baseToBinary(l)
-        try:
-            bytes = long(l, 2) #create 8 bytes from base 2 integer
-            binaryFile.write(struct.pack('=l', bytes))
-        except ValueError:
-            pass      
-
-#This function compresses the sequencing reads in the same manner as the genome sequence is compressed.            
-def compressReadsInt(line, lineLength):
-    subsequences = [] #array of integers
-    for i in range(0, lineLength+1):
-        l = line[i:i+15].rstrip().upper().replace('N', '').replace(' ', '')  #15 = allowed amount for int 
-        l = baseToBinary(l)
-        try:
-            bytes = int(l, 2) #create 4 bytes from base 2 integer
-            subsequences.append(bytes)
-        except ValueError:
-            pass
-            #print "Invalid string found in bytes: %s" % format(bytes)  
-    #print subsequences
-    #s = reduce(lambda x,y: x+str(y), subsequences, '')
-    #sequence = int(s) #join integer array into one single integer
-    return subsequences#sequence
+#This function compresses a sequence using long's into a binary file.            
+def compressLong(sequence, binaryFile): 
+    s = baseToBinary(sequence)
+    try:
+        byte = long(s, 2) #create 8 bytes from base 2 integer
+        binaryFile.write(struct.pack('=l', byte)) #= => native byte-order
+    except ValueError:
+        pass      
                        
-#This function reads the genome sequence into an integer using compressGenomeInt().
+#This function reads the genome sequence into an integer using compressInt().
 def parseGenomeInt(input, output): #file is compressed by ~70%
     binary = open(output, 'wb')
-    with open(input, 'r') as file: 
-    #with gzip.open(input, 'r') as file:
-        for line in file:
-            if line and line[0] != '>': #ignore header line with genome information
-                #Each line has length = 70 in PhiX and length = 50 in Human
-                #Last line has length = 67 in PhiX and length = 41 in Human
-                #print len(line.rstrip()) 
-                compressGenomeInt(line, 50, binary)
-                #pass
-        #last = line
-        #print len(last)
-    binary.close()  
+    with gzip.open(input, 'r') as f:
+        #read genome into line-by-line generator
+        subseqs = (line.rstrip().upper().replace('N', '').replace(' ','')
+                    for line in f if line and line[0] != '>') #ignore header line
+        #Each line has length = 70 in PhiX and length = 50 in Human
+        #Last line has length = 67 in PhiX and length = 41 in Human
+        for seq in subseqs:
+            s = seq[0:15] #15 = allowed amount for int 
+            compressInt(s, binary)
+            s = seq[15:30] #15->29, 15 included 
+            compressInt(s, binary)
+            s = seq[30:45] #30->44, 30 included
+            compressInt(s, binary)
+            s = seq[45:51] #45->50, 45 included
+            compressInt(s, binary)
+            #s = seq[60:71] #60->70, 60 included
+            #compressInt(s, binary)
+    binary.close()
    
-#This function reads the genome sequence into a long using compressGenomeLong().
+#This function reads the genome sequence into a long using compressLong().
 def parseGenomeLong(input, output): #file is compressed by ~70%
     binary = open(output, 'wb')
-    with open(input, 'r') as file: 
-    #with gzip.open(input, 'r') as file:
-        for line in file:
-            if line and line[0] != '>': #ignore header line with genome information
-                #Each line has length = 70 in PhiX and length = 50 in Human
-                #Last line has length = 67 in PhiX and length = 41 in Human
-                #print len(line.rstrip()) 
-                compressGenomeLong(line, 50, binary)
-                #pass
-        #last = line
-        #print len(last)
-    binary.close()  
+    with gzip.open(input, 'r') as f:
+        #read genome into line-by-line generator
+        subseqs = (line.rstrip().upper().replace('N', '').replace(' ','')
+                    for line in f if line and line[0] != '>') #ignore header line
+        #Each line has length = 70 in PhiX and length = 50 in Human
+        #Last line has length = 67 in PhiX and length = 41 in Human
+        for seq in subseqs:
+            s = seq[0:15] #15 = allowed amount for long
+            compressLong(s, binary)
+            s = seq[15:30] #15->29, 15 included 
+            compressLong(s, binary)
+            s = seq[30:45] #30->44, 30 included
+            compressLong(s, binary)
+            s = seq[45:51] #45->50, 45 included
+            compressLong(s, binary)
+            #s = seq[60:71] #60->70, 60 included
+            #compressLong(s, binary)
+    binary.close()
      
 #This function reads the genome sequence into a bitarray.
 #Ambiguities arise when a subsequence does not completely fill the bit array;
 #i.e. 0's are appended => additional A's are encoded
 def parseGenomeBitArray(input, output): #file is compressed by ~75%
     binary = open(output, 'wb')
-    with open(input, 'r') as file: 
-    #with gzip.open(input, 'r') as file:
+    with open(input, 'r') as file:
         for line in file:
             if line and line[0] != '>': #ignore header line with genome information
                 l = line.rstrip().upper().replace('N', '') #N => no confidence
@@ -128,7 +118,24 @@ def parseGenomeString(input, output): #file is not compressed
                 l = line.rstrip().upper().replace('N', '') 
                 genome += l 
     return genome
-  
+
+#This function compresses the sequencing reads in the same manner as the genome sequence is compressed.            
+def compressReadsInt(line, lineLength):
+    subsequences = [] #array of integers
+    for i in range(0, lineLength+1):
+        l = line[i:i+15].rstrip().upper().replace('N', '') #15 = allowed amount for int 
+        l = baseToBinary(l)
+        try:
+            bytes = int(l, 2) #create 4 bytes from base 2 integer
+            subsequences.append(bytes)
+        except ValueError:
+            pass
+            #print "Invalid string found in bytes: %s" % format(bytes)  
+    #print subsequences
+    #s = reduce(lambda x,y: x+str(y), subsequences, '')
+    #sequence = int(s) #join integer array into one single integer
+    return subsequences#sequence    
+    
 #This function parses the Human sequencing reads into an integer generator.   
 def parseReadsInt(filename):  
     flag, sequence, quality = '', '', ''
