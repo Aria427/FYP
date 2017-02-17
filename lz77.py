@@ -12,9 +12,12 @@ class LZ77Compressor:
         self.lookaheadSize = 15 #length of match is at most 4 bits
         
     #This function compresses the sequence given.
-    def compress(self, data):
+    def compress(self, data):#inputFile, outputFile):
         encodeBuffer = bitarray(endian='little') #explicitly set endianness for different systems
-
+        
+        #with open(inputFile, 'rb') as f:
+        #    data = f.read().upper().replace('\n', '').replace('N', '')
+    
         i = 0
         while i < len(data):
             match = self.findLongestMatch(data, i)
@@ -47,6 +50,9 @@ class LZ77Compressor:
         #bitarray size = 8*n;
         #so if number of bits is not a multiple of 8, fill buffer with 0s
         encodeBuffer.fill() 
+        
+        #with open(outputFile, 'wb') as f:
+        #    f.write(encodeBuffer.tobytes())
 
         return encodeBuffer
     
@@ -78,7 +84,7 @@ class LZ77Compressor:
             encoding = self.compress(data)
         
             with open(outputFile, 'wb') as out:
-                out.write(encoding)
+                out.write(encoding.tobytes())
         
         return encoding
         

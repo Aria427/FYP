@@ -44,11 +44,11 @@ genomeFile = path('Data\HumanGenome.fa.gz').abspath()
 #lz77.encodeFile(genomeFile, path('Output Test Files\HumanGenomeLZ77').abspath())
 
 compressor = lz77.LZ77Compressor(windowSize=4)
-input_file_path = path('Data\PhixGenome.fa').abspath()
-output_file_path = path('Output Test Files\PhixLz77Compressed4.bin')
+inputFile = path('Data\PhixGenome.fa').abspath()
+outputFile = path('Output Test Files\PhixLz77Compressed4.txt')
 
 # compress the input file and write it as binary into the output file
-compressor.compress(input_file_path, output_file_path)
+compressor.compressFile(inputFile, outputFile)
 
 #genomeCompressionComparison.compressionComparison(path('Output Test Files\GenomeCompressionAnalysis.png').abspath()) 
    
