@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#This file includes functions for the LZ77 compression of the genome sequence.
+#This file includes functions for the LZ77 encoding of the genome sequence.
 
 import gzip
 
@@ -52,15 +52,7 @@ def encode(data, windowSize):
         encoding.append(codeWord)
         
     return encoding
- 
-#This function decodes the sequence using L77 dictionary-based coding/compression.
-def decode(data, windowSize):  
-    decoding = []
-    
-    
-
-    return decoding
-  
+   
 #This function encodes the sequence found in the file in chunks.
 def encodeFile(sequenceFile, encodedFile):
     out = open(encodedFile, 'w')
