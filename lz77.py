@@ -14,7 +14,7 @@ def grow(window, x, windowSize):
 
 #This function encodes the sequence using L77 dictionary-based coding/compression.
 def encode(data, windowSize):
-    encoding = [] #list of codewords
+    encoding = [] #codewords
     window = ''   #buffer of last symbols
     suffix = ''   #suffix of data to be coded
     index = 0     #data index
