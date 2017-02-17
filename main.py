@@ -40,40 +40,7 @@ genomeFile = path('Data\HumanGenome.fa.gz').abspath()
 #with open('Output Test Files\intWordsCount.txt', 'w') as out:
 #    out.write(str(count))
 
-out = open('Output Test Files\PhixLz77IntWholeFile.txt', 'w')
-with open(path('Data\PhixGenome.fa').abspath()) as f:
-    data = ''
-    for line in f:
-        if line and line[0] != '>':
-            data = data + line.upper().replace('\n', '').replace('N', '')
-    encoding = lz77.encode(data, 4)
-    out.write(str(encoding)) 
-out.close()
-
-out = open('Output Test Files\PhixLz77IntPartsFile.txt', 'w')
-with open(path('Data\PhixGenome.fa').abspath()) as f:
-    #read genome into line-by-line generator     
-    subseqs = (line.upper().replace('\n', '').replace('N', '') 
-                for line in f if line and line[0] != '>') #ignore header line
-            
-    encoding = ''
-    lineCount = 0
-    for s in subseqs:
-        try:
-            #encoding every two lines is more accurate than every one line
-            #window will lose some characters if every one line is considered
-            s = s + next(subseqs) 
-        except StopIteration:
-            pass
-        if lineCount == 0: #normal encoding
-            encoding = encoding + str(lz77.encode(s, 4)).strip('[]') + ', '
-        else: 
-            #ignore first codeword as it produces non-sensical output;
-            #this is due to slight reading difficulties as every 2 lines are taken
-            encoding = encoding + str(lz77.encode(s, 4)[1:]).strip('[]') + ', '
-        lineCount += 1
-    out.write(encoding)
-out.close()
+lz77.encodeFile(genomeFile, path('Output Test Files\HumanGenomeLZ77').abspath())
 
 
 #genomeCompressionComparison.compressionComparison(path('Output Test Files\GenomeCompressionAnalysis.png').abspath()) 

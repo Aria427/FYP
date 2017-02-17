@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 #This file includes functions for the LZ77 compression of the genome sequence.
 
+import gzip
+
 #This function finds the lookback index for the suffix in the given window.
 def lookback(window, suffix):
     return len(window) - (window + suffix).find(suffix)
@@ -58,5 +60,45 @@ def decode(data, windowSize):
     
 
     return decoding
+  
+#This function encodes the sequence found in the file in chunks.
+def encodeFile(sequenceFile, encodedFile):
+    out = open(encodedFile, 'w')
+    with gzip.open(sequenceFile) as f:
+        #read genome into line-by-line generator     
+        subseqs = (line.upper().replace('\n', '').replace('N', '') 
+                    for line in f if line and line[0] != '>') #ignore header line
+                
+        encoding = ''
+        lineCount = 0
+        for s in subseqs:
+            try:
+                #encoding every two lines is more accurate than every one line
+                #window will lose some characters if every one line is considered
+                s = s + next(subseqs) 
+            except StopIteration:
+                pass
+            if lineCount == 0: #normal encoding
+                encoding = encoding + str(encode(s, 4)).strip('[]') + ', ' #format output
+            else: 
+                #ignore first codeword as it produces non-sensical output;
+                #this is due to slight reading difficulties as every 2 lines are taken
+                encoding = encoding + str(encode(s, 4)[1:]).strip('[]') + ', '
+            lineCount += 1
+        out.write(encoding)
+    out.close()    
+    return encoding
     
-#print encode('ACGTACGTACCCGGTT', 4)
+#This function encodes the sequence found in the file as a whole.
+def encodeWholeFile(sequenceFile, encodedFile):
+    out = open(encodedFile, 'w')
+    with open(sequenceFile) as f:
+        data = ''
+        for line in f:
+            if line and line[0] != '>':
+                data = data + line.upper().replace('\n', '').replace('N', '')
+        encoding = encode(data, 4)
+        out.write(str(encoding)) 
+    out.close()
+    return encoding      
+    
