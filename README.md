@@ -7,6 +7,8 @@ This is a repository for my final year project entitled 'The Malta Human Genome 
 
 'Further Research': includes any notes taken from books, articles, online videos, etc... 
 
+'Output Analysis Results': includes the analysis results of implemented functions.
+
 'Output Data': includes the resultant data from compressing the genomes.
 
 'Output Test Files': includes the resultant files from test function implementations.
