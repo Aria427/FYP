@@ -7,6 +7,7 @@ import genomeCompressionComparison
 import intGenomePattern
 import genomePattern
 
+import lz77Coding
 import lz77
 import lz78
 import lzw
@@ -40,8 +41,14 @@ genomeFile = path('Data\HumanGenome.fa.gz').abspath()
 #with open('Output Test Files\intWordsCount.txt', 'w') as out:
 #    out.write(str(count))
 
-lz77.encodeFile(genomeFile, path('Output Test Files\HumanGenomeLZ77').abspath())
+#lz77.encodeFile(genomeFile, path('Output Test Files\HumanGenomeLZ77').abspath())
 
+compressor = lz77.LZ77Compressor(windowSize=4)
+input_file_path = path('Data\PhixGenome.fa').abspath()
+output_file_path = path('Output Test Files\PhixLz77Compressed4.bin')
+
+# compress the input file and write it as binary into the output file
+compressor.compress(input_file_path, output_file_path)
 
 #genomeCompressionComparison.compressionComparison(path('Output Test Files\GenomeCompressionAnalysis.png').abspath()) 
    
