@@ -11,14 +11,9 @@ class LZ77Compressor:
         #look-ahead buffer contains the next characters to be transmitted
         self.lookaheadSize = 15 #length of match is at most 4 bits
         
-    #This function compresses the sequence found in the input file;
-    #The compressed data is written to the output binary file.
-    def compress(self, inputFile, outputFile):
-        data = None
-        encodeBuffer = bitarray(endian='big')
-
-        with open(inputFile, 'rb') as f:
-		data = f.read()
+    #This function compresses the sequence given.
+    def compress(self, data):
+        encodeBuffer = bitarray(endian='little') #explicitly set endianness for different systems
 
         i = 0
         while i < len(data):
@@ -53,15 +48,44 @@ class LZ77Compressor:
         #so if number of bits is not a multiple of 8, fill buffer with 0s
         encodeBuffer.fill() 
 
-        with open(outputFile, 'wb') as f:
-            f.write(encodeBuffer.tobytes())
-
         return encodeBuffer
+    
+    #This function compresses the sequence found in the input file using compress();
+    #The compressed data is written to the output file.   
+    def compressFile(self, inputFile, outputFile):
+        with open(inputFile, 'rb') as f:
+            """
+            #read genome into line-by-line generator     
+            subseqs = (line.upper().replace('\n', '').replace('N', '') 
+                        for line in f if line and line[0] != '>') #ignore header line
+                    
+            encoding = bitarray(endian='little')
+            for s in subseqs:
+                try:
+                    #encoding every two lines is more accurate than every one line
+                    #window will lose some characters if every one line is considered
+                    s = s + next(subseqs) 
+                except StopIteration:
+                    pass
+    
+                encoding.append(self.compress(s))
+            """
+            data = ''
+            for line in f:
+                if line and line[0] != '>':
+                    data = data + line.upper().replace('\n', '').replace('N', '')
+            
+            encoding = self.compress(data)
+        
+            with open(outputFile, 'wb') as out:
+                out.write(encoding)
+        
+        return encoding
         
     #This function decompresses the sequence found in the input binary file;  
     #The decompressed data is written to the output file.
     def decompress(self, inputFile, outputFile):
-        data = bitarray(endian='big')
+        data = bitarray(endian='little')
         decodeBuffer = []
 
         with open(inputFile, 'rb') as f:
@@ -98,6 +122,8 @@ class LZ77Compressor:
         bestMatchDistance = -1
         bestMatchLength = -1
         
+        #output any subsequence of length 1;
+        #8 bits uncompressed is better than the 13 bits used for flag compression
         for j in range(currentPosition + 2, bufferEnd): #subsequences of length 2 or greater are considered
             startIndex = max(0, currentPosition - self.windowSize)
             subsequence = data[currentPosition:j]
