@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#This file includes functions for the LZW compression of the genome sequence.
+#This file includes functions for the LZW coding of the genome sequence -> the reasoning behind the compression.
 
 #More practical adaptation of LZ78.
 #Codeword (i,c) becomes (i) -> only the index is transmitted.

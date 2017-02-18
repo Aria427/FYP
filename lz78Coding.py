@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#This file includes functions for the LZ78 compression of the genome sequence.
+#This file includes functions for the LZ78 coding of the genome sequence -> the reasoning behind the compression.
 
 #The dictionary has to be built and synchronized at both encoder and decoder.
 #Inputs are coded with a double (i, c) where:

@@ -2,15 +2,16 @@
 #This file contains the main functionality of the program.
 
 import fileParsing
+
+import lz77Coding
+import lz77
+import lz78Coding
+import lzwCoding
+
 import genomeCompressionComparison
 
 import intGenomePattern
 import genomePattern
-
-import lz77Coding
-import lz77
-import lz78
-import lzw
 
 import alignmentInt
 #import analyseAlignment
@@ -19,7 +20,6 @@ import alignmentInt
 from path import path
 import numpy as np
 import gzip
-
 import sys
 import pdb
 import time
@@ -41,16 +41,14 @@ genomeFile = path('Data\HumanGenome.fa.gz').abspath()
 #with open('Output Test Files\intWordsCount.txt', 'w') as out:
 #    out.write(str(count))
 
-#lz77.encodeFile(genomeFile, path('Output Test Files\HumanGenomeLZ77').abspath())
 
 compressor = lz77.LZ77Compressor(windowSize=4)
-inputFile = path('Data\PhixGenome.fa').abspath()
-outputFile = path('Output Test Files\PhixLz77Compressed4.txt')
+#inputFile = path('Data\PhixGenome.fa').abspath()
+#outputFile = path('Output Test Files\PhixLz77Compressed4Parts.txt')
+compressor.compressFile(genomeFile, path('Output Data\HumanGenomeLZ77.txt').abspath())
 
-# compress the input file and write it as binary into the output file
-compressor.compressFile(inputFile, outputFile)
 
-#genomeCompressionComparison.compressionComparison(path('Output Test Files\GenomeCompressionAnalysis.png').abspath()) 
+#genomeCompressionComparison.compressionComparison(path('Output Analysis Results\GenomeCompressionAnalysis.png').abspath()) 
    
 
 reads = fileParsing.parseReadsInt(path('Data\HumanSequencingReads.tsv.bz2').abspath()) 

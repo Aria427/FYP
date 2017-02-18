@@ -36,7 +36,7 @@ class LZ77Compressor:
                 encodeBuffer.frombytes(chr(bestMatchDistance >> 4)) #12 bit for distance
                 encodeBuffer.frombytes(chr(((bestMatchDistance & 0xf) << 4) | bestMatchLength)) #4 bit for length of match
 
-                print "(1, %i, %i)" % (bestMatchDistance, bestMatchLength),
+                #print "(1, %i, %i)" % (bestMatchDistance, bestMatchLength),
                 i += bestMatchLength
 
             else: #no match
@@ -44,7 +44,7 @@ class LZ77Compressor:
                 encodeBuffer.append(False) #False = 0 bit
                 encodeBuffer.frombytes(data[i]) #8 bit for character
 				
-                print "(0, %s)" % data[i],
+                #print "(0, %s)" % data[i],
                 i += 1
 
         #bitarray size = 8*n;
@@ -59,7 +59,7 @@ class LZ77Compressor:
     #This function compresses the sequence found in the input file using compress();
     #The compressed data is written to the output file line by line.   
     def compressFile(self, inputFile, outputFile):
-        with open(inputFile, 'rb') as f:
+        with gzip.open(inputFile, 'rb') as f:
             #data = ''
             #for line in f:
             #    if line and line[0] != '>':

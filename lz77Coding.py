@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#This file includes functions for the LZ77 encoding of the genome sequence.
+#This file includes functions for the LZ77 encoding of the genome sequence -> the reasoning behind the compression.
 
 import gzip
 
