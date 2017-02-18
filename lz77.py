@@ -32,24 +32,24 @@ class LZ77Compressor:
                 (bestMatchDistance, bestMatchLength) = match
 
                 #add 1 bit flag, followed by 12 bit for distance, and 4 bit for length of match 
-                encodeBuffer.append(True)
-                encodeBuffer.frombytes(chr(bestMatchDistance >> 4))
-                encodeBuffer.frombytes(chr(((bestMatchDistance & 0xf) << 4) | bestMatchLength))
+                encodeBuffer.append(True) #True = 1 bit
+                encodeBuffer.frombytes(chr(bestMatchDistance >> 4)) #12 bit for distance
+                encodeBuffer.frombytes(chr(((bestMatchDistance & 0xf) << 4) | bestMatchLength)) #4 bit for length of match
 
                 print "(1, %i, %i)" % (bestMatchDistance, bestMatchLength),
                 i += bestMatchLength
 
             else: #no match
                 #add 0 bit flag, followed by 8 bit for character
-                encodeBuffer.append(False)
-                encodeBuffer.frombytes(data[i])
+                encodeBuffer.append(False) #False = 0 bit
+                encodeBuffer.frombytes(data[i]) #8 bit for character
 				
                 print "(0, %s)" % data[i],
                 i += 1
 
         #bitarray size = 8*n;
         #so if number of bits is not a multiple of 8, fill buffer with 0s
-        encodeBuffer.fill() 
+        #encodeBuffer.fill() 
         
         #with open(outputFile, 'wb') as f:
         #    f.write(encodeBuffer.tobytes())
@@ -57,63 +57,57 @@ class LZ77Compressor:
         return encodeBuffer
     
     #This function compresses the sequence found in the input file using compress();
-    #The compressed data is written to the output file.   
+    #The compressed data is written to the output file line by line.   
     def compressFile(self, inputFile, outputFile):
         with open(inputFile, 'rb') as f:
-            """
+            #data = ''
+            #for line in f:
+            #    if line and line[0] != '>':
+            #        data = data + line.upper().replace('\n', '').replace('N', '') 
+            #encoding = self.compress(data)
+            
             #read genome into line-by-line generator     
             subseqs = (line.upper().replace('\n', '').replace('N', '') 
                         for line in f if line and line[0] != '>') #ignore header line
                     
             encoding = bitarray(endian='little')
             for s in subseqs:
-                try:
-                    #encoding every two lines is more accurate than every one line
-                    #window will lose some characters if every one line is considered
-                    s = s + next(subseqs) 
-                except StopIteration:
-                    pass
-    
                 encoding.append(self.compress(s))
-            """
-            data = ''
-            for line in f:
-                if line and line[0] != '>':
-                    data = data + line.upper().replace('\n', '').replace('N', '')
+            encoding.fill()
             
-            encoding = self.compress(data)
-        
             with open(outputFile, 'wb') as out:
                 out.write(encoding.tobytes())
         
         return encoding
         
-    #This function decompresses the sequence found in the input binary file;  
+    #This function decompresses the sequence found in the input binary file line by line;  
     #The decompressed data is written to the output file.
     def decompress(self, inputFile, outputFile):
-        data = bitarray(endian='little')
+        #data = bitarray(endian='little')
         decodeBuffer = []
 
         with open(inputFile, 'rb') as f:
-		 data.fromfile(f)
+            for line in f:
+                data = bitarray(endian='little')
+                data.fromfile(line)
 
-        while len(data) >= 9:
-            flag = data.pop(0)
-
-            if not flag:
-                byte = data[0:8].tobytes()
-                decodeBuffer.append(byte)
-                del data[0:8]
-            else:
-                byte1 = ord(data[0:8].tobytes())
-                byte2 = ord(data[8:16].tobytes())
-
-                del data[0:16]
-                distance = (byte1 << 4) | (byte2 >> 4)
-                length = (byte2 & 0xf)
-                
-                for i in range(length):
-                    decodeBuffer.append(decodeBuffer[-distance])
+                while len(data) >= 9:
+                    flag = data.pop(0)
+        
+                    if not flag:
+                        byte = data[0:8].tobytes()
+                        decodeBuffer.append(byte)
+                        del data[0:8]
+                    else:
+                        byte1 = ord(data[0:8].tobytes())
+                        byte2 = ord(data[8:16].tobytes())
+        
+                        del data[0:16]
+                        distance = (byte1 << 4) | (byte2 >> 4)
+                        length = (byte2 & 0xf)
+                        
+                        for i in range(length):
+                            decodeBuffer.append(decodeBuffer[-distance])
         
         decoding =  ''.join(decodeBuffer)
 
