@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+#This file contains the reduce step for the MapReduce implementation of the genome word count.       
 
 import sys
 

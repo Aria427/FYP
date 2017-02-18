@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+#This file contains the map step for the MapReduce implementation of the genome word count.       
 
 import sys
 from collections import Counter
@@ -32,7 +33,7 @@ def main():
     #write results to STDOUT (standard output)
     for key, value in wordCount.items():
         print '%s\t%s' % (key, value) #tab-delimited
-#The output here will be the input for the reduce step.
+    #The output here will be the input for the reduce step.
 
 if __name__ == '__main__':
     main()
