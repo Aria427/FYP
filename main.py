@@ -13,6 +13,7 @@ import genomeCompressionComparison
 import intGenomePattern
 import genomePattern
 
+import alignmentString
 import alignmentInt
 #import analyseAlignment
 #import visualisation
@@ -25,43 +26,38 @@ import pdb
 import time
 
 #pdb.set_trace()
-genomeFile = path('Data\HumanGenome.fa.gz').abspath()
+#genomeFile = path('Data\HumanGenome.fa.gz').abspath()
 #binaryGenomeFile = path('Output Data\HumanGenomeLong.bin').abspath()
-#fileParsing.parseGenomeLong(genomeFile, binaryGenomeFile)
+genomeFile = path('Data\PhixGenome.fa').abspath()
 #binaryGenomeFile = path('Output Data\PhixGenomeLongZip.bin').abspath() 
-#fileParsing.parseGenomeLong(path('Data\PhixGenome.fa').abspath(), binaryGenomeFile)
+#fileParsing.parseGenomeInt(genomeFile, binaryGenomeFile)
 
 #with open(binaryGenomeFile , 'rb') as f:
     #decodedGenome = np.fromfile(f, dtype=np.int)
     #print decodedGenome #length = 161856144
 #d = reduce(lambda x,y: x+str(y), decodedGenome, '')
 #decodedGenome = int(d)
+genome = fileParsing.parseGenomeString(genomeFile)
 
 #count = genomePattern.countIntWords(genomeFile)    
 #with open('Output Test Files\intWordsCount.txt', 'w') as out:
 #    out.write(str(count))
 
-
-compressor = lz77.LZ77Compressor(windowSize=4)
-#inputFile = path('Data\PhixGenome.fa').abspath()
-#outputFile = path('Output Test Files\PhixLz77Compressed4Parts.txt')
-compressor.compressFile(genomeFile, path('Output Data\HumanGenomeLZ77.txt').abspath())
-
-
 #genomeCompressionComparison.compressionComparison(path('Output Analysis Results\GenomeCompressionAnalysis.png').abspath()) 
-   
 
-reads = fileParsing.parseReadsInt(path('Data\HumanSequencingReads.tsv.bz2').abspath()) 
+#reads = fileParsing.parseReadsInt(path('Data\HumanSequencingReads.tsv.bz2').abspath()) 
 #reads = fileParsing.parseReadsPhiXInt(path('Data\PhiXSequencingReads1000.fastq').abspath())
+reads = fileParsing.parseReadsPhiXString(path('Data\PhiXSequencingReads1000.fastq').abspath())
 
-
-#analyseAlignment.plotTimeVsMatches(reads, decodedGenome, path('Output Test Files\AlignmentAnalysis.png').abspath())
-
+matchesCount, totalCount, offsets = alignmentString.alignHamming(reads, genome)
+print '%d/%d reads matched the genome.' % (matchesCount, totalCount)
+#print offsets
 
 #matchesCount, totalCount, offsets = alignmentInt.alignHamming(reads, decodedGenome)
 #print '%d/%d reads matched the genome.' % (matchesCount, totalCount) #The result is not 100% but this is to be expected due to sequencing errors. 
 #print offsets
 
+#analyseAlignment.plotTimeVsMatches(reads, decodedGenome, path('Output Test Files\AlignmentAnalysis.png').abspath())
 
 """
 textFile = path('Output Test Files\DataVisualisationTest.txt').abspath()
