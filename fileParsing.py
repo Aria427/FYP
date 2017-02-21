@@ -10,8 +10,7 @@ from bitarray import bitarray
 binaryBases = {'A' : '00',
                'C' : '01',
                'G' : '10',
-               'T' : '11',
-               }
+               'T' : '11' }
 
 bases = {'A' : bitarray('00'),
          'C' : bitarray('01'),
@@ -26,9 +25,15 @@ def baseToBinary(line):
 
 #This function converts each binary encoding to its equivalent nucleotide base.
 def binaryToBase(line):
-    for base, binary in binaryBases.items():
-        line = line.replace(binary, base)
-    return line      
+    result = ''
+    bins = [''.join(t) for t in zip(*[iter(line)]*2)] #seperate each two bins in a list
+
+    for b in bins: #for each two bits
+        for base, binary in binaryBases.items():
+            if binary == b:
+                result += b.replace(b, base)
+
+    return result     
     
 #This function compresses a sequence using int's into a binary file.      
 def compressInt(sequence, binaryFile):
@@ -70,7 +75,7 @@ def parseGenomeInt(input, output): #file is compressed by ~70%
             #s = seq[60:71] #60->70, 60 included
             #compressInt(s, binary)
     binary.close()
-   
+    
 #This function reads the genome sequence into a long using compressLong().
 def parseGenomeLong(input, output): #file is compressed by ~70%
     binary = open(output, 'wb')
@@ -92,7 +97,26 @@ def parseGenomeLong(input, output): #file is compressed by ~70%
             #s = seq[60:71] #60->70, 60 included
             #compressLong(s, binary)
     binary.close()
-     
+ 
+#This function decompresses an integer sequence into a text file.  
+def decompressInt(sequence, textFile):
+    integer = struct.unpack('=i', sequence) 
+    integer = integer[0] #as unpack returns a tuple
+    
+    binary = '{0:08b}'.format(integer) #convert integer to binary format
+    textFile.write(binaryToBase(binary))
+    
+#This function decompresses a long sequence into a text file.  
+def decompressLong(sequence, textFile):
+    longS = struct.unpack('=q', sequence) 
+    longS = longS[0] #as unpack returns a tuple
+    
+    binary = '{0:08b}'.format(longS) #convert long to binary format
+    textFile.write(binaryToBase(binary)) 
+ 
+    
+    
+    
 #This function reads the genome sequence into a bitarray.
 #Ambiguities arise when a subsequence does not completely fill the bit array;
 #i.e. 0's are appended => additional A's are encoded
@@ -109,7 +133,7 @@ def parseGenomeBitArray(input, output): #file is compressed by ~75%
   
 #This function reads the genome into a string.
 #It leads to a memory error for the human genome.
-def parseGenomeString(input, output): #file is not compressed
+def parseGenomeString(input): #file is not compressed
     genome = ''
     with open(input, 'r') as file: 
     #with gzip.open(input, 'r') as file:
@@ -229,7 +253,7 @@ def parseReadsPhiXInt(filename):
             sequenceLines = []
             while not line.startswith('+'): #not placeholder line (third line)
                 #Each line has length = 123 in Human
-                sequenceLine = compressReads(line, 123)
+                sequenceLine = compressReadsInt(line, 123)
                 sequenceLines.append(sequenceLine) #no whitespace in integer sequence
                 line = file.readline()
             #s = reduce(lambda x,y: x+str(y), sequenceLine, '')
