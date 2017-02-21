@@ -18,16 +18,18 @@ def alignHamming(reads, genome):
     readsCount = 0
     readsOffsets = []
     for read in reads: 
-        read = read[:50] #prefix of read as all 100 bases have a smaller chance of matching
+        #read = read[:50] #prefix of read as all 100 bases have a smaller chance of matching
         reverseRead = reverseComplement(read)
         matchOffsets = matchingString.naiveApproxHamming(read, genome) #check if read matches in forward direction of genome
         matchOffsets.extend(matchingString.naiveApproxHamming(reverseRead, genome)) #add results of any matches in reverse complement of genome
-        readsCount += 1 
-        if (readsCount % 100) == 0:
-            print '*'
+        
         if len(list(matchOffsets)) > 0: #match - read aligned in at least one place
             readsMatched += 1
         readsOffsets.append(matchOffsets) 
+        
+        readsCount += 1
+        if (readsCount % 100) == 0:
+            print '*'
     return readsMatched, readsCount, readsOffsets      
 
 #This function aligns the reads to the genome using the Edit distance approximate matching method.
@@ -36,7 +38,6 @@ def alignEdit(reads, genome):
     readsCount = 0
     readsOffsets = []
     for read in reads: 
-        read = read[:50] #prefix of read as all 100 bases have a smaller chance of matching
         reverseRead = reverseComplement(read)
         matchOffsets = matchingString.approxEdit(read, genome) #check if read matches in forward direction of genome
         matchOffsets.extend(matchingString.approxEdit(reverseRead, genome)) #add results of any matches in reverse complement of genome
@@ -54,7 +55,7 @@ def alignKmer(reads, genome):
     readsCount = 0
     readsOffsets = []
     for read in reads: 
-        read = read[:50] #prefix of read as all 100 bases have a smaller chance of matching
+        #read = read[:50] #prefix of read as all 100 bases have a smaller chance of matching
         reverseRead = reverseComplement(read)
         index = matchingString.kmerIndex(genome, 10)
         matchOffsets = matchingString.queryKmerIndex(read, genome, index) #check if read matches in forward direction of genome

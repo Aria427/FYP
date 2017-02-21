@@ -155,7 +155,7 @@ def parseGenomeString(input): #file is not compressed
     #with gzip.open(input, 'r') as file:
         for line in file:
             if line and line[0] != '>': #ignore header line with genome information
-                l = line.rstrip().upper().replace('N', '') 
+                l = line.rstrip().upper().replace('N', '').replace(' ', '') 
                 genome += l 
     return genome
 
