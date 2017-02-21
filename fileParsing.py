@@ -5,6 +5,7 @@ import gzip
 import bz2
  
 import struct
+import numpy as np
 from bitarray import bitarray
 
 binaryBases = {'A' : '00',
@@ -114,8 +115,23 @@ def decompressLong(sequence, textFile):
     binary = '{0:08b}'.format(longS) #convert long to binary format
     textFile.write(binaryToBase(binary)) 
  
+#This function reads the integer compressed genome sequence back into its original format.
+def deparseGenomeInt(input, output):
+    text = open(output, 'w')
+    with open(input , 'rb') as f:
+        integerGenome = np.fromfile(f, dtype=np.int32) #read genome into list of ints
+        for i in integerGenome:
+            decompressInt(i, text)
+    text.close()
     
-    
+#This function reads the long compressed genome sequence back into its original format.
+def deparseGenomeLong(input, output):
+    text = open(output, 'w')
+    with open(input , 'rb') as f:
+        longGenome = np.fromfile(f, dtype=np.int64) #read genome into list of longs
+        for l in longGenome:
+            decompressLong(l, text)
+    text.close()    
     
 #This function reads the genome sequence into a bitarray.
 #Ambiguities arise when a subsequence does not completely fill the bit array;

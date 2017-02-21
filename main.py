@@ -30,7 +30,7 @@ import struct
 #genomeFile = path('Data\HumanGenome.fa.gz').abspath()
 #binaryGenomeFile = path('Output Data\HumanGenomeLong.bin').abspath()
 genomeFile = path('Data\PhixGenome.fa').abspath()
-#binaryGenomeFile = path('Output Data\PhixGenomeIntZip.bin').abspath() 
+binaryGenomeFile = path('Output Data\PhixGenomeIntZip.bin').abspath() 
 #fileParsing.parseGenomeInt(genomeFile, binaryGenomeFile)
 
 #with open(binaryGenomeFile , 'rb') as f:
@@ -51,23 +51,9 @@ genomeFile = path('Data\PhixGenome.fa').abspath()
 reads = fileParsing.parseReadsPhiXString(path('Data\PhiXSequencingReads1000.fastq').abspath())
 
 
-s = fileParsing.baseToBinary('ACGT')
-print s
-try:
-    byte = int(s, 2) 
-    print byte
-    i = struct.pack('=i', byte) 
-    print i
-except ValueError:
-    pass
-    
-num = struct.unpack('=i', i)
-print num[0]
-bry = '{0:08b}'.format(num[0])
-print bry
+fileParsing.deparseGenomeInt(binaryGenomeFile, path('Output Data\PhiXGenomeIntOriginalNoNs.txt').abspath())
+#fileParsing.deparseGenomeLong(binaryGenomeFile, path('Output Data\PhiXGenomeLongOriginalNoNs.txt').abspath())  
 
-b = fileParsing.binaryToBase(bry)
-print b
 
 """
 matchesCount, totalCount, offsets = alignmentString.alignHamming(reads, genome)
