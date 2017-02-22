@@ -1,10 +1,8 @@
 #!/usr/bin/env python
 #This file contains the main functionality of the program.
 
-import fileParsing
-
+import fileCompressionAndParsing
 import lzwCompression
-
 import genomeCompressionComparison
 
 import intGenomePattern
@@ -24,13 +22,13 @@ import time
 import struct
 
 #pdb.set_trace()
-#genomeFile = path('Data\HumanGenome.fa').abspath()
+genomeFile = path('Data\HumanGenome.fa').abspath()
 #binaryGenomeFile = path('Output Data\HumanGenomeLong.bin').abspath()
-genomeFile = path('Data\PhixGenome.fa').abspath()
+#genomeFile = path('Data\PhixGenome.fa').abspath()
 #binaryGenomeFile = path('Output Data\PhixGenomeIntZip.bin').abspath() 
-#fileParsing.parseGenomeInt(genomeFile, binaryGenomeFile)
-
-lzwCompression.compress(genomeFile, 'Output Data\PhiXGenomeLZWZip.txt')
+#fileCompressionAndParsing.parseGenomeInt(genomeFile, binaryGenomeFile)
+#lzwCompression.compress(genomeFile, 'Output Data\HumanGenomeLZW.txt')
+genomeCompressionComparison.compressionComparison(path('Output Analysis Results\GenomeCompressionAnalysis.png').abspath()) 
 
 #with open(binaryGenomeFile , 'rb') as f:
     #decodedGenome = np.fromfile(f, dtype=np.int)
@@ -42,16 +40,14 @@ lzwCompression.compress(genomeFile, 'Output Data\PhiXGenomeLZWZip.txt')
 #with open('Output Test Files\intWordsCount.txt', 'w') as out:
 #    out.write(str(count))
 
-#genomeCompressionComparison.compressionComparison(path('Output Analysis Results\GenomeCompressionAnalysis.png').abspath()) 
-
-#reads = fileParsing.parseReadsInt(path('Data\HumanSequencingReads.tsv.bz2').abspath()) 
-reads = fileParsing.parseReadsString(path('Data\HumanSequencingReads.tsv.bz2').abspath()) 
-#reads = fileParsing.parseReadsPhiXInt(path('Data\PhiXSequencingReads1000.fastq').abspath())
-#reads = fileParsing.parseReadsPhiXString(path('Data\PhiXSequencingReads1000.fastq').abspath())
+#reads = fileCompressionAndParsing.parseReadsInt(path('Data\HumanSequencingReads.tsv.bz2').abspath()) 
+reads = fileCompressionAndParsing.parseReadsString(path('Data\HumanSequencingReads.tsv.bz2').abspath()) 
+#reads = fileCompressionAndParsing.parseReadsPhiXInt(path('Data\PhiXSequencingReads1000.fastq').abspath())
+#reads = fileCompressionAndParsing.parseReadsPhiXString(path('Data\PhiXSequencingReads1000.fastq').abspath())
 #print len(next(reads)) #length of PhiX read = 100; length of human read = 58
 #There are 28,094,847 human reads in total.
 
-#genome = fileParsing.parseGenomeString(genomeFile)
+#genome = fileCompressionAndParsing.parseGenomeString(genomeFile)
 #matchesCount, totalCount, offsets = alignmentString.alignHamming(reads, genome)
 #print '%d/%d reads matched the genome.' % (matchesCount, totalCount)
 #print offsets
@@ -72,8 +68,8 @@ with gzip.open(genomeFile, 'r') as f:
     lastRead = '' #overlap
     for s in subseqs:
         print 'Chunk read'
-        reads = fileParsing.parseReadsString(path('Data\HumanSequencingReads.tsv.bz2').abspath()) 
-        #reads = fileParsing.parseReadsPhiXString(path('Data\PhiXSequencingReads1000.fastq').abspath())
+        reads = fileCompressionAndParsing.parseReadsString(path('Data\HumanSequencingReads.tsv.bz2').abspath()) 
+        #reads = fileCompressionAndParsing.parseReadsPhiXString(path('Data\PhiXSequencingReads1000.fastq').abspath())
         s = lastRead + s
         matchesCount, count, offsets = alignmentString.alignHamming(reads, s)
         totalMatches += matchesCount
