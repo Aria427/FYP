@@ -3,10 +3,7 @@
 
 import fileParsing
 
-import lz77Coding
-import lz77
-import lz78Coding
-import lzwCoding
+import lzwCompression
 
 import genomeCompressionComparison
 
@@ -27,11 +24,13 @@ import time
 import struct
 
 #pdb.set_trace()
-genomeFile = path('Data\HumanGenome.fa.gz').abspath()
+#genomeFile = path('Data\HumanGenome.fa').abspath()
 #binaryGenomeFile = path('Output Data\HumanGenomeLong.bin').abspath()
-#genomeFile = path('Data\PhixGenome.fa').abspath()
+genomeFile = path('Data\PhixGenome.fa').abspath()
 #binaryGenomeFile = path('Output Data\PhixGenomeIntZip.bin').abspath() 
 #fileParsing.parseGenomeInt(genomeFile, binaryGenomeFile)
+
+lzwCompression.compress(genomeFile, 'Output Data\PhiXGenomeLZWZip.txt')
 
 #with open(binaryGenomeFile , 'rb') as f:
     #decodedGenome = np.fromfile(f, dtype=np.int)
@@ -50,12 +49,13 @@ reads = fileParsing.parseReadsString(path('Data\HumanSequencingReads.tsv.bz2').a
 #reads = fileParsing.parseReadsPhiXInt(path('Data\PhiXSequencingReads1000.fastq').abspath())
 #reads = fileParsing.parseReadsPhiXString(path('Data\PhiXSequencingReads1000.fastq').abspath())
 #print len(next(reads)) #length of PhiX read = 100; length of human read = 58
+#There are 28,094,847 human reads in total.
 
 #genome = fileParsing.parseGenomeString(genomeFile)
 #matchesCount, totalCount, offsets = alignmentString.alignHamming(reads, genome)
 #print '%d/%d reads matched the genome.' % (matchesCount, totalCount)
 #print offsets
-
+"""
 def readInChunks(genomeFile, chunkSize=65536):
    while True:
        data = f.read(chunkSize).rstrip().upper().replace('N', '').replace(' ', '')
@@ -65,14 +65,13 @@ def readInChunks(genomeFile, chunkSize=65536):
 
 def chunked(file, chunk_size):
     return iter(lambda: file.read(chunk_size).rstrip().upper().replace('N', '').replace(' ', ''), '')     
-       
+   
 totalMatches, totalCount, totalOffsets = 0, 0, []
-with open(genomeFile, 'r') as f:
-    #subseqs = (line.rstrip().upper().replace('N', '').replace(' ', '') 
-    #            for line in f if line and line[0] != '>')
-    subseqs = readInChunks(f)
+with gzip.open(genomeFile, 'r') as f:
+    subseqs = chunked(f, 100000000) #file size = 3,273,481,150 bytes => chunk = 100,000,000 bytes
     lastRead = '' #overlap
     for s in subseqs:
+        print 'Chunk read'
         reads = fileParsing.parseReadsString(path('Data\HumanSequencingReads.tsv.bz2').abspath()) 
         #reads = fileParsing.parseReadsPhiXString(path('Data\PhiXSequencingReads1000.fastq').abspath())
         s = lastRead + s
@@ -81,10 +80,11 @@ with open(genomeFile, 'r') as f:
         totalCount = count
         totalOffsets.append(offsets)
         lastRead = s[-58:]
+        print 'Chunk aligned'
 print '%d/%d reads matched the genome.' % (totalMatches, totalCount)
 #print totalOffsets
-       
-
+     
+"""
 #matchesCount, totalCount, offsets = alignmentInt.alignHamming(reads, decodedGenome)
 #print '%d/%d reads matched the genome.' % (matchesCount, totalCount) #The result is not 100% but this is to be expected due to sequencing errors. 
 #print offsets
