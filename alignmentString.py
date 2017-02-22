@@ -18,17 +18,16 @@ def alignHamming(reads, genome):
     readsCount = 0
     readsOffsets = []
     for read in reads: 
-        #read = read[:50] #prefix of read as all 100 bases have a smaller chance of matching
         reverseRead = reverseComplement(read)
         matchOffsets = matchingString.naiveApproxHamming(read, genome) #check if read matches in forward direction of genome
         matchOffsets.extend(matchingString.naiveApproxHamming(reverseRead, genome)) #add results of any matches in reverse complement of genome
-        
+
         if len(list(matchOffsets)) > 0: #match - read aligned in at least one place
             readsMatched += 1
         readsOffsets.append(matchOffsets) 
         
         readsCount += 1
-        if (readsCount % 100) == 0:
+        if (readsCount % 1) == 0:
             print '*'
     return readsMatched, readsCount, readsOffsets      
 
@@ -41,12 +40,14 @@ def alignEdit(reads, genome):
         reverseRead = reverseComplement(read)
         matchOffsets = matchingString.approxEdit(read, genome) #check if read matches in forward direction of genome
         matchOffsets.extend(matchingString.approxEdit(reverseRead, genome)) #add results of any matches in reverse complement of genome
-        readsCount += 1
-        if (readsCount % 100) == 0:
-            print '*'
+        
         if len(list(matchOffsets)) > 0: #match - read aligned in at least one place
             readsMatched += 1
         readsOffsets.append(matchOffsets) 
+        
+        readsCount += 1
+        if (readsCount % 100) == 0:
+            print '*'
     return readsMatched, readsCount, readsOffsets  
   
 #This function aligns the reads to the genome using the k-mer indexing method.
@@ -54,12 +55,12 @@ def alignKmer(reads, genome):
     readsMatched = 0
     readsCount = 0
     readsOffsets = []
+    index = matchingString.kmerIndex(genome, 10)
     for read in reads: 
-        #read = read[:50] #prefix of read as all 100 bases have a smaller chance of matching
         reverseRead = reverseComplement(read)
-        index = matchingString.kmerIndex(genome, 10)
         matchOffsets = matchingString.queryKmerIndex(read, genome, index) #check if read matches in forward direction of genome
         matchOffsets.extend(matchingString.queryKmerIndex(reverseRead, genome, index)) #add results of any matches in reverse complement of genome
+        
         readsCount += 1
         if (readsCount % 100) == 0:
             print '*'
@@ -73,12 +74,12 @@ def alignFM(reads, genome):#, output):
     readsMatched = 0
     readsCount = 0
     readsOffsets = []
+    fm = matchingString.fmIndex(genome)
     for read in reads: 
-        read = read[:50] #prefix of read as all 100 bases have a smaller chance of matching
         reverseRead = reverseComplement(read)
-        fm = matchingString.fmIndex(genome)
         matchOffsets = fm.occurrences(read) #check if read matches in forward direction of genome
         matchOffsets.extend(fm.occurrences(reverseRead)) #add results of any matches in reverse complement of genome
+        
         readsCount += 1
         if (readsCount % 100) == 0:
             print '*'
