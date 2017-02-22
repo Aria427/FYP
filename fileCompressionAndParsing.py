@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#This file includes functions for efficient parsing of a genome and sequencing reads.
+#This file includes functions for efficient compression and parsing of a genome and sequencing reads.
 
 import gzip
 import bz2
