@@ -49,43 +49,4 @@ def countLongWords(genome):
             wordCount.update(kmers) #update counter
             last7 = s[-7:]
     return wordCount    
-
-"""
-#The below functions proved to be inefficient.
-
-#This function reads a file in pieces/chunks using a lazy approach (generator).
-def readInChunks(genomeFile, chunkSize=1024):
-    with gzip.open(genomeFile, 'r') as f:
-        while True:
-            data = f.read(chunkSize).rstrip().upper().replace('N', '').replace(' ', '')
-            if not data:
-                break
-            yield data
-    #return iter(lambda: genomeFile.read(chunkSize), '')
-    
-#This function returns the frequency of each 4-letter (int) word found in the genome.
-#The implementation is based on the slidingWindow() function defined above.
-def countIntWords(genome):
-    wordCount = Counter()
-    for piece in readInChunks(genome, 4096):
-        #window size = 4 as int (4-letter matches) is considered
-        #step size = 1 to consider each nucleotide
-        chunks = slidingWindow(piece, 4, 1)
-        for c in chunks:
-            wordCount += Counter(c)
-    return wordCount
-
-#This function returns the frequency of each 8-letter (long) word found in the genome.
-#The implementation is based on the slidingWindow() function defined above.
-def countLongWords(genome):
-    wordCount = Counter()
-    with gzip.open(genome) as f:
-        for line in f:
-            line = line.rstrip().upper().replace('N', '').replace('\n', '').replace(' ', '')
-            #window size = 8 as long (8-letter matches) is considered
-            #step size = 1 to consider each nucleotide
-            chunks = slidingWindow(line, 8, 1) 
-            for c in chunks:
-                wordCount += Counter(c)
-    return wordCount
-"""              
+           
