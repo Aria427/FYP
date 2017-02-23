@@ -27,7 +27,7 @@ import struct
 #genomeFile = path('Data\HumanGenome.fa.gz').abspath()
 #binaryGenomeFile = path('Output Data\HumanGenomeLong.bin').abspath()
 genomeFile = path('Data\PhixGenome.fa').abspath()
-#binaryGenomeFile = path('Output Data\PhixGenomeIntZip.bin').abspath() 
+binaryGenomeFile = path('Output Data\PhixGenomeIntZip.bin').abspath() 
 #fileCompressionAndParsing.parseGenomeInt(genomeFile, binaryGenomeFile)
 #lzwCompression.compress(genomeFile, 'Output Data\HumanGenomeLZW.txt')
 #genomeCompressionComparison.compressionComparison(path('Output Analysis Results\GenomeCompressionAnalysis.png').abspath()) 
@@ -57,6 +57,7 @@ print '%d/%d reads matched the genome.' % (matchesCount, totalCount) #The result
 #print offsets
 
 alignment.alignUncompressed(readsFile, genomeFile)
+alignment.alignCompressed(readsFile, binaryGenomeFile)
 
 #with open(binaryGenomeFile , 'rb') as f:
     #decodedGenome = np.fromfile(f, dtype=np.int)

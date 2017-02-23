@@ -101,16 +101,17 @@ def parseGenomeLong(input, output): #file is compressed by ~70%
  
 #This function decompresses an integer sequence into a text file (if a filename is given).  
 def decompressInt(sequence, textFile=None):
+    
     integer = struct.unpack('=i', sequence) 
     integer = integer[0] #as unpack returns a tuple
     
     binary = '{0:08b}'.format(integer) #convert integer to binary format
-    sequence = binaryToBase(binary)
+    seq = binaryToBase(binary)
     
     if textFile != None:
-        textFile.write(sequence)
+        textFile.write(seq)
     else:
-        return sequence
+        return seq
     
 #This function decompresses a long sequence into a text file (if a filename is given).  
 def decompressLong(sequence, textFile):
@@ -118,12 +119,12 @@ def decompressLong(sequence, textFile):
     longS = longS[0] #as unpack returns a tuple
     
     binary = '{0:08b}'.format(longS) #convert long to binary format
-    sequence = binaryToBase(binary)
+    seq = binaryToBase(binary)
     
     if textFile != None:
-        textFile.write(sequence)
+        textFile.write(seq)
     else:
-        return sequence
+        return seq
  
 #This function reads the integer compressed genome sequence back into its original format.
 def deparseGenomeInt(input, output):
