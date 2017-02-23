@@ -48,7 +48,9 @@ def main():
         g = overlap + g #append to start of next line to handle patterns found between lines
 
         #write results to STDOUT (standard output)
-        print '%s\t%d\t%s' % (g, genomeStartIndex, 'G') #tab-delimited
+        print '%s\t%s' % ('G', (g, genomeStartIndex)) #tab-delimited key:value
+        #key = character identifying genome
+        #value = tuple with sequence and its start position
         
         overlap = g[-60:] #overlap = length of read
         genomeStartIndex += 50 #index of each subsequence is incremented by length of genome line 
@@ -57,7 +59,9 @@ def main():
     readStartIndex = 0
     for r in readSeq:
         #write results to STDOUT (standard output)
-        print '%s\t%d\t%s' % (r, readStartIndex, 'R') #tab-delimited
+        print '%s\t%s' % ('R', (r, readStartIndex)) #tab-delimited key:value
+        #key = character identifying read
+        #value = tuple with sequence and its start position
         
         readStartIndex += 60 #index of each read is incremented by length of read
 
