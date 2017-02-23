@@ -26,24 +26,26 @@ def readInChunk(file, chunkSize):
 #This function aligns the sequencing reads against the uncompressed reference genome.
 def alignUncompressed(reads, genome):
     totalMatches, totalCount, totalOffsets = 0, 0, []
-    with gzip.open(genome, 'r') as f:
-        subseqs = readInChunk(f, 100000) #chunk = 100,000 bytes
+    with open(genome, 'r') as f:
+        #subseqs = readInChunk(f, 100000) #chunk = 100,000 bytes
+        subseqs = (line.rstrip().upper().replace('N', '').replace(' ','')
+                    for line in f if line and line[0] != '>') #ignore header lin
         lastRead = '' #overlap
         chunkCount = 0
         for s in subseqs:
-            print 'Chunk read'
-            chunkCount += 1
+            print 'Chunk %d read' % chunkCount
             s = lastRead + s #overlap is appended to the start of the next chunk
             
-            reads = fileCompressionAndParsing.parseReadsString(reads) 
-            #reads = fileCompressionAndParsing.parseReadsPhiXString(reads)
-            matchesCount, count, offsets = alignmentString.alignFM(reads, s)
+            #r = fileCompressionAndParsing.parseReadsString(reads) 
+            r = fileCompressionAndParsing.parseReadsPhiXString(reads)
+            matchesCount, count, offsets = alignmentString.alignFM(r, s)
             
             totalMatches += matchesCount
             totalCount = count #number of reads stays the same as every chunk goes through each read again
             totalOffsets.append(offsets)
-            lastRead = s[-58:]
-            print 'Chunk %d/32735 aligned' % chunkCount        
+            lastRead = s[-100:] #100 for PhiX, 58 for Human
+            print 'Chunk %d aligned' % chunkCount        
+            chunkCount += 1
             print '%d/%d reads matched the genome.' % (totalMatches, totalCount)
             #print totalOffsets
 

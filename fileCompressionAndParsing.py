@@ -301,7 +301,6 @@ def parseReadsPhiXInt(filename):
 def parseReadsPhiXString(filename):  
     readID, sequence, quality = '', '', ''
     file = open(filename, 'r')
-    #file = bz2.BZ2File(filename, 'r')
     while True: #runs until EOF
         line = file.readline() 
         if not line: #reached EOF
