@@ -22,13 +22,13 @@ import time
 import struct
 
 #pdb.set_trace()
-genomeFile = path('Data\HumanGenome.fa').abspath()
+genomeFile = path('Data\HumanGenome.fa.gz').abspath()
 #binaryGenomeFile = path('Output Data\HumanGenomeLong.bin').abspath()
 #genomeFile = path('Data\PhixGenome.fa').abspath()
 #binaryGenomeFile = path('Output Data\PhixGenomeIntZip.bin').abspath() 
 #fileCompressionAndParsing.parseGenomeInt(genomeFile, binaryGenomeFile)
 #lzwCompression.compress(genomeFile, 'Output Data\HumanGenomeLZW.txt')
-genomeCompressionComparison.compressionComparison(path('Output Analysis Results\GenomeCompressionAnalysis.png').abspath()) 
+#genomeCompressionComparison.compressionComparison(path('Output Analysis Results\GenomeCompressionAnalysis.png').abspath()) 
 
 #with open(binaryGenomeFile , 'rb') as f:
     #decodedGenome = np.fromfile(f, dtype=np.int)
@@ -51,7 +51,7 @@ reads = fileCompressionAndParsing.parseReadsString(path('Data\HumanSequencingRea
 #matchesCount, totalCount, offsets = alignmentString.alignHamming(reads, genome)
 #print '%d/%d reads matched the genome.' % (matchesCount, totalCount)
 #print offsets
-"""
+
 def readInChunks(genomeFile, chunkSize=65536):
    while True:
        data = f.read(chunkSize).rstrip().upper().replace('N', '').replace(' ', '')
@@ -64,23 +64,25 @@ def chunked(file, chunk_size):
    
 totalMatches, totalCount, totalOffsets = 0, 0, []
 with gzip.open(genomeFile, 'r') as f:
-    subseqs = chunked(f, 100000000) #file size = 3,273,481,150 bytes => chunk = 100,000,000 bytes
+    subseqs = chunked(f, 100000) #file size = 3,273,481,150 bytes => chunk = 100,000 bytes
     lastRead = '' #overlap
+    chunkCount = 0
     for s in subseqs:
         print 'Chunk read'
+        chunkCount += 1
         reads = fileCompressionAndParsing.parseReadsString(path('Data\HumanSequencingReads.tsv.bz2').abspath()) 
         #reads = fileCompressionAndParsing.parseReadsPhiXString(path('Data\PhiXSequencingReads1000.fastq').abspath())
         s = lastRead + s
-        matchesCount, count, offsets = alignmentString.alignHamming(reads, s)
+        matchesCount, count, offsets = alignmentString.alignFM(reads, s)
         totalMatches += matchesCount
         totalCount = count
         totalOffsets.append(offsets)
         lastRead = s[-58:]
-        print 'Chunk aligned'
-print '%d/%d reads matched the genome.' % (totalMatches, totalCount)
+        print 'Chunk %d/32735 aligned' % chunkCount        
+        print '%d/%d reads matched the genome.' % (totalMatches, totalCount)
 #print totalOffsets
      
-"""
+
 #matchesCount, totalCount, offsets = alignmentInt.alignHamming(reads, decodedGenome)
 #print '%d/%d reads matched the genome.' % (matchesCount, totalCount) #The result is not 100% but this is to be expected due to sequencing errors. 
 #print offsets

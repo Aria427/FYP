@@ -76,12 +76,13 @@ def alignFM(reads, genome):#, output):
     readsOffsets = []
     fm = matchingString.fmIndex(genome)
     for read in reads: 
+        #read = read[:20]
         reverseRead = reverseComplement(read)
         matchOffsets = fm.occurrences(read) #check if read matches in forward direction of genome
         matchOffsets.extend(fm.occurrences(reverseRead)) #add results of any matches in reverse complement of genome
         
         readsCount += 1
-        if (readsCount % 100) == 0:
+        if (readsCount % 1000000) == 0:
             print '*'
         if len(list(matchOffsets)) > 0: #match - read aligned in at least one place
             readsMatched += 1
