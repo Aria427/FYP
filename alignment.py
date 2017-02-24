@@ -37,7 +37,7 @@ def alignUncompressed(reads, genome):
         for s in subseqs:
             print 'Chunk %d read' % chunkCount
             s = overlap + s #overlap is appended to the start of the next chunk
-            
+            print s
             #r = fileCompressionAndParsing.parseReadsString(reads) 
             r = fileCompressionAndParsing.parseReadsPhiXString(reads)
             matchesCount, count, offsets = alignmentString.alignFM(r, s)
@@ -59,20 +59,14 @@ def alignCompressed(reads, genome):
         fileCompressionAndParsing.deparseGenomeInt(genome, tempFile)
     
     with open(tempFile, 'r') as f:
-        subseqs = (line.replace('\n','') for line in f)
+        subseqs = (line for line in f)
         overlap = '' 
         chunkCount = 0
-        #integerCount = 0
-        #for i in integerGenome: 
-            #integerCount += 1
-            #s = fileCompressionAndParsing.decompressInt(i) #integer is decompressed
-            #for i in integerGenome[integerCount:]:
-            #    while len(s) < 100:
-            #        s += fileCompressionAndParsing.decompressInt(i)
         for s in subseqs:  
+            #print s
             print 'Chunk %d read' % chunkCount
-            s = overlap + s #overlap is appended to the start of the next chunk
-            
+            s = overlap.strip() + s.strip() #overlap is appended to the start of the next chunk
+           
             #r = fileCompressionAndParsing.parseReadsString(reads) 
             r = fileCompressionAndParsing.parseReadsPhiXString(reads)
             matchesCount, count, offsets = alignmentString.alignFM(r, s)
