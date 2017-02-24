@@ -131,8 +131,12 @@ def deparseGenomeInt(input, output):
     text = open(output, 'w')
     with open(input , 'rb') as f:
         integerGenome = np.fromfile(f, dtype=np.int32) #read genome into list of ints
+        integers = 0
         for i in integerGenome:
             decompressInt(i, text)
+            integers += 1
+            if (integers % 5) == 0: #4 for human, 5 for PhiX
+                text.write('\n')
     text.close()
     
 #This function reads the long compressed genome sequence back into its original format.
@@ -140,8 +144,12 @@ def deparseGenomeLong(input, output):
     text = open(output, 'w')
     with open(input , 'rb') as f:
         longGenome = np.fromfile(f, dtype=np.int64) #read genome into list of longs
+        longs = 0
         for l in longGenome:
             decompressLong(l, text)
+            longs += 1
+            if (longs % 4) == 0:
+                text.write('\n')
     text.close()    
     
 #This function reads the genome sequence into a bitarray.

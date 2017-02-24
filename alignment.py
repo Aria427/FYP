@@ -59,8 +59,7 @@ def alignCompressed(reads, genome):
         fileCompressionAndParsing.deparseGenomeInt(genome, tempFile)
     
     with open(tempFile, 'r') as f:
-        subseqs = (line.rstrip().upper().replace('N', '').replace(' ','')
-                    for line in f if line and line[0] != '>') #ignore header line   
+        subseqs = (line.replace('\n','') for line in f)
         overlap = '' 
         chunkCount = 0
         #integerCount = 0
