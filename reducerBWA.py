@@ -4,8 +4,8 @@
 import alignmentString
 import sys
 
-#This function reads in the output from the combiner using a generator.
-def readCombinerOutput(file, separator='\t'):
+#This function reads in the output from the mapper using a generator.
+def readMapperOutput(file, separator='\t'):
     for line in file:
         yield line.rstrip().split(separator, 1)
 
@@ -13,9 +13,10 @@ def readCombinerOutput(file, separator='\t'):
 def genomeLine(data):
     for isGR, grValue in data:
         if isGR == 'G':
-            for g in grValue:
-                genSeq = g[0] 
-                yield genSeq   
+            #for g in grValue:
+            #    genSeq = g[0] 
+            genSeq = grValue[0]
+            yield genSeq   
         else: 
             pass
 
@@ -23,15 +24,16 @@ def genomeLine(data):
 def readLine(data):
     for isGR, grValue in data:
         if isGR == 'R':
-            for r in grValue:
-                readSeq = r[1] 
-                yield readSeq  
+            #for r in grValue:
+            #    readSeq = r[0] 
+            readSeq = grValue[0]
+            yield readSeq  
         else:
             pass
         
 def main():
     #input comes from STDIN (standard input)
-    data = readCombinerOutput(sys.stdin) 
+    data = readMapperOutput(sys.stdin) 
   
     genome = genomeLine(data)
     reads = readLine(data)
