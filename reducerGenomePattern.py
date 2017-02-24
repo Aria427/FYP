@@ -2,6 +2,8 @@
 #This file contains the reduce step for the MapReduce implementation of the genome word count.       
 
 import sys
+from itertools import groupby
+from operator import itemgetter
 
 #This function reads in the output from the mapper using a generator.
 def readMapperOutput(file, separator='\t'):
@@ -10,16 +12,14 @@ def readMapperOutput(file, separator='\t'):
 
 def main():
     #input comes from STDIN (standard input)
-    data = readMapperOutput(sys.stdin, separator='\t') 
+    data = readMapperOutput(sys.stdin) 
   
-    for word, count in data:
+    for currentWord, group in groupby(data, itemgetter(0)):
         try:
-            if count == '1':
-                pass #ignore words which occur only once
-            else:
-                print "%s\t%s" % (word, count) #write result to STDOUT
+            totalCount = sum(int(count) for word, count in group)
+            print "%s\t%s" % (currentWord, totalCount) #write result to STDOUT
         except ValueError:
-            pass #when count not a number
+            pass #count = NAN
 
 if __name__ == '__main__':
     main()
