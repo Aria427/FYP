@@ -30,3 +30,5 @@ def main():
 if __name__ == '__main__':
     main()       
 
+#Run MapReduce job on Hadoop using:
+#   bin/hadoop jar share/hadoop/tools/lib/hadoop-streaming-2.7.3.jar -D mapreduce.job.maps=2 -file /home/hduser/mapperBWAg.py -mapper /home/hduser/mapperBWAg.py -input /user/hduser/PhiXGenome.fa -file /home/hduser/mapperBWAr.py -mapper /home/hduser/mapperBWAr.py -input /user/hduser/PhiXSequencingReads1000.fastq  -file /home/hduser/reducerBWA.py -reducer /home/hduser/reducerBWA.py -file /home/hduser/alignmentString.py -file /home/hduser/matchingString.py  -output /user/hduser/bwaPhiX-output
