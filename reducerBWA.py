@@ -35,17 +35,20 @@ def main():
     #input comes from STDIN (standard input)
     data = readMapperOutput(sys.stdin) 
   
-    genome = genomeLine(data)
-    reads = readLine(data)
-    
+    genome = genomeLine(data)  
+
     totalMatches, totalCount, totalOffsets = 0, 0, []
+    overlap = ''
     for g in genome:
+         g = overlap + g #overlap is appended to the start of the next chunk
+         reads = readLine(data) 
          matchesCount, count, offsets = alignmentString.alignFM(reads, g)
             
          totalMatches += matchesCount
          totalCount = count #number of reads stays the same as every chunk goes through each read again
          totalOffsets.append(offsets)
-         print '%d/%d reads matched the genome.' % (totalMatches, totalCount) #write result to STDOUT
+         overlap = g[-100:] #100 for PhiX, 60 for Human
+    print '%d/%d reads matched the genome.' % (totalMatches, totalCount) #write result to STDOUT
 
 if __name__ == '__main__':
     main()
