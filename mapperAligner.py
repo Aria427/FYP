@@ -127,4 +127,4 @@ if __name__ == '__main__':
     main()       
 
 #Run MapReduce job on Hadoop using:
-#   bin/hadoop jar share/hadoop/tools/lib/hadoop-streaming-2.7.3.jar -file /home/hduser/mapperBWA.py -mapper /home/hduser/mapperBWA.py -file /home/hduser/reducerBWA.py -reducer /home/hduser/reducerBWA.py -file /home/hduser/alignmentString.py -file /home/hduser/matchingString.py -input /user/hduser/PhiXGenome.fa -input /user/hduser/PhiXSequencingReads1000.fastq -output /user/hduser/bwaPhiX-output
+#   bin/hadoop jar share/hadoop/tools/lib/hadoop-streaming-2.7.3.jar -file /home/hduser/mapperAligner.py -mapper /home/hduser/mapperAligner.py -file /home/hduser/reducerBWA.py -reducer /home/hduser/reducerBWA.py -file /home/hduser/alignmentString.py -file /home/hduser/matchingString.py -input /user/hduser/PhiXSequencingReads1000.fastq -output /user/hduser/bwaPhiX-output
