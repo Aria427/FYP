@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 #This file contains the reduce step for the alignment MapReduce implementation.       
 
-import alignmentString
+#import alignmentString
 import sys
 
 #This function reads in the output from the mapper using a generator.
 def readMapperOutput(file, separator='\t'):
     for line in file:
-        yield line.rstrip().split(separator, 1)
+        yield line.rstrip()#.split(separator, 1)
 
 #This function iterates through the genome lines.
 def genomeLine(data):
@@ -35,6 +35,17 @@ def main():
     #input comes from STDIN (standard input)
     data = readMapperOutput(sys.stdin) 
   
+    for d in data:
+        print d      
+    
+if __name__ == '__main__':
+    main()
+
+"""
+def main():
+    #input comes from STDIN (standard input)
+    data = readMapperOutput(sys.stdin) 
+  
     genome = genomeLine(data)  
 
     totalMatches, totalCount, totalOffsets = 0, 0, []
@@ -49,7 +60,4 @@ def main():
          totalOffsets.append(offsets)
          overlap = g[-100:] #100 for PhiX, 60 for Human
     print '%d/%d reads matched the genome.' % (totalMatches, totalCount) #write result to STDOUT
-
-if __name__ == '__main__':
-    main()
-
+"""

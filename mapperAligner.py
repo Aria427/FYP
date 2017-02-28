@@ -1,14 +1,10 @@
 #!/usr/bin/env python
 #This file contains the map step for the aligment MapReduce implementation.
 
+import alignmentString
+
 import sys
 from path import path
-
-#This function reads the reference genome as input to the mapper.
-def readInputGenome(file):
-    for line in file:
-        if line and line[0] != '>':
-            yield line.rstrip().upper().replace('N', '').replace(' ','') 
 
 #This function reads the sequencing reads as input to the mapper.        
 def readInputReads(file):
@@ -42,6 +38,7 @@ def readInputReads(file):
 
 def readInputPhiXReads(file):  
     readID, sequence, quality = '', '', ''
+    #file = open(file, 'r')
     while True: #runs until EOF
         line = file.readline() 
         if not line: #reached EOF
@@ -76,7 +73,38 @@ def readInputPhiXReads(file):
                     break
                 else:
                     line = file.readline()
+    #file.close()
                   
+def main():
+    #hard-coded reference genome
+    genomeFile = '/home/hduser/PhiXGenome.fa'
+    with open(genomeFile, 'r') as f:
+        genomeSeq = (line.rstrip().upper().replace('N', '').replace(' ','')
+                    for line in f if line and line[0] != '>') #ignore header line
+
+    	totalMatches, totalCount, totalOffsets = 0, 0, []
+    	overlap = '' 
+       
+    	for g in genomeSeq:
+         g = overlap + g #overlap is appended to the start of the next chunk 
+  
+         readSeq = readInputPhiXReads(sys.stdin)
+         matchesCount, count, offsets = alignmentString.alignFM(readSeq, g)
+	
+         totalMatches += matchesCount
+         totalCount = count #number of reads stays the same as every chunk goes through each read again
+         totalOffsets.append(offsets)
+         overlap = g[-100:] #100 for PhiX, 60 for Human  
+        
+         print '%d/%d reads matched the genome.' % (totalMatches, totalCount) 
+
+if __name__ == '__main__':
+    main()       
+
+#Run MapReduce job on Hadoop using:
+#   bin/hadoop jar share/hadoop/tools/lib/hadoop-streaming-2.7.3.jar -file /home/hduser/mapperAligner.py -mapper /home/hduser/mapperAligner.py -file /home/hduser/reducerAligner.py -reducer /home/hduser/reducerAligner.py -file /home/hduser/alignmentString.py -file /home/hduser/matchingString.py -input /user/hduser/PhiXSequencingReads1000.fastq -output /user/hduser/bwaPhiX-output
+
+"""                
 def main():
     #hard-coded reference genome
     genomeFile = path('Data\HumanGenome.fa.gz').abspath()
@@ -121,10 +149,5 @@ def main():
             #value = tuple with sequence and its start position
             #The output here will be the input for the reduce step.
             
-            readStartIndex += 100 #index of each read is incremented by length of read           
-
-if __name__ == '__main__':
-    main()       
-
-#Run MapReduce job on Hadoop using:
-#   bin/hadoop jar share/hadoop/tools/lib/hadoop-streaming-2.7.3.jar -file /home/hduser/mapperAligner.py -mapper /home/hduser/mapperAligner.py -file /home/hduser/reducerBWA.py -reducer /home/hduser/reducerBWA.py -file /home/hduser/alignmentString.py -file /home/hduser/matchingString.py -input /user/hduser/PhiXSequencingReads1000.fastq -output /user/hduser/bwaPhiX-output
+            readStartIndex += 100 #index of each read is incremented by length of read 
+"""   
