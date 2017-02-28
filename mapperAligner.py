@@ -2,6 +2,7 @@
 #This file contains the map step for the aligment MapReduce implementation.
 
 import sys
+from path import path
 
 #This function reads the reference genome as input to the mapper.
 def readInputGenome(file):
@@ -77,25 +78,26 @@ def readInputPhiXReads(file):
                     line = file.readline()
                   
 def main():
-    #input files comes from STDIN (standard input)
-    if sys.stdin.readline().startswith('>'): #if the first line of the input starts with '>' => genome header information
-        genomeSeq = readInputGenome(sys.stdin) #reads genome file as well as simple text  
-        overlap = '' 
-        genomeStartIndex = 0
+    #hard-coded reference genome
+    genomeFile = path('Data\HumanGenome.fa.gz').abspath()
+    genomeSeq = readInputGenome(genomeFile)
+    overlap = '' 
+    genomeStartIndex = 0
         
-        for g in genomeSeq:
-            g = overlap + g #append to start of next line to handle patterns found between lines
+    for g in genomeSeq:
+        g = overlap + g #append to start of next line to handle patterns found between lines
     
-            #write results to STDOUT (standard output)
-            print '%s\t%s' % ('G', (g, genomeStartIndex)) #tab-delimited key:value
-            #key = character identifying genome
-            #value = tuple with sequence and its start position
-            #The output here will be the input for the reduce step.
+        #write results to STDOUT (standard output)
+        print '%s\t%s' % ('G', (g, genomeStartIndex)) #tab-delimited key:value
+        #key = character identifying genome
+        #value = tuple with sequence and its start position
+        #The output here will be the input for the reduce step.
             
-            overlap = g[-100:] #overlap = length of read
-            genomeStartIndex += 50 #index of each subsequence is incremented by length of genome line 
-      
-    elif sys.stdin.readline().startswith('#'): #if the first line of the input starts with '#' => human sequencing reads
+        overlap = g[-100:] #overlap = length of read
+        genomeStartIndex += 50 #index of each subsequence is incremented by length of genome line 
+    
+    #input file - sequencing reads - comes from STDIN (standard input)
+    if sys.stdin.readline().startswith('#'): #if the first line of the input starts with '#' => human sequencing reads
         readSeq = readInputReads(sys.stdin)
         readStartIndex = 0
         
@@ -104,7 +106,7 @@ def main():
             print '%s\t%s' % ('R', (r, readStartIndex)) #tab-delimited key:value
             #key = character identifying read
             #value = tuple with sequence and its start position
-	    #The output here will be the input for the reduce step.
+            #The output here will be the input for the reduce step.
             
             readStartIndex += 60 #index of each read is incremented by length of read
       
