@@ -204,7 +204,7 @@ def boyerMooreExact(pattern, bmObject, text): #the Boyer-Moore object does the p
             
         i += shift #update position by shift
         
-    return occurrences, alignments, characterComparisons
+    return occurrences#, alignments, characterComparisons
     
 #This function implements approximate matching on Boyer-Moore using the pigeonhole principle. 
 def boyerMooreApproximate(pattern, text, n): #n = max number of mismatches

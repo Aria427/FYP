@@ -74,6 +74,6 @@ def kmerIndexApproximate(pattern, text, n, indexObject): #n = max number of mism
             if mismatches <= n:
                 allMatches.add(m - start) #add start position of match
                 
-    print 'index hits = {', indexHits, '}'
+    #print 'index hits = {', indexHits, '}'
     return list(allMatches)    
     

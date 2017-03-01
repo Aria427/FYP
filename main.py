@@ -9,7 +9,7 @@ import genomePattern
 import intGenomePattern
 
 import alignment
-import alignmentString
+import alignmentMatch
 import alignmentInt
 #import analyseAlignment
 
@@ -46,26 +46,33 @@ binaryGenomeFile = path('Output Data\PhixGenomeIntZip.bin').abspath()
 #reads = fileCompressionAndParsing.parseReadsString(readsFile)
 #reads = fileCompressionAndParsing.parseReadsInt(readsFile)  
 readsFile = path('Data\PhiXSequencingReads1000.fastq').abspath()
-reads = fileCompressionAndParsing.parseReadsPhiXString(readsFile)
+#reads = fileCompressionAndParsing.parseReadsPhiXString(readsFile)
 #reads = fileCompressionAndParsing.parseReadsPhiXInt(readsFile)
 #print len(next(reads)) #length of PhiX read = 100; length of human read = 58
 #There are 28,094,847 human reads in total.
 
 genome = fileCompressionAndParsing.parseGenomeString(genomeFile)
-matchesCount, totalCount, offsets = alignmentString.alignFM(reads, genome)
+reads = fileCompressionAndParsing.parseReadsPhiXString(readsFile)
+matchesCount, totalCount, offsets = alignmentMatch.alignBoyerMoore(reads, genome)
 print '%d/%d reads matched the genome.' % (matchesCount, totalCount) #The result is not 100% but this is to be expected due to sequencing errors. 
 #print offsets
 
-alignment.alignUncompressed(readsFile, genomeFile)
-alignment.alignCompressed(readsFile, binaryGenomeFile)
+genome = fileCompressionAndParsing.parseGenomeString(genomeFile)
+reads = fileCompressionAndParsing.parseReadsPhiXString(readsFile)
+matchesCount, totalCount, offsets = alignmentMatch.alignKmer(reads, genome)
+print '%d/%d reads matched the genome.' % (matchesCount, totalCount) #The result is not 100% but this is to be expected due to sequencing errors. 
+#print offsets
+
+
+#alignment.alignUncompressed(readsFile, genomeFile)
+#alignment.alignCompressed(readsFile, binaryGenomeFile)
+
 
 #with open(binaryGenomeFile , 'rb') as f:
     #decodedGenome = np.fromfile(f, dtype=np.int)
 #matchesCount, totalCount, offsets = alignmentInt.alignHamming(reads, decodedGenome)
 #print '%d/%d reads matched the genome.' % (matchesCount, totalCount)
 #print offsets
-
-
 
 
 #analyseAlignment.plotTimeVsMatches(reads, decodedGenome, path('Output Test Files\AlignmentAnalysis.png').abspath())
