@@ -176,7 +176,7 @@ class BoyerMoore(object):
         return len(self.smallLprime) - self.smallLprime[1]
 
 #This function implements the Boyer-Moore exact matching algorithm.
-def boyerMoore(pattern, bmObject, text): #the Boyer-Moore object does the preprocessing for P
+def boyerMooreExact(pattern, bmObject, text): #the Boyer-Moore object does the preprocessing for P
     i = 0 #keeps track of where we are in the text
     occurrences = []
 
@@ -201,4 +201,40 @@ def boyerMoore(pattern, bmObject, text): #the Boyer-Moore object does the prepro
         i += shift #update position by shift
         
     return occurrences
+    
+#This function implements approximate matching on Boyer-Moore using the pigeonhole principle. 
+def boyerMooreApproximate(pattern, text, n): #n = max number of mismatches
+    segmentLength = int(round(len(pattern) / (n+1))) #n+1 segments where at least 1 must match perfectly against T
+    allMatches = set() #all the indices where matches where found
+    
+    for i in range(n+1): #for each segment in P
+        #bounds of P for segment being searched
+        start = i*segmentLength
+        end = min((i+1)*segmentLength, len(pattern)) #min() to not run past end of P
+        
+        bmObject = BoyerMoore(pattern[start:end], alphabet='ACGT') #does preprocessing of Boyer-Moore
+        matches = boyerMooreExact(pattern[start:end], bmObject, text)
+        
+        #step through each match position to make sure rest of P matches T with no more than n mismatches
+        for m in matches:
+            if m < start or m-start+len(pattern) > len(text):
+                continue #P runs off the start or end of T
+                
+            mismatches = 0
+            for j in range(0, start): #compare segment of P before start against corresponding positions in T
+                if not pattern[j] == text[m-start+j]:
+                    mismatches += 1
+                    if mismatches > n: #exceeds maximum
+                        break
+                    
+            for j in range(end, len(pattern)): #compare suffix after segment
+                if not pattern[j] == text[m-start+j]:
+                    mismatches += 1
+                    if mismatches > n:
+                        break
+                    
+            if mismatches <= n:
+                allMatches.add(m - start) #add start position of match
+                
+    return list(allMatches)
     
