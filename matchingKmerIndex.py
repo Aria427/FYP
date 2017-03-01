@@ -4,7 +4,7 @@
 import bisect #allows binary search on a list
 
 #This class is an index object which is applied for k-mer indexing. 
-class kmerIndex(object):
+class KmerIndex(object):
     #This function initialises the k-mer object to be used by pre-processing text T.
     def __init__(self, text, k): #initialise index from all k-mer length substrings
         self.k = k  #k-mer length
@@ -28,14 +28,55 @@ class kmerIndex(object):
             
         return indexHits
 
-#This function is the offline algorithm using k-mer indexing by the above class.
-def queryKmerIndex(pattern, text, index):
-    k = index.k #length of k
+#This function implements the k-mer indexing exact offline algorithm.
+def kmerIndexExact(pattern, text, indexObject):
+    k = indexObject.k #length of k
     matchOffsets = []
 
-    for i in index.query(pattern): #returns a list of possible places where P could start (where 1st k bases of P match 1st k bases of T)
+    for i in indexObject.query(pattern): #returns a list of possible places where P could start (where 1st k bases of P match 1st k bases of T)
         if pattern[k:] == text[i+k:i+len(pattern)]:  #verify rest of P matches
             matchOffsets.append(i)
             
     return matchOffsets
+ 
+#This function implements approximate matching on k-mer indexing using the pigeonhole principle. 
+def kmerIndexApproximate(pattern, text, n, indexObject): #n = max number of mismatches
+    # 8-mer index, p is 24, and we allow up to two mismatches
+    # Divide p into 3 segments, so at least one of the segment will be an exact match
+
+    segmentLength = int(round(len(pattern) / (n+1))) #n+1 segments where at least 1 must match perfectly against T
+    allMatches = set() #all the indices where matches where found
+    indexHits = 0
+    
+    for i in range(n+1): #for each segment in P
+        #bounds of P for segment being searched
+        start = i*segmentLength
+        end = min((i+1)*segmentLength, len(pattern)) #min() to not run past end of P
+        
+        matches = indexObject.query(pattern[start:end])
+        indexHits += 1
+        
+        #step through each match position to make sure rest of P matches T with no more than n mismatches
+        for m in matches:
+            if m < start or m-start+len(pattern) > len(text):
+                continue #P runs off the start or end of T
+            
+            mismatches = 0
+            for j in range(0, start): #compare segment of P before start against corresponding positions in T
+                if not pattern[j] == text[m-start+j]:
+                    mismatches += 1
+                    if mismatches > n: #exceeds maximum
+                        break
+                    
+            for j in range(end, len(pattern)): #compare suffix after segment
+                if not pattern[j] == text[m-start+j]:
+                    mismatches += 1
+                    if mismatches > n:
+                        break
+                    
+            if mismatches <= n:
+                allMatches.add(m - start) #add start position of match
+                
+    print 'index hits = {', indexHits, '}'
+    return list(allMatches)    
     
