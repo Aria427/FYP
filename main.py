@@ -53,15 +53,16 @@ readsFile = path('Data\PhiXSequencingReads1000.fastq').abspath()
 
 genome = fileCompressionAndParsing.parseGenomeString(genomeFile)
 reads = fileCompressionAndParsing.parseReadsPhiXString(readsFile)
-matchesCount, totalCount, offsets = alignmentMatch.alignBoyerMoore(reads, genome)
+matchesCount, totalCount, offsets = alignmentMatch.alignHamming(reads, genome)
 print '%d/%d reads matched the genome.' % (matchesCount, totalCount) #The result is not 100% but this is to be expected due to sequencing errors. 
 #print offsets
 
 genome = fileCompressionAndParsing.parseGenomeString(genomeFile)
 reads = fileCompressionAndParsing.parseReadsPhiXString(readsFile)
-matchesCount, totalCount, offsets = alignmentMatch.alignKmer(reads, genome)
+matchesCount, totalCount, offsets = alignmentMatch.alignEdit(reads, genome)
 print '%d/%d reads matched the genome.' % (matchesCount, totalCount) #The result is not 100% but this is to be expected due to sequencing errors. 
 #print offsets
+
 
 
 #alignment.alignUncompressed(readsFile, genomeFile)

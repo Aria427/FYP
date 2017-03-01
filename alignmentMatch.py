@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 #This file includes functions for aligning reads with the reference genome by using the different matching algorithms using strings. 
     
+import matchingDistances as dist
 import matchingBoyerMoore as bm
 import matchingKmerIndex as kIdx
-
-import matchingString
+import matchingFmIndex as fmIdx
 
 #This function finds the reverse complement of a sequencing read.
 #The genome is double stranded, so the reads can come from one strand or the other.    
@@ -23,15 +23,15 @@ def alignHamming(reads, genome):
 
     for read in reads: 
         reverseRead = reverseComplement(read)
-        matchOffsets = matchingString.naiveApproxHamming(read, genome) #check if read matches in forward direction of genome
-        matchOffsets.extend(matchingString.naiveApproxHamming(reverseRead, genome)) #add results of any matches in reverse complement of genome
+        matchOffsets = dist.naiveApproxHamming(read, genome) #check if read matches in forward direction of genome
+        matchOffsets.extend(dist.naiveApproxHamming(reverseRead, genome)) #add results of any matches in reverse complement of genome
 
         if len(list(matchOffsets)) > 0: #match - read aligned in at least one place
             readsMatched += 1
         readsOffsets.append(matchOffsets) 
         
         readsCount += 1
-        if (readsCount % 1) == 0:
+        if (readsCount % 100) == 0:
             print '*'
             
     return readsMatched, readsCount, readsOffsets      
@@ -44,8 +44,8 @@ def alignEdit(reads, genome):
 
     for read in reads: 
         reverseRead = reverseComplement(read)
-        matchOffsets = matchingString.approxEdit(read, genome) #check if read matches in forward direction of genome
-        matchOffsets.extend(matchingString.approxEdit(reverseRead, genome)) #add results of any matches in reverse complement of genome
+        matchOffsets = dist.approxEdit(read, genome) #check if read matches in forward direction of genome
+        matchOffsets.extend(dist.approxEdit(reverseRead, genome)) #add results of any matches in reverse complement of genome
         
         if len(list(matchOffsets)) > 0: #match - read aligned in at least one place
             readsMatched += 1
@@ -108,7 +108,7 @@ def alignFM(reads, genome):#, output):
     readsCount = 0
     readsOffsets = []
 
-    fm = matchingString.fmIndex(genome)
+    fm = fmIdx.fmIndex(genome)
     for read in reads: 
         reverseRead = reverseComplement(read)
         matchOffsets = fm.occurrences(read) #check if read matches in forward direction of genome
