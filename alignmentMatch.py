@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 #This file includes functions for aligning reads with the reference genome by using the different matching algorithms using strings. 
     
+import matchingKmerIndex as kIdx
+
 import matchingString
 
 #This function finds the reverse complement of a sequencing read.
@@ -55,11 +57,11 @@ def alignKmer(reads, genome):
     readsMatched = 0
     readsCount = 0
     readsOffsets = []
-    index = matchingString.kmerIndex(genome, 10)
+    index = kIdx.KmerIndex(genome, 10)
     for read in reads: 
         reverseRead = reverseComplement(read)
-        matchOffsets = matchingString.queryKmerIndex(read, genome, index) #check if read matches in forward direction of genome
-        matchOffsets.extend(matchingString.queryKmerIndex(reverseRead, genome, index)) #add results of any matches in reverse complement of genome
+        matchOffsets = kIdx.kmerIndexExact(read, genome, index) #check if read matches in forward direction of genome
+        matchOffsets.extend(kIdx.kmerIndexExact(reverseRead, genome, index)) #add results of any matches in reverse complement of genome
         
         readsCount += 1
         if (readsCount % 100) == 0:
@@ -76,7 +78,6 @@ def alignFM(reads, genome):#, output):
     readsOffsets = []
     fm = matchingString.fmIndex(genome)
     for read in reads: 
-        #read = read[:20]
         reverseRead = reverseComplement(read)
         matchOffsets = fm.occurrences(read) #check if read matches in forward direction of genome
         matchOffsets.extend(fm.occurrences(reverseRead)) #add results of any matches in reverse complement of genome
