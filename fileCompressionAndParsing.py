@@ -100,8 +100,7 @@ def parseGenomeLong(input, output): #file is compressed by ~70%
     binary.close()
  
 #This function decompresses an integer sequence into a text file (if a filename is given).  
-def decompressInt(sequence, textFile=None):
-    
+def decompressInt(sequence, textFile=None): 
     integer = struct.unpack('=i', sequence) 
     integer = integer[0] #as unpack returns a tuple
     
@@ -114,7 +113,7 @@ def decompressInt(sequence, textFile=None):
         return seq
     
 #This function decompresses a long sequence into a text file (if a filename is given).  
-def decompressLong(sequence, textFile):
+def decompressLong(sequence, textFile=None):
     longS = struct.unpack('=q', sequence) 
     longS = longS[0] #as unpack returns a tuple
     
@@ -310,6 +309,7 @@ def parseReadsPhiXInt(filename):
 def parseReadsPhiXString(filename):  
     readID, sequence, quality = '', '', ''
     file = open(filename, 'r')
+    
     while True: #runs until EOF
         line = file.readline() 
         if not line: #reached EOF
@@ -334,14 +334,27 @@ def parseReadsPhiXString(filename):
                 sequenceLines.append(line) #no whitespace in string sequence
                 line = file.readline()
             sequence = ''.join(sequenceLines) #merge lines to form sequence
-            yield sequence
+            yield sequence, quality
         
         elif not quality:
-            quality = []
+            qualityLines = []
             while True: #collect base qualities
-                quality += line.rstrip().replace(' ', '') 
+                line = line.rstrip().replace(' ', '')
+                qualityLines.append(line) 
+                quality = ''.join(qualityLines) #merge lines to form quality
                 if len(quality) >= len(sequence): #bases and qualities line up
                     break
                 else:
                     line = file.readline()
+        
     file.close() 
+
+#This function converts a quality character to its Phredd33 equivalent score.
+def phred33ToQ(quality):
+    return ord(quality) - 33 #converts character to integer according to ASCII table
+
+#This function converts a  Phredd33 quality score to its corresponding character.    
+def QtoPhred33(Q):
+    return chr(Q+33) #converts integer to character according to ASCII table
+
+    

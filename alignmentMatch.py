@@ -21,7 +21,7 @@ def alignHamming(reads, genome):
     readsCount = 0
     readsOffsets = []
 
-    for read in reads: 
+    for read, quality in reads: 
         #maximum Hamming distance = 2
         reverseRead = reverseComplement(read)
         matchOffsets = dist.naiveApproxHamming(read, genome, 2) #check if read matches in forward direction of genome
@@ -43,7 +43,7 @@ def alignEdit(reads, genome):
     readsCount = 0
     readsOffsets = []
 
-    for read in reads: 
+    for read, quality in reads: 
         reverseRead = reverseComplement(read)
         matchOffsets = dist.naiveApproxEdit(read, genome) #check if read matches in forward direction of genome
         matchOffsets.extend(dist.naiveApproxEdit(reverseRead, genome)) #add results of any matches in reverse complement of genome
@@ -64,7 +64,7 @@ def alignBoyerMoore(reads, genome):
     readsCount = 0
     readsOffsets = []
     
-    for read in reads: 
+    for read, quality in reads: 
         #maximum number of mismatches = 2
         reverseRead = reverseComplement(read)
         matchOffsets = bm.boyerMooreApproximate(read, genome, 2) #check if read matches in forward direction of genome
@@ -87,7 +87,7 @@ def alignKmer(reads, genome):
     readsOffsets = []
 
     index = kIdx.KmerIndex(genome, 10) #k-mer of length 10
-    for read in reads: 
+    for read, quality in reads: 
         #maximum number of mismatches = 2
         reverseRead = reverseComplement(read)
         matchOffsets = kIdx.kmerIndexApproximate(read, genome, 2, index) #check if read matches in forward direction of genome
@@ -110,7 +110,7 @@ def alignFM(reads, genome):#, output):
     readsOffsets = []
 
     fm = fmIdx.fmIndex(genome)
-    for read in reads: 
+    for read, quality in reads: 
         reverseRead = reverseComplement(read)
         matchOffsets = fm.occurrences(read) #check if read matches in forward direction of genome
         matchOffsets.extend(fm.occurrences(reverseRead)) #add results of any matches in reverse complement of genome

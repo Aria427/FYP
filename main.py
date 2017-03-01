@@ -46,7 +46,7 @@ binaryGenomeFile = path('Output Data\PhixGenomeIntZip.bin').abspath()
 #reads = fileCompressionAndParsing.parseReadsString(readsFile)
 #reads = fileCompressionAndParsing.parseReadsInt(readsFile)  
 readsFile = path('Data\PhiXSequencingReads1000.fastq').abspath()
-#reads = fileCompressionAndParsing.parseReadsPhiXString(readsFile)
+reads = fileCompressionAndParsing.parseReadsPhiXString(readsFile)
 #reads = fileCompressionAndParsing.parseReadsPhiXInt(readsFile)
 #print len(next(reads)) #length of PhiX read = 100; length of human read = 58
 #There are 28,094,847 human reads in total.
@@ -56,7 +56,6 @@ reads = fileCompressionAndParsing.parseReadsPhiXString(readsFile)
 matchesCount, totalCount, offsets = alignmentMatch.alignBoyerMoore(reads, genome)
 print '%d/%d reads matched the genome.' % (matchesCount, totalCount) #The result is not 100% but this is to be expected due to sequencing errors. 
 #print offsets
-
 
 
 #alignment.alignUncompressed(readsFile, genomeFile)
