@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 #This file includes functions for aligning reads with the reference genome by using the different matching algorithms using strings. 
     
+import matchingBoyerMoore as bm
 import matchingKmerIndex as kIdx
 
 import matchingString
@@ -19,6 +20,7 @@ def alignHamming(reads, genome):
     readsMatched = 0
     readsCount = 0
     readsOffsets = []
+
     for read in reads: 
         reverseRead = reverseComplement(read)
         matchOffsets = matchingString.naiveApproxHamming(read, genome) #check if read matches in forward direction of genome
@@ -31,6 +33,7 @@ def alignHamming(reads, genome):
         readsCount += 1
         if (readsCount % 1) == 0:
             print '*'
+            
     return readsMatched, readsCount, readsOffsets      
 
 #This function aligns the reads to the genome using the Edit distance approximate matching method.
@@ -38,6 +41,7 @@ def alignEdit(reads, genome):
     readsMatched = 0
     readsCount = 0
     readsOffsets = []
+
     for read in reads: 
         reverseRead = reverseComplement(read)
         matchOffsets = matchingString.approxEdit(read, genome) #check if read matches in forward direction of genome
@@ -50,25 +54,52 @@ def alignEdit(reads, genome):
         readsCount += 1
         if (readsCount % 100) == 0:
             print '*'
+            
     return readsMatched, readsCount, readsOffsets  
   
-#This function aligns the reads to the genome using the k-mer indexing method.
+#This function aligns the reads to the genome using the Boyer-Moore approximate algorithm.
+def alignBoyerMoore(reads, genome):
+    readsMatched = 0
+    readsCount = 0
+    readsOffsets = []
+    
+    for read in reads: 
+        #maximum number of mismatches = 2
+        reverseRead = reverseComplement(read)
+        matchOffsets = bm.boyerMooreApproximate(read, genome, 2) #check if read matches in forward direction of genome
+        matchOffsets.extend(bm.boyerMooreApproximate(reverseRead, genome, 2)) #add results of any matches in reverse complement of genome
+        
+        if len(list(matchOffsets)) > 0: #match - read aligned in at least one place
+            readsMatched += 1
+        readsOffsets.append(matchOffsets) 
+         
+        readsCount += 1
+        if (readsCount % 100) == 0:
+            print '*'
+        
+    return readsMatched, readsCount, readsOffsets     
+    
+#This function aligns the reads to the genome using the k-mer approximate indexing method.
 def alignKmer(reads, genome):
     readsMatched = 0
     readsCount = 0
     readsOffsets = []
-    index = kIdx.KmerIndex(genome, 10)
+
+    index = kIdx.KmerIndex(genome, 10) #k-mer of length 10
     for read in reads: 
+        #maximum number of mismatches = 2
         reverseRead = reverseComplement(read)
-        matchOffsets = kIdx.kmerIndexExact(read, genome, index) #check if read matches in forward direction of genome
-        matchOffsets.extend(kIdx.kmerIndexExact(reverseRead, genome, index)) #add results of any matches in reverse complement of genome
+        matchOffsets = kIdx.kmerIndexApproximate(read, genome, 2, index) #check if read matches in forward direction of genome
+        matchOffsets.extend(kIdx.kmerIndexApproximate(reverseRead, genome, 2, index)) #add results of any matches in reverse complement of genome
         
+        if len(list(matchOffsets)) > 0: #match - read aligned in at least one place
+            readsMatched += 1
+        readsOffsets.append(matchOffsets)
+
         readsCount += 1
         if (readsCount % 100) == 0:
             print '*'
-        if len(list(matchOffsets)) > 0: #match - read aligned in at least one place
-            readsMatched += 1
-        readsOffsets.append(matchOffsets) 
+         
     return readsMatched, readsCount, readsOffsets  
    
 #This function aligns the reads to the genome using the FM indexing method.
@@ -76,17 +107,20 @@ def alignFM(reads, genome):#, output):
     readsMatched = 0
     readsCount = 0
     readsOffsets = []
+
     fm = matchingString.fmIndex(genome)
     for read in reads: 
         reverseRead = reverseComplement(read)
         matchOffsets = fm.occurrences(read) #check if read matches in forward direction of genome
         matchOffsets.extend(fm.occurrences(reverseRead)) #add results of any matches in reverse complement of genome
         
-        readsCount += 1
-        if (readsCount % 1000000) == 0:
-            print '*'
         if len(list(matchOffsets)) > 0: #match - read aligned in at least one place
             readsMatched += 1
         readsOffsets.append(matchOffsets) 
+
+        readsCount += 1
+        if (readsCount % 100) == 0:
+            print '*'
+        
     return readsMatched, readsCount, readsOffsets  
  

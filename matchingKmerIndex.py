@@ -41,9 +41,6 @@ def kmerIndexExact(pattern, text, indexObject):
  
 #This function implements approximate matching on k-mer indexing using the pigeonhole principle. 
 def kmerIndexApproximate(pattern, text, n, indexObject): #n = max number of mismatches
-    # 8-mer index, p is 24, and we allow up to two mismatches
-    # Divide p into 3 segments, so at least one of the segment will be an exact match
-
     segmentLength = int(round(len(pattern) / (n+1))) #n+1 segments where at least 1 must match perfectly against T
     allMatches = set() #all the indices where matches where found
     indexHits = 0
