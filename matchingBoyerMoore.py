@@ -179,13 +179,17 @@ class BoyerMoore(object):
 def boyerMooreExact(pattern, bmObject, text): #the Boyer-Moore object does the preprocessing for P
     i = 0 #keeps track of where we are in the text
     occurrences = []
+    alignments = 0 #number of aligned characters
+    characterComparisons = 0 #number of character comparisons
 
     #loop through all the positions in T where P could start w/o running past the end of T
     while i < len(text) - len(pattern) + 1: 
         shift = 1 
         mismatched = False
+        alignments += 1
         
         for j in range(len(pattern)-1, -1, -1): #loop through P from end to start
+            characterComparisons += 1
             if pattern[j] != text[i+j]: #mismatch
                 bcShift = bmObject.badCharacterRule(j, text[i+j])
                 gsShift = bmObject.goodSuffixRule(j)
@@ -200,7 +204,7 @@ def boyerMooreExact(pattern, bmObject, text): #the Boyer-Moore object does the p
             
         i += shift #update position by shift
         
-    return occurrences
+    return occurrences, alignments, characterComparisons
     
 #This function implements approximate matching on Boyer-Moore using the pigeonhole principle. 
 def boyerMooreApproximate(pattern, text, n): #n = max number of mismatches
