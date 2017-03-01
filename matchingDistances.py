@@ -27,13 +27,15 @@ def naiveExact(pattern, text):
 def naiveApproxHamming(pattern, text, maxHammingDist=1):
     matchOffsets = []
 
-    for i in xrange(len(text) - len(pattern) + 1):
+    #loop through every position from where P could start without running past the end of T 
+    for i in xrange(len(text) - len(pattern) + 1): #loop over all possible alignments of P in T from left to right	 
         mismatches = 0
-        for j in xrange(len(pattern)):
+        for j in xrange(len(pattern)): #loop over characters in P from left to right
+            #i'th alignment and j'th character   
             if text[i+j] != pattern[j]: #mismatch
                 mismatches += 1  
                 if mismatches > maxHammingDist:   
-                    break           #exceeded maximum distance
+                    break #exceeded maximum distance
                     
         if mismatches <= maxHammingDist: #approximate match
             matchOffsets.append(i)
@@ -86,8 +88,9 @@ def editDistanceTrace(pattern, text, D):
             j -= 1
             
     return j #offset of leftmost character of T in match
-
+    
 #This function is an approximate matching algorithm using the backtrace of the edit distance.
+#Takes too long => inefficient.
 def approxEdit(pattern, text): #if multiple alignments tie for best, report leftmost
     matchOffsets = []
     distanceJ = None
@@ -112,4 +115,26 @@ def approxEdit(pattern, text): #if multiple alignments tie for best, report left
     matchOffset = editDistanceTrace(pattern, text[:distanceJ], D) #backtrace stops as it gets to first row
     matchOffsets.append(matchOffset) 
     
-    return matchOffsets   
+    return matchOffsets    
+
+#This function is a naive algorithm for approximate matching using the Edit distance.
+#Takes too long => inefficient.
+def naiveApproxEdit(pattern, text):
+    matchOffsets = []
+    editDist = editDistance(pattern, text)
+
+    #loop through every position from where P could start without running past the end of T 
+    for i in xrange(len(text) - len(pattern) + 1): #loop over all possible alignments of P in T from left to right	 
+        mismatches = 0
+        for j in xrange(len(pattern)): #loop over characters in P from left to right
+            #i'th alignment and j'th character   
+            if text[i+j] != pattern[j]: #mismatch
+                mismatches += 1  
+                if mismatches > editDist:   
+                    break #exceeded maximum distance
+                    
+        if mismatches <= editDist: #approximate match
+            matchOffsets.append(i)
+            
+    return matchOffsets
+    

@@ -22,9 +22,10 @@ def alignHamming(reads, genome):
     readsOffsets = []
 
     for read in reads: 
+        #maximum Hamming distance = 2
         reverseRead = reverseComplement(read)
-        matchOffsets = dist.naiveApproxHamming(read, genome) #check if read matches in forward direction of genome
-        matchOffsets.extend(dist.naiveApproxHamming(reverseRead, genome)) #add results of any matches in reverse complement of genome
+        matchOffsets = dist.naiveApproxHamming(read, genome, 2) #check if read matches in forward direction of genome
+        matchOffsets.extend(dist.naiveApproxHamming(reverseRead, genome, 2)) #add results of any matches in reverse complement of genome
 
         if len(list(matchOffsets)) > 0: #match - read aligned in at least one place
             readsMatched += 1
@@ -44,8 +45,8 @@ def alignEdit(reads, genome):
 
     for read in reads: 
         reverseRead = reverseComplement(read)
-        matchOffsets = dist.approxEdit(read, genome) #check if read matches in forward direction of genome
-        matchOffsets.extend(dist.approxEdit(reverseRead, genome)) #add results of any matches in reverse complement of genome
+        matchOffsets = dist.naiveApproxEdit(read, genome) #check if read matches in forward direction of genome
+        matchOffsets.extend(dist.naiveApproxEdit(reverseRead, genome)) #add results of any matches in reverse complement of genome
         
         if len(list(matchOffsets)) > 0: #match - read aligned in at least one place
             readsMatched += 1
