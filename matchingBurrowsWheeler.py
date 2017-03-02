@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 #This file includes functions for the Burrows-Wheeler alignment algorithm.
 
+from itertools import chain, islice
 from operator import itemgetter
 
 ALPHABET = ['A', 'C', 'G', 'T']
@@ -16,9 +17,34 @@ MATCH = 0
 prunes = 0
 
 #This function inefficiently generates the suffix array for some text.
-def suffixArray(text):
+def suffixarray(text):
     sa = sorted([(text[i:], i) for i in xrange(0, len(text)+1)]) #sorted list of all rotations
     return map(lambda x: x[1], sa) #extract offsets from last column
+
+#This function generates the suffix array for some text.
+#It implements the algorithm of Vladu and Negruseri:
+#   http://web.stanford.edu/class/cs97si/suffix-array.pdf
+def suffixArray(text):
+    L = sorted((b, i) for i, b in enumerate(text)) #list of pairs = (base, index)
+    n = len(text)+1
+    count = 1
+    
+    while count < n:
+        U = [0] * n
+        for (r, i), (s, j) in zip(L, islice(L, 1, None)):
+            U[j] = U[i] + (r != s)
+        #Invariant: U[i] 
+        #   index of text[i:i+count] in sorted list of the text's unique substrings of length count
+
+        L = sorted(chain((((U[i],  U[i+count]), i) for i in range(n - count)),
+                         (((U[i], -1), i) for i in range(n - count, n))))
+        #Invariant: L[i][1]
+        #   starting index in text of substring i of length count in sorted order
+        
+        count *= 2
+        
+    return [i for _, i in L]
+
 
 #This function generates the Burrows-Wheeler Transform of some text using the suffix array.
 def bwt(text):
