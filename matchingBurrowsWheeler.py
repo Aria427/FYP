@@ -216,7 +216,7 @@ def bestMatchPosition(bw, bwr, pattern, maxMismatches, sa):
         return -1, -1    
     
 #This function displays the results.
-def displayOutput(saIndexList, sa, s):
+def displayOutput(saIndexList, sa, s, read):
     saValues = [(sa[i], j) for (i, j) in saIndexList]
 
     print '\n-------------------------------------'
@@ -230,6 +230,7 @@ def displayOutput(saIndexList, sa, s):
 
     print '-------------------------------------'
 
+"""    
 ref = 'ACGTACGTACGTAAACCCGGGTTTACGT' #reference
 read = 'ACGTAACCGGTTACGTAAGGTT' #read
     
@@ -240,10 +241,11 @@ bwr = bwt(ref[::-1])
 print burrowsWheelerExact(bw, read)     
     
 threshold = 8 #error score upper bound
-displayOutput(burrowsWheelerApproximate(bw, bwr, read, threshold), sa, ref)
+displayOutput(burrowsWheelerApproximate(bw, bwr, read, threshold), sa, ref, read)
 
 threshold = 9 #error score upper bound
-displayOutput(burrowsWheelerApproximate(bw, bwr, read, threshold), sa, ref)
+displayOutput(burrowsWheelerApproximate(bw, bwr, read, threshold), sa, ref, read)
 
 threshold = 10 #error score upper bound
-displayOutput(burrowsWheelerApproximate(bw, bwr, read, threshold), sa, ref)
+displayOutput(burrowsWheelerApproximate(bw, bwr, read, threshold), sa, ref, read)
+"""

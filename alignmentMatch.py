@@ -5,6 +5,7 @@ import matchingDistances as dist
 import matchingBoyerMoore as bm
 import matchingKmerIndex as kIdx
 import matchingFmIndex as fmIdx
+import matchingBurrowsWheeler as bwa
 
 #This function finds the reverse complement of a sequencing read.
 #The genome is double stranded, so the reads can come from one strand or the other.    
@@ -114,6 +115,31 @@ def alignFM(reads, genome):#, output):
         reverseRead = reverseComplement(read)
         matchOffsets = fm.occurrences(read) #check if read matches in forward direction of genome
         matchOffsets.extend(fm.occurrences(reverseRead)) #add results of any matches in reverse complement of genome
+        
+        if len(list(matchOffsets)) > 0: #match - read aligned in at least one place
+            readsMatched += 1
+        readsOffsets.append(matchOffsets) 
+
+        readsCount += 1
+        if (readsCount % 100) == 0:
+            print '*'
+        
+    return readsMatched, readsCount, readsOffsets  
+    
+#This function aligns the reads to the genome using the Burrows Wheeler approximate algorithm.
+def alignBurrowsWheeler(reads, genome):#, output):
+    readsMatched = 0
+    readsCount = 0
+    readsOffsets = []
+
+    sa = bwa.suffixArray(genome)
+    bw = bwa.bwt(genome) 
+    bwr = bwa.bwt(genome[::-1]) 
+    for read, quality in reads: 
+         #maximum number of mismatches = 2
+        reverseRead = reverseComplement(read)
+        matchOffsets = bwa.burrowsWheelerApproximate(bw, bwr, read, 2) #check if read matches in forward direction of genome
+        matchOffsets.extend(bwa.burrowsWheelerApproximate(bw, bwr, reverseRead, 2)) #add results of any matches in reverse complement of genome
         
         if len(list(matchOffsets)) > 0: #match - read aligned in at least one place
             readsMatched += 1
