@@ -2,9 +2,14 @@
 #This file includes functions for the Smith-Waterman algorithm.
 
 #scores taken from Wikipedia
-MATCH = 2
-MISMATCH = -1
-GAP = -1
+#MATCH = 2
+#MISMATCH = -1
+#GAP = -1
+
+#rewards/penalties => score
+GAP = 1
+MISMATCH = 1
+MATCH = 0
 
 #This function creates a score matrix of trial alignments of the two sequences.
 def scoreMatrix(seq1, seq2):
@@ -117,7 +122,7 @@ def displayAlignment(alignedSeq1, alignedSeq2):
 
     return ''.join(alignmentString), identities, gaps, mismatches
 
-#This function dispays the score matrix generated.
+#This function displays the score matrix generated.
 def displayMatrix(scoreMatrix):
     for row in scoreMatrix:
         for col in row:
@@ -125,13 +130,13 @@ def displayMatrix(scoreMatrix):
         print()
 
 #Smith-Waterman alignment
-seq1 = 'ATAGACGACATACAGACAGCATACAGACAGCATACAGA'
-seq2 = 'TTTAGCATGCGCATATCAGCAATACAGACAGATACG'
+ref = 'ACGTACGTACGTAAACCCGGGTTTACGT' #reference
+read = 'ACGTAACCGGTTACGTAAGGTT' #read
 
-scoreMatrix, startPos = scoreMatrix(seq1, seq2) #intialise score matrix
+scoreMatrix, startPos = scoreMatrix(ref, read) #intialise score matrix
 
 #optimal path through the score matrix = optimal local sequence alignment
-seq1Aligned, seq2Aligned = traceback(scoreMatrix, startPos, seq1, seq2)
+seq1Aligned, seq2Aligned = traceback(scoreMatrix, startPos, ref, read)
 #assert len(seq1Aligned) == len(seq2Aligned), 'aligned strings are not the same size'
 
 #pretty print results

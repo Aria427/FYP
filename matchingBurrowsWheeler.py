@@ -8,7 +8,7 @@ O = {} #dictionary with keys = $, A, C, G, T and values = arrays of counts
 C = {} #number of lexographically greater symbols in the reference genome
 D = [] # estimated lower bounds of mismatches in the short read
 
-#rewards/penalties
+#rewards/penalties => score
 GAP = 1
 MISMATCH = 1
 MATCH = 0
