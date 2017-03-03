@@ -33,7 +33,6 @@ def alignHamming(reads, genome):
     readsMatched = 0
     readsCount = 0
     readsOffsets = []
-
     readQualityDictionary = {} #key:read, value:list of quality integers
 
     for read, quality in reads: 
@@ -63,6 +62,7 @@ def alignEdit(reads, genome):
     readsMatched = 0
     readsCount = 0
     readsOffsets = []
+    readQualityDictionary = {} #key:read, value:list of quality integers
 
     for read, quality in reads: 
         reverseRead = reverseComplement(read)
@@ -71,19 +71,26 @@ def alignEdit(reads, genome):
         
         if len(list(matchOffsets)) > 0: #match - read aligned in at least one place
             readsMatched += 1
+            
+            qualityQ = []
+            for q in quality:
+                qualityQ.append(phred33ToQ(q))
+            readQualityDictionary[read] = qualityQ
+
         readsOffsets.append(matchOffsets) 
         
         readsCount += 1
         if (readsCount % 100) == 0:
             print '*'
             
-    return readsMatched, readsCount, readsOffsets  
+    return readsMatched, readsCount, readsOffsets, readQualityDictionary  
   
 #This function aligns the reads to the genome using the Boyer-Moore approximate algorithm.
 def alignBoyerMoore(reads, genome):
     readsMatched = 0
     readsCount = 0
     readsOffsets = []
+    readQualityDictionary = {} #key:read, value:list of quality integers
     
     for read, quality in reads: 
         #maximum number of mismatches = 2
@@ -93,19 +100,26 @@ def alignBoyerMoore(reads, genome):
         
         if len(list(matchOffsets)) > 0: #match - read aligned in at least one place
             readsMatched += 1
+            
+            qualityQ = []
+            for q in quality:
+                qualityQ.append(phred33ToQ(q))
+            readQualityDictionary[read] = qualityQ
+
         readsOffsets.append(matchOffsets) 
          
         readsCount += 1
         if (readsCount % 100) == 0:
             print '*'
         
-    return readsMatched, readsCount, readsOffsets     
+    return readsMatched, readsCount, readsOffsets, readQualityDictionary     
     
 #This function aligns the reads to the genome using the k-mer approximate indexing method.
 def alignKmer(reads, genome):
     readsMatched = 0
     readsCount = 0
     readsOffsets = []
+    readQualityDictionary = {} #key:read, value:list of quality integers
 
     index = kIdx.KmerIndex(genome, 10) #k-mer of length 10
     for read, quality in reads: 
@@ -116,20 +130,27 @@ def alignKmer(reads, genome):
         
         if len(list(matchOffsets)) > 0: #match - read aligned in at least one place
             readsMatched += 1
+            
+            qualityQ = []
+            for q in quality:
+                qualityQ.append(phred33ToQ(q))
+            readQualityDictionary[read] = qualityQ
+
         readsOffsets.append(matchOffsets)
 
         readsCount += 1
         if (readsCount % 100) == 0:
             print '*'
          
-    return readsMatched, readsCount, readsOffsets  
+    return readsMatched, readsCount, readsOffsets, readQualityDictionary  
    
 #This function aligns the reads to the genome using the FM indexing method.
 def alignFM(reads, genome):
     readsMatched = 0
     readsCount = 0
     readsOffsets = []
-
+    readQualityDictionary = {} #key:read, value:list of quality integers
+    
     fm = fmIdx.fmIndex(genome)
     for read, quality in reads: 
         reverseRead = reverseComplement(read)
@@ -138,20 +159,27 @@ def alignFM(reads, genome):
         
         if len(list(matchOffsets)) > 0: #match - read aligned in at least one place
             readsMatched += 1
+            
+            qualityQ = []
+            for q in quality:
+                qualityQ.append(phred33ToQ(q))
+            readQualityDictionary[read] = qualityQ
+
         readsOffsets.append(matchOffsets) 
 
         readsCount += 1
         if (readsCount % 100) == 0:
             print '*'
         
-    return readsMatched, readsCount, readsOffsets  
+    return readsMatched, readsCount, readsOffsets, readQualityDictionary  
     
 #This function aligns the reads to the genome using the Smith Waterman local alignment algorithm.
 def alignSmithWaterman(reads, genome):
     readsMatched = 0
     readsCount = 0
     readsOffsets = []
-
+    readQualityDictionary = {} #key:read, value:list of quality integers
+    
     for read, quality in reads: 
         #maximum number of mismatches = 2
         reverseRead = reverseComplement(read)
@@ -160,20 +188,27 @@ def alignSmithWaterman(reads, genome):
         
         if len(list(matchOffsets)) > 0: #match - read aligned in at least one place
             readsMatched += 1
+            
+            qualityQ = []
+            for q in quality:
+                qualityQ.append(phred33ToQ(q))
+            readQualityDictionary[read] = qualityQ
+
         readsOffsets.append(matchOffsets) 
 
         readsCount += 1
         if (readsCount % 100) == 0:
             print '*'
         
-    return readsMatched, readsCount, readsOffsets    
+    return readsMatched, readsCount, readsOffsets, readQualityDictionary   
     
 #This function aligns the reads to the genome using the Burrows Wheeler approximate algorithm.
 def alignBurrowsWheeler(reads, genome):
     readsMatched = 0
     readsCount = 0
     readsOffsets = []
-
+    readQualityDictionary = {} #key:read, value:list of quality integers
+    
     #sa = bwa.suffixArray(genome)
     bw = bwa.bwt(genome) 
     bwr = bwa.bwt(genome[::-1]) 
@@ -185,11 +220,17 @@ def alignBurrowsWheeler(reads, genome):
         
         if len(list(matchOffsets)) > 0: #match - read aligned in at least one place
             readsMatched += 1
+            
+            qualityQ = []
+            for q in quality:
+                qualityQ.append(phred33ToQ(q))
+            readQualityDictionary[read] = qualityQ
+
         readsOffsets.append(matchOffsets) 
 
         readsCount += 1
         if (readsCount % 100) == 0:
             print '*'
         
-    return readsMatched, readsCount, readsOffsets  
+    return readsMatched, readsCount, readsOffsets, readQualityDictionary  
  
