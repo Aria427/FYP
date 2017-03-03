@@ -17,11 +17,24 @@ def reverseComplement(read):
         reverseRead = complement[base] + reverseRead #complement added to beginning in order to reverse the read from end to start
     return reverseRead
 
+#Quality values are ASCII-encoded -> a character encodes an integer.
+#Low quality score Q => low confidence in value.
+#High quality score Q => high confidence in value.
+#This function takes the quality value Q (rounded integer) and converts it to its respective character. 
+def QtoPhred33(Q):
+    return chr(Q + 33) #converts integer to character according to ASCII table
+
+#This function takes the Phred-33 encoded character and converts it back to Q.  
+def phred33ToQ(qual):
+    return ord(qual) - 33 #converts character to integer according to ASCII table
+
 #This function aligns the reads to the genome using the Hamming distance approximate matching method.
 def alignHamming(reads, genome):
     readsMatched = 0
     readsCount = 0
     readsOffsets = []
+
+    readQualityDictionary = {} #key:read, value:list of quality integers
 
     for read, quality in reads: 
         #maximum Hamming distance = 2
@@ -31,13 +44,19 @@ def alignHamming(reads, genome):
 
         if len(list(matchOffsets)) > 0: #match - read aligned in at least one place
             readsMatched += 1
+            
+            qualityQ = []
+            for q in quality:
+                qualityQ.append(phred33ToQ(q))
+            readQualityDictionary[read] = qualityQ
+
         readsOffsets.append(matchOffsets) 
         
         readsCount += 1
         if (readsCount % 100) == 0:
             print '*'
             
-    return readsMatched, readsCount, readsOffsets      
+    return readsMatched, readsCount, readsOffsets, readQualityDictionary      
 
 #This function aligns the reads to the genome using the Edit distance approximate matching method.
 def alignEdit(reads, genome):

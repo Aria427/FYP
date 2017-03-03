@@ -53,10 +53,13 @@ reads = fileCompressionAndParsing.parseReadsPhiXString(readsFile)
 
 genome = fileCompressionAndParsing.parseGenomeString(genomeFile)
 reads = fileCompressionAndParsing.parseReadsPhiXString(readsFile)
-matchesCount, totalCount, offsets = alignmentMatch.alignSmithWaterman(reads, genome)
-print '%d/%d reads matched the genome.' % (matchesCount, totalCount) #The result is not 100% but this is to be expected due to sequencing errors. 
-print offsets
+#for r, q in reads:
+#    print r, ':', q
 
+matchesCount, totalCount, offsets, rqDict = alignmentMatch.alignHamming(reads, genome)
+print '%d/%d reads matched the genome.' % (matchesCount, totalCount) #The result is not 100% but this is to be expected due to sequencing errors. 
+#print offsets
+print rqDict
 
 #alignment.alignUncompressed(readsFile, genomeFile)
 #alignment.alignCompressed(readsFile, binaryGenomeFile)

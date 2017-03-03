@@ -334,7 +334,8 @@ def parseReadsPhiXString(filename):
                 sequenceLines.append(line) #no whitespace in string sequence
                 line = file.readline()
             sequence = ''.join(sequenceLines) #merge lines to form sequence
-            yield sequence, quality
+            #yield sequence
+            temp = sequence
         
         elif not quality:
             qualityLines = []
@@ -346,15 +347,7 @@ def parseReadsPhiXString(filename):
                     break
                 else:
                     line = file.readline()
+            yield temp, quality
         
     file.close() 
-
-#This function converts a quality character to its Phredd33 equivalent score.
-def phred33ToQ(quality):
-    return ord(quality) - 33 #converts character to integer according to ASCII table
-
-#This function converts a  Phredd33 quality score to its corresponding character.    
-def QtoPhred33(Q):
-    return chr(Q+33) #converts integer to character according to ASCII table
-
     
