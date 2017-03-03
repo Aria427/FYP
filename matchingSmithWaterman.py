@@ -170,7 +170,7 @@ def displayResults(seq1, seq2, maxMismatches):
         print 'Sbjct  {0:<4}  {1}  {2:<4}'.format(i + 1, seq2Slice, i + len(seq2Slice))
         
 """  
-ref = 'ACGTACGTACGTAAACCCGGGTTTACGT' #reference
+ref = 'ACGTACGTACGTAAACCCGGGTTTACGT' #reference genome
 read = 'ACGTAACCGGTTACGTAAGGTT' #read
 
 displayResults(ref, read, 2)
