@@ -105,7 +105,7 @@ def traceback(scoreMatrix, startPosition, seq1, seq2):
     return ''.join(reversed(alignedSeq1)), ''.join(reversed(alignedSeq2))   
 
 #This function generates a special string displaying identities (|), gaps (-), and mismatches (:).
-def smithWatermanApproximate(alignedSeq1, alignedSeq2, maxMismatches):
+def smithWatermanApproximateString(alignedSeq1, alignedSeq2, maxMismatches):
     identities, gaps, mismatches = 0, 0, 0
     alignmentString = []
     matchOffsets = []
@@ -125,35 +125,53 @@ def smithWatermanApproximate(alignedSeq1, alignedSeq2, maxMismatches):
 
     return matchOffsets, ''.join(alignmentString), identities, gaps, mismatches
 
+#This function implements the Smith Waterman approximate matching algorithm.
+def smithWatermanApproximate(text, pattern, maxMismatches):
+    sMatrix, startPos = scoreMatrix(text, pattern) #intialise score matrix
+
+    #optimal path through the score matrix = optimal local sequence alignment
+    refAligned, readAligned = traceback(sMatrix, startPos, text, pattern)
+    assert len(refAligned) == len(readAligned), 'aligned strings are not the same size'
+    
+    matchOffsets, alignmentString, identities, gaps, mismatches =  \
+            smithWatermanApproximateString(refAligned, readAligned, maxMismatches)
+    
+    return matchOffsets
+
 #This function displays the score matrix generated.
 def displayMatrix(scoreMatrix):
     print '\n'.join([''.join(['{:4}'.format(col) 
                     for col in row]) 
                       for row in scoreMatrix])
+ 
+#This function displays the results of the alignment.
+def displayResults(seq1, seq2, maxMismatches):
+    sMatrix, startPos = scoreMatrix(seq1, seq2) #intialise score matrix
+
+    #optimal path through the score matrix = optimal local sequence alignment
+    seq1Aligned, seq2Aligned = traceback(sMatrix, startPos, seq1, seq2)
+    assert len(seq1Aligned) == len(seq2Aligned), 'aligned strings are not the same size'
     
-#Smith-Waterman alignment
+    matchOffsets, alignmentString, identities, gaps, mismatches =  \
+            smithWatermanApproximateString(seq1Aligned, seq2Aligned, maxMismatches)
+    
+    #pretty print results
+    print 'Reference genome match offsets: %s' % matchOffsets
+    print 'Identities = %d/%d' % (identities, len(seq1Aligned))
+    print 'Gaps = %d/%d' % (gaps, len(seq1Aligned))
+    print 'Mismatches = %d/%d' % (mismatches, len(seq1Aligned))
+    
+    for i in range(0, len(seq1Aligned), 60):
+        seq1Slice = seq1Aligned[i:i+60]
+        print 'Query  {0:<4}  {1}  {2:<4}'.format(i + 1, seq1Slice, i + len(seq1Slice))
+        print '             {0}'.format(alignmentString[i:i+60])
+        
+        seq2Slice = seq2Aligned[i:i+60]
+        print 'Sbjct  {0:<4}  {1}  {2:<4}'.format(i + 1, seq2Slice, i + len(seq2Slice))
+        
+"""  
 ref = 'ACGTACGTACGTAAACCCGGGTTTACGT' #reference
 read = 'ACGTAACCGGTTACGTAAGGTT' #read
 
-scoreMatrix, startPos = scoreMatrix(ref, read) #intialise score matrix
-
-#optimal path through the score matrix = optimal local sequence alignment
-seq1Aligned, seq2Aligned = traceback(scoreMatrix, startPos, ref, read)
-assert len(seq1Aligned) == len(seq2Aligned), 'aligned strings are not the same size'
-
-matchOffsets, alignmentString, identities, gaps, mismatches =  \
-        smithWatermanApproximate(seq1Aligned, seq2Aligned, 2)
-
-#pretty print results
-print 'Reference genome match offsets: %s' % matchOffsets
-print 'Identities = %d/%d' % (identities, len(seq1Aligned))
-print 'Gaps = %d/%d' % (gaps, len(seq1Aligned))
-print 'Mismatches = %d/%d' % (mismatches, len(seq1Aligned))
-
-for i in range(0, len(seq1Aligned), 60):
-    seq1Slice = seq1Aligned[i:i+60]
-    print 'Query  {0:<4}  {1}  {2:<4}'.format(i + 1, seq1Slice, i + len(seq1Slice))
-    print '             {0}'.format(alignmentString[i:i+60])
-    
-    seq2Slice = seq2Aligned[i:i+60]
-    print 'Sbjct  {0:<4}  {1}  {2:<4}'.format(i + 1, seq2Slice, i + len(seq2Slice))
+displayResults(ref, read, 2)
+"""
