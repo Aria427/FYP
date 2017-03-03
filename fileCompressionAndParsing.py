@@ -253,14 +253,21 @@ def parseReadsString(filename):
             sequence = line[1]
             quality = line[2]
             
+            #Each read has length = 60
             if sequence == 'NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN':
                 line = file.readline()
                 pass
             
             else:
-                #Each read has length = 60
-                sequence = sequence.rstrip().upper().replace('N', '').replace(' ', '')
-                yield sequence
+                qualityNoNs = ''
+                N = [pos for pos, char in enumerate(sequence) if char == 'N'] #positions of N in read
+                sequenceNoNs = sequence.rstrip().upper().replace('N', '').replace(' ', '') 
+                
+                for i in range(len(quality)):
+                    if i not in N: #remove indices corresponding to Ns in read
+                        qualityNoNs = qualityNoNs + quality[i]
+                
+                yield sequenceNoNs, qualityNoNs
         
     file.close()       
     
@@ -324,21 +331,24 @@ def parseReadsPhiXString(filename):
         elif not readID: #if no previous line starts with @
             readID = line.rstrip() #get first ID
             continue
-
+        
         elif not sequence:
             sequenceLines = [] 
             while not line.startswith('+'): #not placeholder line (third line)
                 #rstrip() - removes leading/trailing whitespace
                 #replace() - removes whitespace from within string
-                line = line.rstrip().upper().replace('N', '').replace(' ', '')
+                N = [pos for pos, char in enumerate(sequence) if char == 'N'] #positions of N in read
+                line = line.rstrip().upper().replace(' ', '')
                 sequenceLines.append(line) #no whitespace in string sequence
                 line = file.readline()
-            sequence = ''.join(sequenceLines) #merge lines to form sequence
-            #yield sequence
-            temp = sequence
+            sequence = ''.join(sequenceLines) #merge lines to form original sequence
+            sequenceNoNs = sequence.replace('N', '') #remove Ns
+            temp = sequenceNoNs
         
         elif not quality:
             qualityLines = []
+            qualityNoNs = ''
+            
             while True: #collect base qualities
                 line = line.rstrip().replace(' ', '')
                 qualityLines.append(line) 
@@ -347,7 +357,12 @@ def parseReadsPhiXString(filename):
                     break
                 else:
                     line = file.readline()
-            yield temp, quality
+            
+            for i in range(len(quality)): 
+                if i not in N: #remove indices corresponding to Ns in read
+                    qualityNoNs = qualityNoNs + quality[i]
+                
+            yield temp, qualityNoNs
         
     file.close() 
     
