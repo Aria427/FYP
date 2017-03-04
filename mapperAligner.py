@@ -1,10 +1,8 @@
 #!/usr/bin/env python
 #This file contains the map step for the aligment MapReduce implementation.
 
-import alignmentString
-
+import alignmentMatch
 import sys
-from path import path
 
 #This function reads the sequencing reads as input to the mapper.        
 def readInputReads(file):
@@ -28,17 +26,24 @@ def readInputReads(file):
             sequence = line[1]
             quality = line[2]
             
+            #Each read has length = 60
             if sequence == 'NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN':
                 line = file.readline()
                 pass
             
             else:
-                sequence = sequence.rstrip().upper().replace('N', '').replace(' ', '')
-                yield sequence     
+                qualityNoNs = ''
+                N = [pos for pos, char in enumerate(sequence) if char == 'N'] #positions of N in read
+                sequenceNoNs = sequence.rstrip().upper().replace('N', '').replace(' ', '') 
+                
+                for i in range(len(quality)):
+                    if i not in N: #remove indices corresponding to Ns in read
+                        qualityNoNs = qualityNoNs + quality[i]
+                
+                yield sequenceNoNs, qualityNoNs
 
 def readInputPhiXReads(file):  
     readID, sequence, quality = '', '', ''
-    #file = open(file, 'r')
     while True: #runs until EOF
         line = file.readline() 
         if not line: #reached EOF
@@ -53,27 +58,38 @@ def readInputPhiXReads(file):
         elif not readID: #if no previous line starts with @
             readID = line.rstrip() #get first ID
             continue
-
+        
         elif not sequence:
             sequenceLines = [] 
             while not line.startswith('+'): #not placeholder line (third line)
                 #rstrip() - removes leading/trailing whitespace
                 #replace() - removes whitespace from within string
-                line = line.rstrip().upper().replace('N', '').replace(' ', '')
+                N = [pos for pos, char in enumerate(sequence) if char == 'N'] #positions of N in read
+                line = line.rstrip().upper().replace(' ', '')
                 sequenceLines.append(line) #no whitespace in string sequence
                 line = file.readline()
-            sequence = ''.join(sequenceLines) #merge lines to form sequence
-            yield sequence
+            sequence = ''.join(sequenceLines) #merge lines to form original sequence
+            sequenceNoNs = sequence.replace('N', '') #remove Ns
+            temp = sequenceNoNs
         
         elif not quality:
-            quality = []
+            qualityLines = []
+            qualityNoNs = ''
+            
             while True: #collect base qualities
-                quality += line.rstrip().replace(' ', '') 
+                line = line.rstrip().replace(' ', '')
+                qualityLines.append(line) 
+                quality = ''.join(qualityLines) #merge lines to form quality
                 if len(quality) >= len(sequence): #bases and qualities line up
                     break
                 else:
                     line = file.readline()
-    #file.close()
+            
+            for i in range(len(quality)): 
+                if i not in N: #remove indices corresponding to Ns in read
+                    qualityNoNs = qualityNoNs + quality[i]
+                
+            yield temp, qualityNoNs
                   
 def main():
     #hard-coded reference genome
@@ -82,72 +98,33 @@ def main():
         genomeSeq = (line.rstrip().upper().replace('N', '').replace(' ','')
                     for line in f if line and line[0] != '>') #ignore header line
 
-    	totalMatches, totalCount, totalOffsets = 0, 0, []
-    	overlap = '' 
+        totalMatches, totalCount, totalOffsets, completeRQDict = 0, 0, [], {}
+        overlap = '' 
+        genomeIndex = 0
        
-    	for g in genomeSeq:
-         g = overlap + g #overlap is appended to the start of the next chunk 
+        for g in genomeSeq:
+            g = overlap + g #overlap is appended to the start of the next chunk 
   
-         readSeq = readInputPhiXReads(sys.stdin)
-         matchesCount, count, offsets = alignmentString.alignFM(readSeq, g)
-	
-         totalMatches += matchesCount
-         totalCount = count #number of reads stays the same as every chunk goes through each read again
-         totalOffsets.append(offsets)
-         overlap = g[-100:] #100 for PhiX, 60 for Human  
-        
-         print '%d/%d reads matched the genome.' % (totalMatches, totalCount) 
-
+            readSeq = readInputPhiXReads(sys.stdin)
+            matchesCount, count, offsets, rqDict = alignmentMatch.alignFM(readSeq, g)
+    	
+            totalMatches += matchesCount
+            totalCount = count #number of reads stays the same as every chunk goes through each read again
+            totalOffsets.append(offsets)
+            completeRQDict.update(rqDict)
+            
+            for i in range(len(offsets)):
+                offsets[i] += genomeIndex #as each genome line has its own offsets
+            
+            #write results to STDOUT (standard output)
+            print '%s\t%s' % (g, offsets) #tab-delimited, key:genome line, value:offsets of match with read
+            #The output here will be the input for the reduce step.
+            
+            overlap = g[-100:] #100 for PhiX & 60 for Human  
+            genomeIndex += 70 #index of each subsequence is incremented by length of genome line, 70 for PhiX & 50 for Human  
+    
 if __name__ == '__main__':
     main()       
 
 #Run MapReduce job on Hadoop using:
 #   bin/hadoop jar share/hadoop/tools/lib/hadoop-streaming-2.7.3.jar -file /home/hduser/mapperAligner.py -mapper /home/hduser/mapperAligner.py -file /home/hduser/reducerAligner.py -reducer /home/hduser/reducerAligner.py -file /home/hduser/alignmentString.py -file /home/hduser/matchingString.py -input /user/hduser/PhiXSequencingReads1000.fastq -output /user/hduser/bwaPhiX-output
-
-"""                
-def main():
-    #hard-coded reference genome
-    genomeFile = path('Data\HumanGenome.fa.gz').abspath()
-    genomeSeq = readInputGenome(genomeFile)
-    overlap = '' 
-    genomeStartIndex = 0
-        
-    for g in genomeSeq:
-        g = overlap + g #append to start of next line to handle patterns found between lines
-    
-        #write results to STDOUT (standard output)
-        print '%s\t%s' % ('G', (g, genomeStartIndex)) #tab-delimited key:value
-        #key = character identifying genome
-        #value = tuple with sequence and its start position
-        #The output here will be the input for the reduce step.
-            
-        overlap = g[-100:] #overlap = length of read
-        genomeStartIndex += 50 #index of each subsequence is incremented by length of genome line 
-    
-    #input file - sequencing reads - comes from STDIN (standard input)
-    if sys.stdin.readline().startswith('#'): #if the first line of the input starts with '#' => human sequencing reads
-        readSeq = readInputReads(sys.stdin)
-        readStartIndex = 0
-        
-        for r in readSeq:
-            #write results to STDOUT (standard output)
-            print '%s\t%s' % ('R', (r, readStartIndex)) #tab-delimited key:value
-            #key = character identifying read
-            #value = tuple with sequence and its start position
-            #The output here will be the input for the reduce step.
-            
-            readStartIndex += 60 #index of each read is incremented by length of read
-      
-    else: #if the first line of the input starts with '@' => PhiX sequencing reads
-        readSeq = readInputPhiXReads(sys.stdin)
-        readStartIndex = 0
-        
-        for r in readSeq:
-            #write results to STDOUT (standard output)
-            print '%s\t%s' % ('R', (r, readStartIndex)) #tab-delimited key:value
-            #key = character identifying read
-            #value = tuple with sequence and its start position
-            #The output here will be the input for the reduce step.
-            
-            readStartIndex += 100 #index of each read is incremented by length of read 
-"""   
