@@ -113,11 +113,12 @@ def main():
             totalOffsets.append(offsets)
             completeRQDict.update(rqDict)
             
+            offsets = [o for offset in offsets for o in offset] #flatten list
             for i in range(len(offsets)):
                 offsets[i] += genomeIndex #as each genome line has its own offsets
             
             #write results to STDOUT (standard output)
-            print '%s\t%s' % (g, offsets) #tab-delimited, key:genome line, value:offsets of match with read
+            print '%s\t%s' % (g, offsets) #tab-delimited, key:genome line, value:list of offsets of match with read
             #The output here will be the input for the reduce step.
             
             overlap = g[-100:] #100 for PhiX & 60 for Human  
@@ -127,4 +128,4 @@ if __name__ == '__main__':
     main()       
 
 #Run MapReduce job on Hadoop using:
-#   bin/hadoop jar share/hadoop/tools/lib/hadoop-streaming-2.7.3.jar -file /home/hduser/mapperAligner.py -mapper /home/hduser/mapperAligner.py -file /home/hduser/reducerAligner.py -reducer /home/hduser/reducerAligner.py -file /home/hduser/alignmentString.py -file /home/hduser/matchingString.py -input /user/hduser/PhiXSequencingReads1000.fastq -output /user/hduser/bwaPhiX-output
+#   bin/hadoop jar share/hadoop/tools/lib/hadoop-streaming-2.7.3.jar -file /home/hduser/mapperAligner.py -mapper /home/hduser/mapperAligner.py -file /home/hduser/reducerAligner.py -reducer /home/hduser/reducerAligner.py -file /home/hduser/alignmentMatch.py -file /home/hduser/matchingDistances.py -file /home/hduser/matchingBoyerMoore.py -file /home/hduser/matchingKmerIndex.py -file /home/hduser/matchingFmIndex.py -file /home/hduser/matchingSmithWaterman.py -file /home/hduser/matchingBurrowsWheeler.py -input /user/hduser/PhiXSequencingReads1000.fastq -output /user/hduser/bwaPhiX-output
