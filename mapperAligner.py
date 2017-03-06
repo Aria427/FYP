@@ -59,7 +59,7 @@ def readInputPhiXReads(file):
             readID = line.rstrip() #get first ID
             continue
         
-        elif not sequence:
+        elif not sequence or not quality:
             sequenceLines = [] 
             while not line.startswith('+'): #not placeholder line (third line)
                 #rstrip() - removes leading/trailing whitespace
@@ -72,7 +72,6 @@ def readInputPhiXReads(file):
             sequenceNoNs = sequence.replace('N', '') #remove Ns
             temp = sequenceNoNs
         
-        elif not quality:
             qualityLines = []
             qualityNoNs = ''
             
