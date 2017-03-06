@@ -14,9 +14,16 @@ def main():
     #input comes from STDIN (standard input)
     data = readMapperOutput(sys.stdin) 
   
-    for genomeLine, offsets in groupby(data, itemgetter(0)):
+    #for offsets, count in groupby(data, itemgetter(0)):
         #write results to STDOUT (standard output)
-        print "%s\t%s" % (genomeLine, offsets) #tab-delimited, key:genome line, value:list of offsets of match with read 
+    #    print '%s\t%s' % (offsets, count)  #tab-delimited, key:list of offsets of match with read, value:number of matches
     
+    for currentOffset, group in groupby(data, itemgetter(0)):
+        try:
+            totalCount = sum(int(count) for offset, count in group)
+            print '%s\t%s' % (currentOffset, totalCount) #write result to STDOUT
+        except ValueError:
+            pass #count = NAN
+
 if __name__ == '__main__':
     main()

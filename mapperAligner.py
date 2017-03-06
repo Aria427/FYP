@@ -105,23 +105,25 @@ def main():
             g = overlap + g #overlap is appended to the start of the next chunk 
   
             readSeq = readInputPhiXReads(sys.stdin)
-            matchesCount, count, offsets, rqDict = alignmentMatch.alignFM(readSeq, g)
-    	
-            totalMatches += matchesCount
-            totalCount = count #number of reads stays the same as every chunk goes through each read again
-            totalOffsets.append(offsets)
-            completeRQDict.update(rqDict)
+            matchesCount, count, offsets, rqDict = alignmentMatch.alignHamming(readSeq, g)
             
             offsets = [o for offset in offsets for o in offset] #flatten list
             for i in range(len(offsets)):
                 offsets[i] += genomeIndex #as each genome line has its own offsets
             
+            totalMatches += matchesCount
+            totalCount = count #number of reads stays the same as every chunk goes through each read again
+            totalOffsets.append(offsets)
+            completeRQDict.update(rqDict)
+                
             #write results to STDOUT (standard output)
-            print '%s\t%s' % (g, offsets) #tab-delimited, key:genome line, value:list of offsets of match with read
+            #print '%s\t%s' % (offsets, matchesCount) #tab-delimited, key:list of offsets of match with reads, value:number of matches
+            for o in offsets:
+                print '%s\t%s' % (o, 1) #tab-delimited, key:offset of match with reads, value:default count of 1 
             #The output here will be the input for the reduce step.
             
             overlap = g[-100:] #100 for PhiX & 60 for Human  
-            genomeIndex += 70 #index of each subsequence is incremented by length of genome line, 70 for PhiX & 50 for Human  
+            #genomeIndex += 70 #index of each subsequence is incremented by length of genome line, 70 for PhiX & 50 for Human  
     
 if __name__ == '__main__':
     main()       
