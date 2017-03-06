@@ -51,6 +51,37 @@ reads = fileCompressionAndParsing.parseReadsPhiXString(readsFile)
 #print len(next(reads)) #length of PhiX read = 100; length of human read = 58
 #There are 28,094,847 human reads in total.
 
+with open(genomeFile, 'r') as f:
+    genomeSeq = (line.rstrip().upper().replace('N', '').replace(' ','')
+                    for line in f if line and line[0] != '>') #ignore header line
+
+    totalMatches, totalCount, totalOffsets, completeRQDict = 0, 0, [], {}
+    overlap = '' 
+    genomeIndex = 0
+       
+    for g in genomeSeq:
+        g = overlap + g #overlap is appended to the start of the next chunk 
+  
+        readSeq = fileCompressionAndParsing.parseReadsPhiXString(readsFile)
+        matchesCount, count, offsets, rqDict = alignmentMatch.alignFM(readSeq, g)
+    
+        offsets = [o for offset in offsets for o in offset] #flatten list
+        for i in range(len(offsets)):
+            offsets[i] += genomeIndex #as each genome line has its own offsets
+                
+        totalMatches += matchesCount
+        totalCount = count #number of reads stays the same as every chunk goes through each read again
+        totalOffsets.append(offsets)
+        completeRQDict.update(rqDict)
+            
+        overlap = g[-100:] #100 for PhiX & 60 for Human  
+        #genomeIndex += 70 #index of each subsequence is incremented by length of genome line, 70 for PhiX & 50 for Human  
+
+    print '%d/%d reads matched the genome.' % (totalMatches, totalCount) #The result is not 100% but this is to be expected due to sequencing errors. 
+    totalOffsets = [o for offset in totalOffsets for o in offset] #flatten list
+    print len(sorted(totalOffsets, key=int))
+    print len(completeRQDict)
+
 genome = fileCompressionAndParsing.parseGenomeString(genomeFile)
 reads = fileCompressionAndParsing.parseReadsPhiXString(readsFile)
 #for r, q in reads:
@@ -58,21 +89,21 @@ reads = fileCompressionAndParsing.parseReadsPhiXString(readsFile)
 
 matchesCount, totalCount, offsets, rqDict = alignmentMatch.alignHamming(reads, genome)
 print '%d/%d reads matched the genome.' % (matchesCount, totalCount) #The result is not 100% but this is to be expected due to sequencing errors. 
-#print offsets
-print rqDict
+offsets = [o for offset in offsets for o in offset]
+print offsets #len(offsets) = matchesCount
+print len(rqDict) #=> number unique reads which matches
+
+#=> aligning line by line causes loss of data
+
 
 #alignment.alignUncompressed(readsFile, genomeFile)
 #alignment.alignCompressed(readsFile, binaryGenomeFile)
-
 
 #with open(binaryGenomeFile , 'rb') as f:
     #decodedGenome = np.fromfile(f, dtype=np.int)
 #matchesCount, totalCount, offsets = alignmentInt.alignHamming(reads, decodedGenome)
 #print '%d/%d reads matched the genome.' % (matchesCount, totalCount)
 #print offsets
-
-
-#analyseAlignment.plotTimeVsMatches(reads, decodedGenome, path('Output Test Files\AlignmentAnalysis.png').abspath())
 
 """
 textFile = path('Output Test Files\DataVisualisationTest.txt').abspath()
