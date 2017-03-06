@@ -63,7 +63,7 @@ with open(genomeFile, 'r') as f:
         g = overlap + g #overlap is appended to the start of the next chunk 
   
         readSeq = fileCompressionAndParsing.parseReadsPhiXString(readsFile)
-        matchesCount, count, offsets, rqDict = alignmentMatch.alignFM(readSeq, g)
+        matchesCount, count, offsets, rqDict = alignmentMatch.alignHamming(readSeq, g)
     
         offsets = [o for offset in offsets for o in offset] #flatten list
         for i in range(len(offsets)):
@@ -73,13 +73,13 @@ with open(genomeFile, 'r') as f:
         totalCount = count #number of reads stays the same as every chunk goes through each read again
         totalOffsets.append(offsets)
         completeRQDict.update(rqDict)
-            
+        
         overlap = g[-100:] #100 for PhiX & 60 for Human  
         #genomeIndex += 70 #index of each subsequence is incremented by length of genome line, 70 for PhiX & 50 for Human  
 
     print '%d/%d reads matched the genome.' % (totalMatches, totalCount) #The result is not 100% but this is to be expected due to sequencing errors. 
     totalOffsets = [o for offset in totalOffsets for o in offset] #flatten list
-    print len(sorted(totalOffsets, key=int))
+    print sorted(totalOffsets, key=int)
     print len(completeRQDict)
 
 genome = fileCompressionAndParsing.parseGenomeString(genomeFile)
@@ -92,8 +92,6 @@ print '%d/%d reads matched the genome.' % (matchesCount, totalCount) #The result
 offsets = [o for offset in offsets for o in offset]
 print offsets #len(offsets) = matchesCount
 print len(rqDict) #=> number unique reads which matches
-
-#=> aligning line by line causes loss of data
 
 
 #alignment.alignUncompressed(readsFile, genomeFile)
