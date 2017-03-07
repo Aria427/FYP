@@ -50,14 +50,14 @@ reads = fileCompressionAndParsing.parseReadsPhiXString(readsFile)
 #reads = fileCompressionAndParsing.parseReadsPhiXInt(readsFile)
 #print len(next(reads)) #length of PhiX read = 100; length of human read = 58
 #There are 28,094,847 human reads in total.
-
+"""
 with open(genomeFile, 'r') as f:
     genomeSeq = (line.rstrip().upper().replace('N', '').replace(' ','')
                     for line in f if line and line[0] != '>') #ignore header line
 
     totalMatches, totalCount, totalOffsets, completeRQDict = 0, 0, [], {}
     overlap = '' 
-    genomeIndex = 0
+    #genomeIndex = 0
        
     for g in genomeSeq:
         g = overlap + g #overlap is appended to the start of the next chunk 
@@ -66,8 +66,8 @@ with open(genomeFile, 'r') as f:
         matchesCount, count, offsets, rqDict = alignmentMatch.alignHamming(readSeq, g)
     
         offsets = [o for offset in offsets for o in offset] #flatten list
-        for i in range(len(offsets)):
-            offsets[i] += genomeIndex #as each genome line has its own offsets
+        #for i in range(len(offsets)):
+        #    offsets[i] += genomeIndex #as each genome line has its own offsets
                 
         totalMatches += matchesCount
         totalCount = count #number of reads stays the same as every chunk goes through each read again
@@ -81,7 +81,7 @@ with open(genomeFile, 'r') as f:
     totalOffsets = [o for offset in totalOffsets for o in offset] #flatten list
     print sorted(totalOffsets, key=int)
     print len(completeRQDict)
-
+"""
 genome = fileCompressionAndParsing.parseGenomeString(genomeFile)
 reads = fileCompressionAndParsing.parseReadsPhiXString(readsFile)
 #for r, q in reads:
@@ -90,8 +90,32 @@ reads = fileCompressionAndParsing.parseReadsPhiXString(readsFile)
 matchesCount, totalCount, offsets, rqDict = alignmentMatch.alignHamming(reads, genome)
 print '%d/%d reads matched the genome.' % (matchesCount, totalCount) #The result is not 100% but this is to be expected due to sequencing errors. 
 offsets = [o for offset in offsets for o in offset]
-print offsets #len(offsets) = matchesCount
-print len(rqDict) #=> number unique reads which matches
+#print offsets #len(offsets) = matchesCount
+#print len(rqDict) #=> number unique reads which matches
+
+tuples = []
+for o in offsets:
+    tuples.append((o, 1))
+print tuples
+
+def Partition(L):
+  tf = {}
+  for p in L:
+      # Append the tuple to the list in the map
+      try:
+        tf[p[0]].append(p[1])
+      except KeyError:
+        tf[p[0]] = [p[1]]
+  return tf
+
+part = Partition(tuples)
+print part
+  
+rd = {}
+for key, value in part.items():
+    total = sum(value)
+    rd[key] = total
+print rd
 
 
 #alignment.alignUncompressed(readsFile, genomeFile)
