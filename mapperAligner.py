@@ -113,7 +113,7 @@ def main():
     #write results to STDOUT (standard output)
     for o in offsets:
         print '%s\t%s' % (o, 1) #tab-delimited, key:offset of match with reads, value:default count of 1 
-        #The output here will be the input for the reduce step.
+    #The output here will be the input for the partition step.
     
 if __name__ == '__main__':
     main()            
