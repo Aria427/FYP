@@ -14,14 +14,11 @@ def main():
     #input comes from STDIN (standard input)
     data = readMapperOutput(sys.stdin) 
   
-    #for offsets, count in groupby(data, itemgetter(0)):
-        #write results to STDOUT (standard output)
-    #    print '%s\t%s' % (offsets, count)  #tab-delimited, key:list of offsets of match with read, value:number of matches
-    
     for currentOffset, group in groupby(data, itemgetter(0)):
         try:
             totalCount = sum(int(count) for offset, count in group)
-            print '%s\t%s' % (currentOffset, totalCount) #write result to STDOUT
+            #write result to STDOUT
+            print "%s\t%s" % (currentOffset, totalCount) #tab-delimited, key:offset of match with reads, value:count of match
         except ValueError:
             pass #count = NAN
 

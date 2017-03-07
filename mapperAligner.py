@@ -4,6 +4,16 @@
 import alignmentMatch
 import sys
 
+#This function reads the genome into a string.
+def readGenome(file): 
+    genome = ''
+    with open(file, 'r') as f: 
+        for line in f:
+            if line and line[0] != '>': #ignore header line with genome information
+                l = line.rstrip().upper().replace('N', '').replace(' ', '') 
+                genome += l 
+    return genome
+
 #This function reads the sequencing reads as input to the mapper.        
 def readInputReads(file):
     flag, sequence, quality = '', '', ''
@@ -93,13 +103,33 @@ def readInputPhiXReads(file):
 def main():
     #hard-coded reference genome
     genomeFile = '/home/hduser/PhiXGenome.fa'
+    genome = readGenome(genomeFile)
+  
+    readSeq = readInputPhiXReads(sys.stdin)
+    matchesCount, count, offsets, rqDict = alignmentMatch.alignHamming(readSeq, genome)
+            
+    offsets = [o for offset in offsets for o in offset] #flatten list             
+          
+    #write results to STDOUT (standard output)
+    for o in offsets:
+        print '%s\t%s' % (o, 1) #tab-delimited, key:offset of match with reads, value:default count of 1 
+        #The output here will be the input for the reduce step.
+    
+if __name__ == '__main__':
+    main()            
+
+#Run MapReduce job on Hadoop using:
+#   bin/hadoop jar share/hadoop/tools/lib/hadoop-streaming-2.7.3.jar -file /home/hduser/mapperAligner.py -mapper /home/hduser/mapperAligner.py -file /home/hduser/reducerAligner.py -reducer /home/hduser/reducerAligner.py -file /home/hduser/alignmentMatch.py -file /home/hduser/matchingDistances.py -file /home/hduser/matchingBoyerMoore.py -file /home/hduser/matchingKmerIndex.py -file /home/hduser/matchingFmIndex.py -file /home/hduser/matchingSmithWaterman.py -file /home/hduser/matchingBurrowsWheeler.py -input /user/hduser/PhiXSequencingReads1000.fastq -output /user/hduser/bwaPhiX-output
+
+"""
+def main():
+    #hard-coded reference genome
+    genomeFile = '/home/hduser/PhiXGenome.fa'
     with open(genomeFile, 'r') as f:
         genomeSeq = (line.rstrip().upper().replace('N', '').replace(' ','')
                     for line in f if line and line[0] != '>') #ignore header line
 
-        totalMatches, totalCount, totalOffsets, completeRQDict = 0, 0, [], {}
         overlap = '' 
-        genomeIndex = 0
        
         for g in genomeSeq:
             g = overlap + g #overlap is appended to the start of the next chunk 
@@ -108,25 +138,11 @@ def main():
             matchesCount, count, offsets, rqDict = alignmentMatch.alignHamming(readSeq, g)
             
             offsets = [o for offset in offsets for o in offset] #flatten list
-            for i in range(len(offsets)):
-                offsets[i] += genomeIndex #as each genome line has its own offsets
-            
-            totalMatches += matchesCount
-            totalCount = count #number of reads stays the same as every chunk goes through each read again
-            totalOffsets.append(offsets)
-            completeRQDict.update(rqDict)
                 
             #write results to STDOUT (standard output)
-            #print '%s\t%s' % (offsets, matchesCount) #tab-delimited, key:list of offsets of match with reads, value:number of matches
             for o in offsets:
                 print '%s\t%s' % (o, 1) #tab-delimited, key:offset of match with reads, value:default count of 1 
             #The output here will be the input for the reduce step.
             
             overlap = g[-100:] #100 for PhiX & 60 for Human  
-            #genomeIndex += 70 #index of each subsequence is incremented by length of genome line, 70 for PhiX & 50 for Human  
-    
-if __name__ == '__main__':
-    main()       
-
-#Run MapReduce job on Hadoop using:
-#   bin/hadoop jar share/hadoop/tools/lib/hadoop-streaming-2.7.3.jar -file /home/hduser/mapperAligner.py -mapper /home/hduser/mapperAligner.py -file /home/hduser/reducerAligner.py -reducer /home/hduser/reducerAligner.py -file /home/hduser/alignmentMatch.py -file /home/hduser/matchingDistances.py -file /home/hduser/matchingBoyerMoore.py -file /home/hduser/matchingKmerIndex.py -file /home/hduser/matchingFmIndex.py -file /home/hduser/matchingSmithWaterman.py -file /home/hduser/matchingBurrowsWheeler.py -input /user/hduser/PhiXSequencingReads1000.fastq -output /user/hduser/bwaPhiX-output
+"""
