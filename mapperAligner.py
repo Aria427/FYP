@@ -106,7 +106,6 @@ def main():
     
     readSeq = readInputPhiXReads(sys.stdin)
     
-    offsets, completeRQDict = [], {}
     for read, quality in readSeq:
         genome = readGenome(genomeFile)
         overlap = ''
@@ -114,21 +113,20 @@ def main():
         for g in genome:
             g = overlap + g
             offset, rqDict = alignmentHadoop.alignHamming(read, quality, g)
-            offsets.append(offset)
-            completeRQDict.update(rqDict)
+            
+            #write results to STDOUT (standard output)
+            for o in offset: #to remove empty list and '[' ']' characters
+                print '%s\t%s' % (o, 1) #tab-delimited, key:offset of match with reads, value:default count of 1 
+            #The output here will be the input for the reduce step  
+            
             overlap = g[-100:] #100 for PhiX, 60 for Human
     
-    offsets = [o for oset in offsets for o in oset] #flatten list
-    #write results to STDOUT (standard output)
-    for o in offsets:
-        print '%s\t%s' % (o, 1) #tab-delimited, key:offset of match with reads, value:default count of 1 
-    #The output here will be the input for the reduce step  
     
 if __name__ == '__main__':
     main()            
 
 #Run MapReduce job on Hadoop using:
 # PhiX
-#   bin/hadoop jar share/hadoop/tools/lib/hadoop-streaming-2.7.3.jar -file /home/hduser/mapperAligner.py -mapper /home/hduser/mapperAligner.py -file /home/hduser/reducerAligner.py -reducer /home/hduser/reducerAligner.py -file /home/hduser/alignmentMatch.py -file /home/hduser/matchingDistances.py -file /home/hduser/matchingBoyerMoore.py -file /home/hduser/matchingKmerIndex.py -file /home/hduser/matchingFmIndex.py -file /home/hduser/matchingSmithWaterman.py -file /home/hduser/matchingBurrowsWheeler.py -input /user/hduser/PhiXSequencingReads1000.fastq -output /user/hduser/PhiX-output -partitioner org.apache.hadoop.mapred.lib.KeyFieldBasedPartitioner
+#   bin/hadoop jar share/hadoop/tools/lib/hadoop-streaming-2.7.3.jar -file /home/hduser/mapperAligner.py -mapper /home/hduser/mapperAligner.py -file /home/hduser/reducerAligner.py -reducer /home/hduser/reducerAligner.py -file /home/hduser/alignmentHadoop.py -file /home/hduser/matchingDistances.py -file /home/hduser/matchingBoyerMoore.py -file /home/hduser/matchingKmerIndex.py -file /home/hduser/matchingFmIndex.py -file /home/hduser/matchingSmithWaterman.py -file /home/hduser/matchingBurrowsWheeler.py -input /user/hduser/PhiXSequencingReads1000.fastq -output /user/hduser/PhiX-output -partitioner org.apache.hadoop.mapred.lib.KeyFieldBasedPartitioner
 # Human
-#   bin/hadoop jar share/hadoop/tools/lib/hadoop-streaming-2.7.3.jar -file /home/hduser/mapperAligner.py -mapper /home/hduser/mapperAligner.py -file /home/hduser/reducerAligner.py -reducer /home/hduser/reducerAligner.py -file /home/hduser/alignmentMatch.py -file /home/hduser/matchingDistances.py -file /home/hduser/matchingBoyerMoore.py -file /home/hduser/matchingKmerIndex.py -file /home/hduser/matchingFmIndex.py -file /home/hduser/matchingSmithWaterman.py -file /home/hduser/matchingBurrowsWheeler.py -input /user/hduser/HumanSequencingReads.tsv.bz2 -output /user/hduser/humanHamming-output -partitioner org.apache.hadoop.mapred.lib.KeyFieldBasedPartitioner
+#   bin/hadoop jar share/hadoop/tools/lib/hadoop-streaming-2.7.3.jar -file /home/hduser/mapperAligner.py -mapper /home/hduser/mapperAligner.py -file /home/hduser/reducerAligner.py -reducer /home/hduser/reducerAligner.py -file /home/hduser/alignmentHadoop.py -file /home/hduser/matchingDistances.py -file /home/hduser/matchingBoyerMoore.py -file /home/hduser/matchingKmerIndex.py -file /home/hduser/matchingFmIndex.py -file /home/hduser/matchingSmithWaterman.py -file /home/hduser/matchingBurrowsWheeler.py -input /user/hduser/HumanSequencingReads.tsv.bz2 -output /user/hduser/humanHamming-output -partitioner org.apache.hadoop.mapred.lib.KeyFieldBasedPartitioner
