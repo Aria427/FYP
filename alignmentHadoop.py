@@ -44,5 +44,109 @@ def alignHamming(read, quality, genome):
         readQualityDictionary[read] = qualityQ
     return matchOffset, readQualityDictionary
     
-    
+#This function aligns the reads to the genome using the Edit distance approximate matching method.
+def alignEdit(read, quality, genome):
+    readQualityDictionary = {} #key:read, value:list of quality integers
 
+    reverseRead = reverseComplement(read)
+    matchOffset = dist.naiveApproxEdit(read, genome) #check if read matches in forward direction of genome
+    matchOffset.extend(dist.naiveApproxEdit(reverseRead, genome)) #add results of any matches in reverse complement of genome
+        
+    if len(list(matchOffset)) > 0: #match - read aligned in at least one place
+        qualityQ = []
+        for q in quality:
+            qualityQ.append(phred33ToQ(q))
+        readQualityDictionary[read] = qualityQ
+
+    return matchOffset, readQualityDictionary  
+  
+#This function aligns the reads to the genome using the Boyer-Moore approximate algorithm.
+def alignBoyerMoore(read, quality, genome):
+    readQualityDictionary = {} #key:read, value:list of quality integers
+    
+    #maximum number of mismatches = 2
+    reverseRead = reverseComplement(read)
+    matchOffset = bm.boyerMooreApproximate(read, genome, 2) #check if read matches in forward direction of genome
+    matchOffset.extend(bm.boyerMooreApproximate(reverseRead, genome, 2)) #add results of any matches in reverse complement of genome
+        
+    if len(list(matchOffset)) > 0: #match - read aligned in at least one place
+        qualityQ = []
+        for q in quality:
+            qualityQ.append(phred33ToQ(q))
+        readQualityDictionary[read] = qualityQ
+    
+    return matchOffset, readQualityDictionary     
+    
+#This function aligns the reads to the genome using the k-mer approximate indexing method.
+def alignKmer(read, quality, genome):
+    readQualityDictionary = {} #key:read, value:list of quality integers
+
+    index = kIdx.KmerIndex(genome, 10) #k-mer of length 10
+    
+    #maximum number of mismatches = 2
+    reverseRead = reverseComplement(read)
+    matchOffset = kIdx.kmerIndexApproximate(read, genome, 2, index) #check if read matches in forward direction of genome
+    matchOffset.extend(kIdx.kmerIndexApproximate(reverseRead, genome, 2, index)) #add results of any matches in reverse complement of genome
+        
+    if len(list(matchOffset)) > 0: #match - read aligned in at least one place
+        qualityQ = []
+        for q in quality:
+            qualityQ.append(phred33ToQ(q))
+        readQualityDictionary[read] = qualityQ
+     
+    return matchOffset, readQualityDictionary  
+   
+#This function aligns the reads to the genome using the FM indexing method.
+def alignFM(read, quality, genome):
+    readQualityDictionary = {} #key:read, value:list of quality integers
+    
+    fm = fmIdx.fmIndex(genome)
+    reverseRead = reverseComplement(read)
+    matchOffset = fm.occurrences(read) #check if read matches in forward direction of genome
+    matchOffset.extend(fm.occurrences(reverseRead)) #add results of any matches in reverse complement of genome
+        
+    if len(list(matchOffset)) > 0: #match - read aligned in at least one place
+        qualityQ = []
+        for q in quality:
+            qualityQ.append(phred33ToQ(q))
+        readQualityDictionary[read] = qualityQ
+        
+    return matchOffset, readQualityDictionary  
+    
+#This function aligns the reads to the genome using the Smith Waterman local alignment algorithm.
+def alignSmithWaterman(read, quality, genome):
+    readQualityDictionary = {} #key:read, value:list of quality integers
+    
+    #maximum number of mismatches = 2
+    reverseRead = reverseComplement(read)
+    matchOffset = sw.smithWatermanApproximate(genome, read, 2) #check if read matches in forward direction of genome
+    matchOffset.extend(sw.smithWatermanApproximate(genome, reverseRead, 2)) #add results of any matches in reverse complement of genome
+        
+    if len(list(matchOffset)) > 0: #match - read aligned in at least one place
+        qualityQ = []
+        for q in quality:
+            qualityQ.append(phred33ToQ(q))
+        readQualityDictionary[read] = qualityQ
+
+    return matchOffset, readQualityDictionary   
+    
+#This function aligns the reads to the genome using the Burrows Wheeler approximate algorithm.
+def alignBurrowsWheeler(read, quality, genome):
+    readQualityDictionary = {} #key:read, value:list of quality integers
+    
+    #sa = bwa.suffixArray(genome)
+    bw = bwa.bwt(genome) 
+    bwr = bwa.bwt(genome[::-1]) 
+    
+    #maximum number of mismatches = 2
+    reverseRead = reverseComplement(read)
+    matchOffset = bwa.burrowsWheelerApproximate(bw, bwr, read, 2) #check if read matches in forward direction of genome
+    matchOffset.extend(bwa.burrowsWheelerApproximate(bw, bwr, reverseRead, 2)) #add results of any matches in reverse complement of genome
+        
+    if len(list(matchOffset)) > 0: #match - read aligned in at least one place
+        qualityQ = []
+        for q in quality:
+            qualityQ.append(phred33ToQ(q))
+        readQualityDictionary[read] = qualityQ
+        
+    return matchOffset, readQualityDictionary      
