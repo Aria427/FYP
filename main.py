@@ -47,8 +47,8 @@ reads = fileCompressionAndParsing.parseReadsPhiXString(readsFile)
 #alignment.alignUncompressed(readsFile, genomeFile)
 #alignment.alignCompressed(readsFile, binaryGenomeFile)
 
-
 genome = fileCompressionAndParsing.parseGenomeString(genomeFile)
+reads = fileCompressionAndParsing.parseReadsPhiXString(readsFile)
 
 offsets, completeRQDict = [], {}
 for read, quality in reads:
@@ -56,8 +56,30 @@ for read, quality in reads:
     offsets.append(offset)
     completeRQDict.update(rqDict)
 offsets = [o for oset in offsets for o in oset] #flatten list
-print offsets
-print completeRQDict
+#print offsets
+#print completeRQDict
+
+def readGenome(file):
+    with open(file, 'r') as f: 
+        for line in f:
+            if line and line[0] != '>': #ignore header line with genome information
+                l = line.rstrip().upper().replace('N', '').replace(' ', '')
+                yield l
+        
+reads = fileCompressionAndParsing.parseReadsPhiXString(readsFile)
+offsets, completeRQDict = [], {}
+for read, quality in reads:
+   genome = readGenome(genomeFile)
+   overlap = ''
+   for g in genome:
+       g = overlap + g
+       offset, rqDict = alignmentHadoop.alignHamming(read, quality, g)
+       offsets.append(offset)
+       completeRQDict.update(rqDict)
+       overlap = g[-100:] #100 for PhiX, 60 for Human
+offsets = [o for oset in offsets for o in oset] #flatten list
+print sorted(offsets, key=int)
+#print completeRQDict    
 
 
 #textFile = path('Output Test Files\DataVisualisationTest.txt').abspath()

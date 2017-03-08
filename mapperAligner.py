@@ -1,19 +1,17 @@
 #!/usr/bin/env python
 #This file contains the map step for the aligment MapReduce implementation.
 
-import alignmentMatch
+import alignmentHadoop
 import sys
 import gzip
 
 #This function reads the genome into a string.
 def readGenome(file): 
-    genome = ''
-    with gzip.open(file, 'r') as f: 
+    with open(file, 'r') as f: 
         for line in f:
             if line and line[0] != '>': #ignore header line with genome information
                 l = line.rstrip().upper().replace('N', '').replace(' ', '') 
-                genome += l 
-    return genome
+                yield l
 
 #This function reads the sequencing reads as input to the mapper.        
 def readInputReads(file):
@@ -103,19 +101,28 @@ def readInputPhiXReads(file):
    
 def main():
     #hard-coded reference genome
-    #genomeFile = '/home/hduser/PhiXGenome.fa'
-    genomeFile = '/home/hduser/HumanGenome.fa.gz'
-    genome = readGenome(genomeFile)
-  	
-    readSeq = readInputReads(sys.stdin)
-    matchesCount, count, offsets, rqDict = alignmentMatch.alignHamming(readSeq, genome)
-            
-    offsets = [o for offset in offsets for o in offset] #flatten list             
-          
+    genomeFile = '/home/hduser/PhiXGenome.fa'
+    #genomeFile = '/home/hduser/HumanGenome.fa.gz'            
+    
+    readSeq = readInputPhiXReads(sys.stdin)
+    
+    offsets, completeRQDict = [], {}
+    for read, quality in readSeq:
+        genome = readGenome(genomeFile)
+        overlap = ''
+        
+        for g in genome:
+            g = overlap + g
+            offset, rqDict = alignmentHadoop.alignHamming(read, quality, g)
+            offsets.append(offset)
+            completeRQDict.update(rqDict)
+            overlap = g[-100:] #100 for PhiX, 60 for Human
+    
+    offsets = [o for oset in offsets for o in oset] #flatten list
     #write results to STDOUT (standard output)
     for o in offsets:
         print '%s\t%s' % (o, 1) #tab-delimited, key:offset of match with reads, value:default count of 1 
-    #The output here will be the input for the reduce step.
+    #The output here will be the input for the reduce step  
     
 if __name__ == '__main__':
     main()            
@@ -125,28 +132,3 @@ if __name__ == '__main__':
 #   bin/hadoop jar share/hadoop/tools/lib/hadoop-streaming-2.7.3.jar -file /home/hduser/mapperAligner.py -mapper /home/hduser/mapperAligner.py -file /home/hduser/reducerAligner.py -reducer /home/hduser/reducerAligner.py -file /home/hduser/alignmentMatch.py -file /home/hduser/matchingDistances.py -file /home/hduser/matchingBoyerMoore.py -file /home/hduser/matchingKmerIndex.py -file /home/hduser/matchingFmIndex.py -file /home/hduser/matchingSmithWaterman.py -file /home/hduser/matchingBurrowsWheeler.py -input /user/hduser/PhiXSequencingReads1000.fastq -output /user/hduser/PhiX-output -partitioner org.apache.hadoop.mapred.lib.KeyFieldBasedPartitioner
 # Human
 #   bin/hadoop jar share/hadoop/tools/lib/hadoop-streaming-2.7.3.jar -file /home/hduser/mapperAligner.py -mapper /home/hduser/mapperAligner.py -file /home/hduser/reducerAligner.py -reducer /home/hduser/reducerAligner.py -file /home/hduser/alignmentMatch.py -file /home/hduser/matchingDistances.py -file /home/hduser/matchingBoyerMoore.py -file /home/hduser/matchingKmerIndex.py -file /home/hduser/matchingFmIndex.py -file /home/hduser/matchingSmithWaterman.py -file /home/hduser/matchingBurrowsWheeler.py -input /user/hduser/HumanSequencingReads.tsv.bz2 -output /user/hduser/humanHamming-output -partitioner org.apache.hadoop.mapred.lib.KeyFieldBasedPartitioner
-
-"""
-def main():
-    #hard-coded reference genome
-    genomeFile = '/home/hduser/PhiXGenome.fa'
-    genome = readGenome(genomeFile)
-    
-    overlap = ''
-    totalOffsets = []
-    for g in genome:
-        g = overlap + g
-        readSeq = readInputPhiXReads(sys.stdin)
-        matchesCount, count, offsets, rqDict = alignmentMatch.alignHamming(readSeq, g)
-            
-        offsets = [o for offset in offsets for o in offset] #flatten list  
-        totalOffsets.append(offsets)
-
-        overlap = g[-100:] #100 for PhiX & 60 for Human             
-          
-    #write results to STDOUT (standard output)
-    totalOffsets = [o for offset in totalOffsets for o in offset] #flatten list
-    for o in totalOffsets:
-        print '%s\t%s' % (o, 1) #tab-delimited, key:offset of match with reads, value:default count of 1 
-    #The output here will be the input for the partition step.
-"""
