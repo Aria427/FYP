@@ -22,23 +22,5 @@ def main():
         except ValueError:
             pass #count = NAN
     
-    """
-    data = readPartitionerOutput(sys.stdin) 
-  
-    dictionary = {}
-    for o1s in data:
-        dictionary[o1s].append(o1s[1]) #offset: list of 1s
-        
-    offsetCount = {}
-    for offset, ones in dictionary.items():
-        total = sum(ones)
-        offsetCount[offset] = total
-
-    #write results to STDOUT (standard output)
-    for offset, count in offsetCount.items():
-        print '%s\t%s' % (offset, count) #tab-delimited, key:offset of match with reads, value:count of match
-    #The output here will be the input for the reduce step.
-    """
-    
 if __name__ == '__main__':
     main()
