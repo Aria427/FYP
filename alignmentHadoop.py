@@ -117,11 +117,18 @@ def alignFM(read, quality, genome):
 def alignSmithWaterman(read, quality, genome):
     readQualityDictionary = {} #key:read, value:list of quality integers
     
+    #PhiX read line=100 & genome line=70, Human read line=60 & genome line=50
+    read1 = read[:70] #first 70 characters 
+    read2 = read[70:] #last 70 characters
+
     #maximum number of mismatches = 2
-    reverseRead = reverseComplement(read)
-    matchOffset = sw.smithWatermanApproximate(genome, read, 2) #check if read matches in forward direction of genome
-    matchOffset.extend(sw.smithWatermanApproximate(genome, reverseRead, 2)) #add results of any matches in reverse complement of genome
-        
+    reverseRead1 = reverseComplement(read1)
+    matchOffset = sw.smithWatermanApproximate(genome, read1, 2) #check if read matches in forward direction of genome
+    matchOffset.extend(sw.smithWatermanApproximate(genome, reverseRead1, 2)) #add results of any matches in reverse complement of genome
+    reverseRead2 = reverseComplement(read2)
+    matchOffset = sw.smithWatermanApproximate(genome, read2, 2) #check if read matches in forward direction of genome
+    matchOffset.extend(sw.smithWatermanApproximate(genome, reverseRead2, 2))       
+
     if len(list(matchOffset)) > 0: #match - read aligned in at least one place
         qualityQ = []
         for q in quality:

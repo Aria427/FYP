@@ -134,7 +134,7 @@ def smithWatermanApproximate(text, pattern, maxMismatches):
     assert len(refAligned) == len(readAligned), 'aligned strings are not the same size'
     
     matchOffsets, alignmentString, identities, gaps, mismatches =  \
-            smithWatermanApproximateString(refAligned, readAligned, maxMismatches)
+            smithWatermanApproximateString(text, pattern, maxMismatches)
     
     return matchOffsets
 
@@ -153,7 +153,7 @@ def displayResults(seq1, seq2, maxMismatches):
     assert len(seq1Aligned) == len(seq2Aligned), 'aligned strings are not the same size'
     
     matchOffsets, alignmentString, identities, gaps, mismatches =  \
-            smithWatermanApproximateString(seq1Aligned, seq2Aligned, maxMismatches)
+            smithWatermanApproximateString(seq1, seq2, maxMismatches)
     
     #pretty print results
     print 'Reference genome match offsets: %s' % matchOffsets
@@ -161,17 +161,18 @@ def displayResults(seq1, seq2, maxMismatches):
     print 'Gaps = %d/%d' % (gaps, len(seq1Aligned))
     print 'Mismatches = %d/%d' % (mismatches, len(seq1Aligned))
     
-    for i in range(0, len(seq1Aligned), 60):
-        seq1Slice = seq1Aligned[i:i+60]
+    for i in range(0, len(seq1), 60):
+        seq1Slice = seq1[i:i+60]
         print 'Query  {0:<4}  {1}  {2:<4}'.format(i + 1, seq1Slice, i + len(seq1Slice))
         print '             {0}'.format(alignmentString[i:i+60])
         
-        seq2Slice = seq2Aligned[i:i+60]
+        seq2Slice = seq2[i:i+60]
         print 'Sbjct  {0:<4}  {1}  {2:<4}'.format(i + 1, seq2Slice, i + len(seq2Slice))
         
-"""  
+"""
 ref = 'ACGTACGTACGTAAACCCGGGTTTACGT' #reference genome
-read = 'ACGTAACCGGTTACGTAAGGTT' #read
-
+read = 'ACGTACGTACGTAAACCCGGTGTTTAC' #read
+matchOffset = smithWatermanApproximate(ref, read, 2)
+print matchOffset
 displayResults(ref, read, 2)
 """
