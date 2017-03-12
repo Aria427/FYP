@@ -127,16 +127,16 @@ if __name__ == '__main__':
 
 #Run MapReduce job on Hadoop using:
 # PhiX
-#   bin/hadoop jar share/hadoop/tools/lib/hadoop-streaming-2.7.3.jar -D stream.map.output.field.separator=\t -D stream.num.map.output.key.fields=1 -D map.output.key.field.separator=\t -D mapred.text.key.partitioner.options=-k1,1 -D mapred.reduce.tasks=4 -D mapred.output.key.comparator.class=org.apache.hadoop.mapred.lib.KeyFieldBasedComparator -D  mapred.text.key.comparator.options=-n -file /home/hduser/mapperAligner.py -mapper /home/hduser/mapperAligner.py -file /home/hduser/reducerAligner.py -reducer /home/hduser/reducerAligner.py -file /home/hduser/alignmentMatch.py -file /home/hduser/matchingDistances.py -file /home/hduser/matchingBoyerMoore.py -file /home/hduser/matchingKmerIndex.py -file /home/hduser/matchingFmIndex.py -file /home/hduser/matchingSmithWaterman.py -file /home/hduser/matchingBurrowsWheeler.py -input /user/hduser/PhiXSequencingReads1000.fastq -output /user/hduser/PhiXHamming-output -partitioner org.apache.hadoop.mapred.lib.KeyFieldBasedPartitioner
+#   bin/hadoop jar share/hadoop/tools/lib/hadoop-streaming-2.7.3.jar -D stream.map.output.field.separator=\t -D stream.num.map.output.key.fields=1 -D mapreduce.map.output.key.field.separator=\t -D mapreduce.partition.keypartitioner.options=-k1,1 -D  mapreduce.job.reduces=2 -D  mapreduce.job.output.key.comparator.class=org.apache.hadoop.mapred.lib.KeyFieldBasedComparator -D  mapreduce.partition.keycomparator.options=-n -file /home/hduser/mapperAligner.py -mapper /home/hduser/mapperAligner.py -file /home/hduser/reducerAligner.py -reducer /home/hduser/reducerAligner.py -file /home/hduser/alignmentMatch.py -file /home/hduser/matchingDistances.py -file /home/hduser/matchingBoyerMoore.py -file /home/hduser/matchingKmerIndex.py -file /home/hduser/matchingFmIndex.py -file /home/hduser/matchingSmithWaterman.py -file /home/hduser/matchingBurrowsWheeler.py -input /user/hduser/PhiXSequencingReads1000.fastq -output /user/hduser/PhiXHamming-output -partitioner org.apache.hadoop.mapred.lib.KeyFieldBasedPartitioner 
 """
     bin/hadoop jar share/hadoop/tools/lib/hadoop-streaming-2.7.3.jar \
     -D stream.map.output.field.separator=\t \ #seperator between key and value for mapper
     -D stream.num.map.output.key.fields=1 \ #no of \t before end of key
-    -D map.output.key.field.separator=\t \ #seperator between key and value for partitioner
-    -D mapred.text.key.partitioner.options=-k1,1 \ #partition map outputs by key (first \t)
-    -D mapred.reduce.tasks=4 \
-    -D mapred.output.key.comparator.class=org.apache.hadoop.mapred.lib.KeyFieldBasedComparator 
-    -D  mapred.text.key.comparator.options=-n \ #sort numerically in shuffle & sort phase
+    -D mapreduce.map.output.key.field.separator=\t \ #seperator between key and value for partitioner
+    -D mapreduce.partition.keypartitioner.options=-k1,1 \ #partition map outputs by key (first \t)
+    -D mapreduce.job.reduces=2 \
+    -D mapreduce.job.output.key.comparator.class=org.apache.hadoop.mapred.lib.KeyFieldBasedComparator \ 
+    -D mapreduce.partition.keycomparator.options=-n \ #sort numerically in shuffle & sort phase
     -file /home/hduser/mapperAligner.py -mapper /home/hduser/mapperAligner.py \
     -file /home/hduser/reducerAligner.py -reducer /home/hduser/reducerAligner.py \
     -file /home/hduser/alignmentHadoop.py \
@@ -148,4 +148,4 @@ if __name__ == '__main__':
     -partitioner org.apache.hadoop.mapred.lib.KeyFieldBasedPartitioner
 """
 # Human
-#   bin/hadoop jar share/hadoop/tools/lib/hadoop-streaming-2.7.3.jar -D stream.map.output.field.separator=\t -D stream.num.map.output.key.fields=1 -D map.output.key.field.separator=\t -D mapred.text.key.partitioner.options=-k1,1 -D mapred.reduce.tasks=5 -D mapred.output.key.comparator.class=org.apache.hadoop.mapred.lib.KeyFieldBasedComparator -D  mapred.text.key.comparator.options=-n -file /home/hduser/mapperAligner.py -mapper /home/hduser/mapperAligner.py -file /home/hduser/reducerAligner.py -reducer /home/hduser/reducerAligner.py -file /home/hduser/alignmentHadoop.py -file /home/hduser/matchingDistances.py -file /home/hduser/matchingBoyerMoore.py -file /home/hduser/matchingKmerIndex.py -file /home/hduser/matchingFmIndex.py -file /home/hduser/matchingSmithWaterman.py -file /home/hduser/matchingBurrowsWheeler.py -input /user/hduser/HumanSequencingReads.tsv -output /user/hduser/HumanHamming-output -partitioner org.apache.hadoop.mapred.lib.KeyFieldBasedPartitioner 
+#   bin/hadoop jar share/hadoop/tools/lib/hadoop-streaming-2.7.3.jar -D stream.map.output.field.separator=\t -D stream.num.map.output.key.fields=1 -D mapreduce.map.output.key.field.separator=\t -D mapreduce.partition.keypartitioner.options=-k1,1 -D mapreduce.job.reduces=100 -D mapreduce.job.output.key.comparator.class=org.apache.hadoop.mapred.lib.KeyFieldBasedComparator -D mapreduce.partition.keycomparator.options=-n -file /home/hduser/mapperAligner.py -mapper /home/hduser/mapperAligner.py -file /home/hduser/reducerAligner.py -reducer /home/hduser/reducerAligner.py -file /home/hduser/alignmentHadoop.py -file /home/hduser/matchingDistances.py -file /home/hduser/matchingBoyerMoore.py -file /home/hduser/matchingKmerIndex.py -file /home/hduser/matchingFmIndex.py -file /home/hduser/matchingSmithWaterman.py -file /home/hduser/matchingBurrowsWheeler.py -input /user/hduser/HumanSequencingReads.tsv -output /user/hduser/HumanHamming-output -partitioner org.apache.hadoop.mapred.lib.KeyFieldBasedPartitioner
