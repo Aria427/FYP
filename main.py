@@ -47,38 +47,62 @@ reads = fileCompressionAndParsing.parseReadsPhiXString(readsFile)
 #alignment.alignUncompressed(readsFile, genomeFile)
 #alignment.alignCompressed(readsFile, binaryGenomeFile)
 
+"""
 genome = fileCompressionAndParsing.parseGenomeString(genomeFile)
 reads = fileCompressionAndParsing.parseReadsPhiXString(readsFile)
 
 offsets, completeRQDict = [], {}
 for read, quality in reads:
-    offset, rqDict = alignmentHadoop.alignSmithWaterman(read, quality, genome)
+    offset, rqDict = alignmentHadoop.alignHamming(read, quality, genome)
     offsets.append(offset)
     completeRQDict.update(rqDict)
 offsets = [o for oset in offsets for o in oset] #flatten list
 print offsets
 #print completeRQDict
-
+"""
 def readGenome(file):
     with open(file, 'r') as f: 
         for line in f:
             if line and line[0] != '>': #ignore header line with genome information
                 l = line.rstrip().upper().replace('N', '').replace(' ', '')
                 yield l
-             
+ 
+def readInChunks(file, chunkSize=6000):
+    with open(file, 'r') as f:
+        f.readline() #ignore header line with genome information
+        while True:
+            data = f.read(chunkSize).rstrip().upper().replace('N', '').replace(' ', '')
+            if not data:
+                break
+            yield data  
+
+def chunks(f, chunkSize=4096):
+    return iter(lambda: f.read(chunkSize).rstrip().upper().replace('N', '').replace(' ', ''), b'')            
+            
+ch = readInChunks(genomeFile, 1000)
+for c in ch:
+    print c
+    
+with open(genomeFile, 'r') as f:            
+    ch = chunks(f, 1000)   
+    for c in ch:
+        print c
+    
 reads = fileCompressionAndParsing.parseReadsPhiXString(readsFile)
 offsets, completeRQDict = [], {}
 for read, quality in reads:
-   genome = readGenome(genomeFile)
-   overlap = ''
-   for g in genome:
-       g = overlap + g
-       offset, rqDict = alignmentHadoop.alignBurrowsWheeler(read, quality, g)
-       offsets.append(offset)
-       completeRQDict.update(rqDict)
-       overlap = g[-100:] #100 for PhiX, 60 for Human
+    genome = readInChunks(genomeFile, 1000)
+    overlap = ''
+    for g in genome:
+        print len(g)
+        g = overlap + g
+        offset, rqDict = alignmentHadoop.alignHamming(read, quality, g)
+        print offset
+        offsets.append(offset)
+        completeRQDict.update(rqDict)
+        overlap = g[100:] #last 100 for PhiX, last 60 for Human
 offsets = [o for oset in offsets for o in oset] #flatten list
-print offsets#sorted(offsets, key=int)
+print sorted(offsets, key=int)
 #print completeRQDict    
 
 
