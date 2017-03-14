@@ -5,13 +5,15 @@ import alignmentHadoop
 import sys
 import gzip
 
-#This function reads the genome into a string.
-def readGenome(file): 
-    with open(file, 'r') as f: 
-        for line in f:
-            if line and line[0] != '>': #ignore header line with genome information
-                l = line.rstrip().upper().replace('N', '').replace(' ', '') 
-                yield l
+#This function reads the genome in chunks (groups of lines).
+def readGenome(file, lines=100):    
+    with open(file, 'r') as f:
+        f.readline()
+        while True:
+            data = ''.join(f.next().rstrip().upper().replace('N', '').replace(' ', '') for x in xrange(lines))
+            if not data:
+                break
+            yield data
 
 #This function reads the sequencing reads as input to the mapper.        
 def readInputReads(file):
