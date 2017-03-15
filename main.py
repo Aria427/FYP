@@ -23,7 +23,7 @@ import sys
 #import time
 
 #pdb.set_trace()
-#genomeFile = path('Data\HumanGenome.fa.gz').abspath() #64185939, line=50
+#genomeFile = path('Data\HumanGenome.fa.gz').abspath() #64,185,939, line=50
 #binaryGenomeFile = path('Output Data\HumanGenomeLong.bin').abspath()
 genomeFile = path('Data\PhixGenome.fa').abspath() #77, line=70
 #binaryGenomeFile = path('Output Data\PhixGenomeIntZip.bin').abspath() 
@@ -69,12 +69,16 @@ def readGenomeLine(file):
 
 def readGenomeLines(file, lines=100):    
     with open(file, 'r') as f:
-        f.readline()
+        firstLine = f.readline()
+        if firstLine.startswith('>'):
+            firstLine = ''
+            pass #ignore header information
         while True:
-            data = ''.join(f.next().rstrip().upper().replace('N', '').replace(' ', '') for x in xrange(lines))
+            data = firstLine + ''.join(f.next().rstrip().upper().replace('N', '').replace(' ', '') for x in xrange(lines))
             if not data:
                 break
             yield data
+            firstLine = '' #first line in file is only needed for first iteration if not header
     
 reads = fileCompressionAndParsing.parseReadsPhiXString(readsFile)
 offsets, completeRQDict = [], {}
