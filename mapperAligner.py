@@ -109,10 +109,11 @@ def main():
     #hard-coded reference genome
     #genomeFile = '/home/hduser/PhiXGenome.fa'
     #genomeFile = '/home/hduser/HumanGenome.fa0' 
-    genomeFile = 'data/HumanGenome.fa.gz' #for Amazon EMR           
+    genomeFile = 's3://fyp-input/HumanGenome.fa.gz' #for Amazon EMR           
 
     readSeq = readInputReads(sys.stdin) #Human reads=28,094,847
     
+    #readsMatched, readsMismatched = 0, 0
     for read, quality in readSeq:
         #Human genome=64,185,939 lines
         genome = readGenome(genomeFile, 1000000) 
@@ -124,8 +125,12 @@ def main():
             
             #write results to STDOUT (standard output)
             for o in offset: #to remove empty list and '[' ']' characters
+                #if o == '':
+                #    readsMismatched += 1
+                #else:
                 #tab-delimited, key:offset of match with reads, value:<default count of 1, read matched, corresponding quality> 
-                print '%s\t%s\t%s\t%s' % (o, 1, read, quality)         
+                print '%s\t%s\t%s\t%s' % (o, 1, read, quality)   
+                    #readsMatched += 1
                 #The output here will be the input for the reduce step  
             
             overlap = g[-60:] #100 for PhiX, 60 for Human
