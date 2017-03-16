@@ -3,10 +3,11 @@
 
 import alignmentHadoop
 import sys
+import gzip
 
 #This function reads the genome in chunks (groups of lines).
 def readGenome(file, lines=100):  
-    with open(file, 'r') as f:
+    with gzip.open(file, 'r') as f:
         firstLine = f.readline()
         if firstLine.startswith('>'):
             firstLine = ''
@@ -107,13 +108,13 @@ def readInputPhiXReads(file):
 def main():
     #hard-coded reference genome
     #genomeFile = '/home/hduser/PhiXGenome.fa'
-    genomeFile = '/home/hduser/HumanGenome.fa0'            
+    #genomeFile = '/home/hduser/HumanGenome.fa0' 
+    genomeFile = 'data/HumanGenome.fa.gz' #for Amazon EMR           
 
-    readSeq = readInputReads(sys.stdin)
+    readSeq = readInputReads(sys.stdin) #Human reads=28,094,847
     
     for read, quality in readSeq:
-        #Human lines of whole file=64,185,939 so read in 5,000,000 at a time
-        #split file in 6 (last file is small) so read in 1,000,000 at a time
+        #Human genome=64,185,939 lines
         genome = readGenome(genomeFile, 1000000) 
         overlap = ''
         
@@ -123,8 +124,9 @@ def main():
             
             #write results to STDOUT (standard output)
             for o in offset: #to remove empty list and '[' ']' characters
-                print '%s\t%s' % (o, 1) #tab-delimited, key:offset of match with reads, value:default count of 1 
-            #The output here will be the input for the reduce step  
+                #tab-delimited, key:offset of match with reads, value:<default count of 1, read matched, corresponding quality> 
+                print '%s\t%s\t%s\t%s' % (o, 1, read, quality)         
+                #The output here will be the input for the reduce step  
             
             overlap = g[-60:] #100 for PhiX, 60 for Human
     
