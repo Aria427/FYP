@@ -5,14 +5,14 @@ import sys
 from itertools import groupby
 from operator import itemgetter
 
-#This function reads in the output from the partitioner using a generator.
-def readPartitionerOutput(file, separator='\t'):
+#This function reads in the output from the mapper using a generator.
+def readMapperOutput(file, separator='\t'):
     for line in file:
         yield line.rstrip().split(separator, 4)
         
 def main():
     #input comes from STDIN (standard input)
-    data = readPartitionerOutput(sys.stdin) 
+    data = readMapperOutput(sys.stdin) 
 
     totalCount, readQuality = 0, {}
     for currentOffset, group in groupby(data, itemgetter(0)):
