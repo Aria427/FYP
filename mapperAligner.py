@@ -146,7 +146,7 @@ def main():
                 #    readsMismatched += 1
                 #else:
                 #tab-delimited, key:offset of match with reads, value:<default count of 1, read matched, corresponding quality> 
-                print '%s\t%s\t%s\t%s' % (overlap, 1, read, quality)   
+                print '%s\t%s\t%s\t%s' % (o, 1, read, quality)   
                     #readsMatched += 1
                 #The output here will be the input for the reduce step  
             
