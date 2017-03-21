@@ -3,7 +3,6 @@
 
 import alignmentHadoop
 import sys
-import gzip
 import urllib2
 
 #This function reads the genome in chunks (groups of lines).
@@ -21,17 +20,19 @@ def readGenome(file, lines=100):
             firstLine = '' #first line in file is only needed for first iteration if not header             
  
 def readGenomeEMR(s3FileUrl, lines=100):
-    dataFile = urllib2.urlopen(s3FileUrl)	
+    request = urllib2.Request(s3FileUrl)
+    response = urllib2.urlopen(request)
+    dataFile = response	
     firstLine = dataFile.readline()
     if firstLine.startswith('>'):
-    	firstLine = ''
+        firstLine = ''
         pass #ignore header information
     while True:
         data = firstLine + ''.join(dataFile.next().rstrip().upper().replace('N', '').replace(' ', '') for x in xrange(lines))
         if not data:
             break
         yield data
-        firstLine = '' #first line in file is only needed for first iteration if not header      
+        firstLine = '' #first line in file is only needed for first iteration if not header   
            
 #This function reads the sequencing reads as input to the mapper.        
 def readInputReads(file):
@@ -118,21 +119,21 @@ def readInputPhiXReads(file):
                     qualityNoNs = qualityNoNs + quality[i]
                 
             yield temp, qualityNoNs
-   
+              
 def main():
     #hard-coded reference genome
     #genomeFile = '/home/hduser/PhiXGenome.fa'
     #genomeFile = '/home/hduser/HumanGenome.fa.gz' 
     
     #For Amazon EMR:
-    genomeFile = 'https://s3.eu-central-1.amazonaws.com/fyp-input/PhiXGenome.fa' #file has to be public
+    genomeFile = 'https://s3.eu-central-1.amazonaws.com/fyp-input/HumanGenome.fa' #file has to be public
        
-    readSeq = readInputPhiXReads(sys.stdin) #Human reads=28,094,847
+    readSeq = readInputReads(sys.stdin) #Human reads=28,094,847
     
     #readsMatched, readsMismatched = 0, 0
-    for read, quality in readSeq:
+    for read, quality in readSeq: 
         #Human genome=64,185,939 lines
-        genome = readGenomeEMR(genomeFile, 1000000) 
+        genome = readGenomeEMR(genomeFile, 1000000) #1,000,000 
         overlap = ''
         
         for g in genome:
@@ -145,12 +146,12 @@ def main():
                 #    readsMismatched += 1
                 #else:
                 #tab-delimited, key:offset of match with reads, value:<default count of 1, read matched, corresponding quality> 
-                print '%s\t%s\t%s\t%s' % (o, 1, read, quality)   
+                print '%s\t%s\t%s\t%s' % (overlap, 1, read, quality)   
                     #readsMatched += 1
                 #The output here will be the input for the reduce step  
             
             overlap = g[-100:] #100 for PhiX, 60 for Human   
-    
+ 
 if __name__ == '__main__':
     main()            
 
