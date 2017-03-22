@@ -3,7 +3,7 @@
 
 import alignmentHadoop
 import sys
-import urllib2
+import smart_open #Add bootstrap action to s3://fyp-input/installPythonModules.sh
 
 #This function reads the genome in chunks (groups of lines).
 def readGenome(file, lines=100):  
@@ -18,22 +18,19 @@ def readGenome(file, lines=100):
                 break
             yield data
             firstLine = '' #first line in file is only needed for first iteration if not header             
- 
+
+#This function reads the genome in chunks (groups of lines) from the file stored in S3.
 def readGenomeEMR(s3FileUrl, lines=100):
-    request = urllib2.Request(s3FileUrl)
-    response = urllib2.urlopen(request)
-    dataFile = response	
-    firstLine = dataFile.readline()
-    if firstLine.startswith('>'):
-        firstLine = ''
-        pass #ignore header information
-    while True:
-        data = firstLine + ''.join(dataFile.next().rstrip().upper().replace('N', '').replace(' ', '') for x in xrange(lines))
-        if not data:
-            break
-        yield data
-        firstLine = '' #first line in file is only needed for first iteration if not header   
-           
+    with smart_open.smart_open(s3FileUrl, 'r') as dataFile:
+        data, count = '', 0
+        for line in dataFile:
+            if line and line[0] != '>': #ignore header line with genome information
+                l = line.rstrip().upper().replace('N', '').replace(' ', '')
+                data += l
+                count += 1 #count of lines
+                if count >= lines:
+                    yield data
+                    count = 0 #set back to 0 for next iteration     
 #This function reads the sequencing reads as input to the mapper.        
 def readInputReads(file):
     flag, sequence, quality = '', '', ''
@@ -126,7 +123,7 @@ def main():
     #genomeFile = '/home/hduser/HumanGenome.fa.gz' 
     
     #For Amazon EMR:
-    genomeFile = 'https://s3.eu-central-1.amazonaws.com/fyp-input/HumanGenome.fa' #file has to be public
+    genomeFile = 'https://s3.eu-central-1.amazonaws.com/fyp-input/HumanGenome.fa' 
        
     readSeq = readInputReads(sys.stdin) #Human reads=28,094,847
     
@@ -146,7 +143,7 @@ def main():
                 #    readsMismatched += 1
                 #else:
                 #tab-delimited, key:offset of match with reads, value:<default count of 1, read matched, corresponding quality> 
-                print '%s\t%s\t%s\t%s' % (o, 1, read, quality)   
+                print '%s\t%s\t%s\t%s' % (g, 1, read, quality)   
                     #readsMatched += 1
                 #The output here will be the input for the reduce step  
             
