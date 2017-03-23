@@ -1,4 +1,10 @@
-#!/bin/bash -xe
+#!/bin/bash
+set -e -x
 
-sudo pip-2.7 install smart_open
-sudo pip-2.7 install requests[security]
+sudo rm /usr/bin/python
+sudo ln -s /usr/bin/python2.7 /usr/bin/python
+
+sudo -H pip install ipython[all]
+
+sudo -H pip install smart_open
+sudo -H pip install requests[security]
