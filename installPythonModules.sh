@@ -1,3 +1,4 @@
 #!/bin/bash -xe
 
-sudo pip install smart_open
+sudo pip-2.7 install smart_open
+sudo pip-2.7 install requests[security]

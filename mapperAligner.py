@@ -19,18 +19,16 @@ def readGenome(file, lines=100):
             yield data
             firstLine = '' #first line in file is only needed for first iteration if not header             
 
-#This function reads the genome in chunks (groups of lines) from the file stored in S3.
-def readGenomeEMR(s3FileUrl, lines=100):
+#This function reads the genome in chunks (groups of bytes) from the file stored in S3.
+def readGenomeEMR(s3FileUrl, bytesNum=100):
     with smart_open.smart_open(s3FileUrl, 'r') as dataFile:
-        data, count = '', 0
-        for line in dataFile:
-            if line and line[0] != '>': #ignore header line with genome information
-                l = line.rstrip().upper().replace('N', '').replace(' ', '')
-                data += l
-                count += 1 #count of lines
-                if count >= lines:
-                    yield data
-                    count = 0 #set back to 0 for next iteration     
+        firstLine = dataFile.readline()
+        if firstLine.startswith('>'):
+            firstLine = ''
+            pass #ignore header information
+        data = firstLine + dataFile.read(bytesNum).rstrip().upper().replace('N', '').replace(' ', '')
+        yield data
+        
 #This function reads the sequencing reads as input to the mapper.        
 def readInputReads(file):
     flag, sequence, quality = '', '', ''
@@ -129,8 +127,8 @@ def main():
     
     #readsMatched, readsMismatched = 0, 0
     for read, quality in readSeq: 
-        #Human genome=64,185,939 lines
-        genome = readGenomeEMR(genomeFile, 1000000) #1,000,000 
+        #Human genome=64,185,939 lines -> 3,273,481,150 bytes
+        genome = readGenomeEMR(genomeFile, 500000000) #500,000,000 bytes = 0.5GB
         overlap = ''
         
         for g in genome:

@@ -4,18 +4,15 @@
 import sys
 import smart_open #Add bootstrap action to s3://fyp-input/installPythonModules.sh
 
-#This function reads the genome in chunks (groups of lines) from the file stored in S3.
-def readGenomeEMR(s3FileUrl, lines=100):
+#This function reads the genome in chunks (groups of bytes) from the file stored in S3.
+def readGenomeEMR(s3FileUrl, bytesNum=100):
     with smart_open.smart_open(s3FileUrl, 'r') as dataFile:
-        data, count = '', 0
-        for line in dataFile:
-            if line and line[0] != '>': #ignore header line with genome information
-                l = line.rstrip().upper().replace('N', '').replace(' ', '')
-                data += l
-                count += 1 #count of lines
-                if count >= lines:
-                    yield data
-                    count = 0 #set back to 0 for next iteration
+        firstLine = dataFile.readline()
+        if firstLine.startswith('>'):
+            firstLine = ''
+            pass #ignore header information
+        data = firstLine + dataFile.read(bytesNum).rstrip().upper().replace('N', '').replace(' ', '')
+        yield data
                   
 #This function reads the sequencing reads as input to the mapper.        
 def readInputReads(file):
@@ -114,21 +111,22 @@ def main():
     
     #readsMatched, readsMismatched = 0, 0
     for read, quality in readSeq: 
-        #Human genome=64,185,939 lines
-        genome = readGenomeEMR(genomeFile, 1000000) #1,000,000 
+        #Human genome=64,185,939 lines -> 3,273,481,150 bytes
+        genome = readGenomeEMR(genomeFile, 500000000) #500,000,000 bytes = 0.5GB
         overlap = ''
         
         for g in genome:
+            print g
             g = overlap + g
-            offset, rqDict = alignHamming(read, quality, g)
+        #    offset, rqDict = alignHamming(read, quality, g)
             
             #write results to STDOUT (standard output)
-            for o in offset: #to remove empty list and '[' ']' characters
+        #    for o in offset: #to remove empty list and '[' ']' characters
                 #if o == '':
                 #    readsMismatched += 1
                 #else:
                 #tab-delimited, key:offset of match with reads, value:<default count of 1, read matched, corresponding quality> 
-                print '%s\t%s\t%s\t%s' % (o, 1, read, quality)   
+        #        print '%s\t%s\t%s\t%s' % (o, 1, read, quality)   
                     #readsMatched += 1
                 #The output here will be the input for the reduce step  
             
