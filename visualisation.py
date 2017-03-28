@@ -35,7 +35,8 @@ def visualisationJPG(genome, readsOffsets, outputFile):
     j = 0
     for i in range(len(genome)):
         if offsetsCount[i] != 0:
-            draw.line(((i, 20+j), (i+offsetsCount[i], 20+j)), fill='purple', width=5)
+            #draw.line(((i, 20+j), (i+offsetsCount[i], 20+j)), fill='purple', width=5)
+            draw.line(((i, 20+j), (i+100, 20+j)), fill='purple', width=5) #100 for PhiX, 60 for Human read
             draw.text((i, 20+j), "%d" % i, fill=0)
             j += 10
     img.save(outputFile, 'JPEG', quality=80, optimize=True, progressive=True)
@@ -50,7 +51,8 @@ def visualisationGD(genome, readsOffsets, outputFile):
     featuresSet = featuresTrack.new_set()
     for i in range(len(genome)):
         if offsetsCount[i] != 0:
-            feature = SeqFeature(FeatureLocation(i, i+offsetsCount[i]), strand=+1)
+            #feature = SeqFeature(FeatureLocation(i, i+offsetsCount[i]), strand=+1)
+            feature = SeqFeature(FeatureLocation(i, i+100), strand=+1) #100 for PhiX, 60 for Human read
             featuresSet.add_feature(feature, name="%d" % i, label=True, label_size=8) 
     dia.draw(format='linear', pagesize=(len(genome), 2500), fragments=10, start=0, end=len(genome))
     dia.write(outputFile, "PNG")
@@ -58,7 +60,7 @@ def visualisationGD(genome, readsOffsets, outputFile):
 
 def visualisationTkinter(genome, readsOffsets):
     readsOffsets.sort()                     #sort list
-    readsOffsets = sum(readsOffsets, [])    #flatten list
+    #readsOffsets = sum(readsOffsets, [])    #flatten list
     offsetsCount = collections.Counter(readsOffsets) #record count of each offset => length of match
     window = Tkinter.Tk()
     canvas = Tkinter.Canvas(window, bg='white', width=len(genome), height=500)
@@ -71,7 +73,8 @@ def visualisationTkinter(genome, readsOffsets):
     j = 0
     for i in range(len(genome)):
         if offsetsCount[i] != 0:
-            line = canvas.create_line(i, 10+j, i+offsetsCount[i], 10+j, fill='purple', width=2.5)
+            #line = canvas.create_line(i, 10+j, i+offsetsCount[i], 10+j, fill='purple', width=2.5) 
+            line = canvas.create_line(i, 10+j, i+100, 10+j, fill='purple', width=2.5) #100 for PhiX, 60 for Human read
             canvas.tag_bind(line, '<Button-1>', onObjectClick)
             j += 5
     canvas.pack()

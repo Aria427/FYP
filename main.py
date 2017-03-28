@@ -14,9 +14,16 @@ import fileCompressionAndParsing
 import alignmentHadoop
 #import analyseAlignment
 
-#import visualisation
+import visualisation
 
 from path import path
+import numpy as np
+import fileinput
+from glob import glob
+from itertools import groupby
+from operator import itemgetter
+from collections import defaultdict
+
 import gzip
 import sys
 #import pdb
@@ -26,7 +33,7 @@ import sys
 #genomeFile = path('Data\HumanGenome.fa.gz').abspath() #64,185,939, line=50
 #binaryGenomeFile = path('Output Data\HumanGenomeLong.bin').abspath()
 genomeFile = path('Data\PhixGenome.fa').abspath() #77, line=70
-#binaryGenomeFile = path('Output Data\PhixGenomeIntZip.bin').abspath() 
+binaryGenomeFile = path('Output Data\PhixGenomeIntZip.bin').abspath() 
 #fileCompressionAndParsing.parseGenomeInt(genomeFile, binaryGenomeFile)
 #lzwCompression.compress(genomeFile, 'Output Data\HumanGenomeLZW.txt')
 #genomeCompressionComparison.compressionComparison(path('Output Analysis Results\GenomeCompressionAnalysis.png').abspath()) 
@@ -47,7 +54,7 @@ reads = fileCompressionAndParsing.parseReadsPhiXString(readsFile)
 #alignment.alignUncompressed(readsFile, genomeFile)
 #alignment.alignCompressed(readsFile, binaryGenomeFile)
 
-
+"""
 genome = fileCompressionAndParsing.parseGenomeString(genomeFile)
 reads = fileCompressionAndParsing.parseReadsPhiXString(readsFile)
 
@@ -58,14 +65,7 @@ for read, quality in reads:
     completeRQDict.update(rqDict)
 offsets = [o for oset in offsets for o in oset] #flatten list
 print len(offsets)
-#print completeRQDict
-
-def readGenomeLine(file):
-    with open(file, 'r') as f: 
-        for line in f.readlines():
-            if line and line[0] != '>': #ignore header line with genome information
-                l = line.rstrip().upper().replace('N', '').replace(' ', '')
-                yield l                   
+#print completeRQDict                 
 
 def readGenomeLines(file, lines=100):    
     with open(file, 'r') as f:
@@ -94,12 +94,28 @@ for read, quality in reads:
 offsets = [o for oset in offsets for o in oset] #flatten list
 print len(sorted(offsets, key=int))
 #print completeRQDict    
+"""
 
+with open(binaryGenomeFile , 'rb') as f:
+      decodedGenome = np.fromfile(f, dtype=np.int)
+      
+#This function reads in the output from the reducers using a generator.
+def readReducerOutputs(files, separator='\t'):
+    fnames = glob(files)
+    for line in fileinput.input(fnames):
+        yield line.rstrip().split(separator, 3)
+ 
+resultFiles = path('Output Test Files\PhiXHamming-output\part-000**').abspath() #* for multiple files
+#resultFile = path('Output Test Files\PhiXHamming-output\part-00000').abspath()
+data = readReducerOutputs(resultFiles)
 
-#textFile = path('Output Test Files\DataVisualisationTest.txt').abspath()
-#textFile = visualisation.visualisationText(genome, offsets, textFile)
-#jpgFile = path('Output Test Files\DataVisualisationTest.jpg').abspath()
-#jpgFile = visualisation.visualisationJPG(genome, offsets, jpgFile) 
-#pngFile = path('Output Test Files\DataVisualisationTest.png').abspath()
-#pngFile = visualisation.visualisationGD(genome, offsets, pngFile)
-#visualisation.visualisationTkinter(decodedGenome, offsets)
+offsets = []
+for currentOffset, group in groupby(data, itemgetter(0)):
+    try:
+        for offset, count, rq in group:	
+            offsets.append(int(offset))
+    except ValueError:
+        pass     
+print offsets    
+    
+visualisation.visualisationTkinter(decodedGenome, offsets)
