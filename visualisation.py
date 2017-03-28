@@ -1,17 +1,21 @@
 #!/usr/bin/env python
-#This file includes functions for data visualisation in the form of a text file and a jpeg file.
+#This file includes functions for data visualisation in the form of files and a Tkinter GUI.
 
-import collections
 from PIL import Image, ImageDraw
 from Bio.Graphics import GenomeDiagram
 from Bio.SeqFeature import SeqFeature, FeatureLocation
 import Tkinter
+import numpy as np
+from itertools import groupby
+from operator import itemgetter
+from collections import Counter
+from analyseMapReduceOutput import readReducerOutputs
 
-#To create a data visualisation of the matched reads against the genome in a text file:
+#This function creates a data visualisation of the matched reads against the genome in a text file.
 def visualisationText(genome, readsOffsets, outputFile):
     readsOffsets.sort()                     #sort list
     readsOffsets = sum(readsOffsets, [])    #flatten list
-    offsetsCount = collections.Counter(readsOffsets) #record count of each offset => length of match
+    offsetsCount = Counter(readsOffsets) #record count of each offset => length of match
     file = open(outputFile, 'w')
     for i in range(len(genome)):
         if offsetsCount[i] != 0:
@@ -24,11 +28,11 @@ def visualisationText(genome, readsOffsets, outputFile):
     file.close()
     return outputFile
   
-#To create a data visualisation of the matched reads against the genome in a jpg file:
+#This function creates a data visualisation of the matched reads against the genome in a jpg file.
 def visualisationJPG(genome, readsOffsets, outputFile):
     readsOffsets.sort()                     #sort list
     readsOffsets = sum(readsOffsets, [])    #flatten list
-    offsetsCount = collections.Counter(readsOffsets) #record count of each offset => length of match
+    offsetsCount = Counter(readsOffsets) #record count of each offset => length of match
     img = Image.new('RGBA', (len(genome), 2500), (255, 255, 255, 0)) 
     draw = ImageDraw.Draw(img)
     draw.line(((0, 10), (len(genome), 10)), fill='blue', width=5)
@@ -41,11 +45,12 @@ def visualisationJPG(genome, readsOffsets, outputFile):
             j += 10
     img.save(outputFile, 'JPEG', quality=80, optimize=True, progressive=True)
     return outputFile
-    
+
+#This function creates a data visualisation of the matched reads against the genome using 'GenomeDiagram'.    
 def visualisationGD(genome, readsOffsets, outputFile):
     readsOffsets.sort()                     #sort list
     readsOffsets = sum(readsOffsets, [])    #flatten list
-    offsetsCount = collections.Counter(readsOffsets) #record count of each offset => length of match
+    offsetsCount = Counter(readsOffsets) #record count of each offset => length of match
     dia = GenomeDiagram.Diagram(outputFile)
     featuresTrack = dia.new_track(1, greytrack=False)
     featuresSet = featuresTrack.new_set()
@@ -58,10 +63,11 @@ def visualisationGD(genome, readsOffsets, outputFile):
     dia.write(outputFile, "PNG")
     return outputFile  
 
+#This function creates a data visualisation of the matched reads against the genome using Tkinter.
 def visualisationTkinter(genome, readsOffsets):
     readsOffsets.sort()                     #sort list
     #readsOffsets = sum(readsOffsets, [])    #flatten list
-    offsetsCount = collections.Counter(readsOffsets) #record count of each offset => length of match
+    offsetsCount = Counter(readsOffsets) #record count of each offset => length of match
     window = Tkinter.Tk()
     canvas = Tkinter.Canvas(window, bg='white', width=len(genome), height=500)
     
@@ -79,4 +85,20 @@ def visualisationTkinter(genome, readsOffsets):
             j += 5
     canvas.pack()
     window.mainloop()
+
+#This function visualises the MapReduce output results using the Tkinter function defined above.   
+def visualise(binaryGenomeFile, mapReduceResultFiles):
+    with open(binaryGenomeFile , 'rb') as f:
+        decodedGenome = np.fromfile(f, dtype=np.int)
+        data = readReducerOutputs(mapReduceResultFiles)
+
+        offsets = []
+        for currentOffset, group in groupby(data, itemgetter(0)):
+            try:
+                for offset, count, rq in group:	
+                    offsets.append(int(offset))
+            except ValueError:
+                pass      
+    
+        visualisationTkinter(decodedGenome, offsets)
     

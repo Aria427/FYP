@@ -14,16 +14,10 @@ import fileCompressionAndParsing
 import alignmentHadoop
 #import analyseAlignment
 
+import analyseMapReduceOutput
 import visualisation
 
 from path import path
-import numpy as np
-import fileinput
-from glob import glob
-from itertools import groupby
-from operator import itemgetter
-from collections import defaultdict
-
 import gzip
 import sys
 #import pdb
@@ -95,27 +89,7 @@ offsets = [o for oset in offsets for o in oset] #flatten list
 print len(sorted(offsets, key=int))
 #print completeRQDict    
 """
-
-with open(binaryGenomeFile , 'rb') as f:
-      decodedGenome = np.fromfile(f, dtype=np.int)
-      
-#This function reads in the output from the reducers using a generator.
-def readReducerOutputs(files, separator='\t'):
-    fnames = glob(files)
-    for line in fileinput.input(fnames):
-        yield line.rstrip().split(separator, 3)
  
-resultFiles = path('Output Test Files\PhiXHamming-output\part-000**').abspath() #* for multiple files
-#resultFile = path('Output Test Files\PhiXHamming-output\part-00000').abspath()
-data = readReducerOutputs(resultFiles)
-
-offsets = []
-for currentOffset, group in groupby(data, itemgetter(0)):
-    try:
-        for offset, count, rq in group:	
-            offsets.append(int(offset))
-    except ValueError:
-        pass     
-print offsets    
-    
-visualisation.visualisationTkinter(decodedGenome, offsets)
+resultFiles = path('Output Test Files\PhiXHamming-output\part-000**').abspath() #* for multiple files    
+analyseMapReduceOutput.analyseMR(resultFiles)
+visualisation.visualise(binaryGenomeFile, resultFiles)
