@@ -13,6 +13,15 @@ def readGenomeEMR(s3FileUrl, bytesNum=100):
             pass #ignore header information
         data = firstLine + dataFile.read(bytesNum).rstrip().upper().replace('N', '').replace(' ', '')
         yield data
+
+def readGenome(s3File):
+    genome = ''
+    with smart_open.smart_open(s3File, 'r') as f: 
+        for line in f:
+            if line and line[0] != '>': #ignore header line with genome information
+                l = line.rstrip().upper().replace('N', '').replace(' ', '')
+                genome += l
+        return genome
                   
 #This function reads the sequencing reads as input to the mapper.        
 def readInputReads(file):
@@ -105,32 +114,31 @@ def alignHamming(read, quality, genome):
     
 def main():
     #hard-coded reference genome stored in S3 via Amazon EMR
-    genomeFile = 'https://s3.eu-central-1.amazonaws.com/fyp-input/HumanGenome.fa' 
-       
+    genomeFile = 's3://fyp-input.genome/HumanGenome.fa.gz' #Frankfurt region doesn't work, Ireland does
+    g = readGenome(genomeFile)   
     readSeq = readInputReads(sys.stdin) #Human reads=28,094,847
     
     #readsMatched, readsMismatched = 0, 0
     for read, quality in readSeq: 
         #Human genome=64,185,939 lines -> 3,273,481,150 bytes
-        genome = readGenomeEMR(genomeFile, 500000000) #500,000,000 bytes = 0.5GB
-        overlap = ''
+        #genome = readGenomeEMR(genomeFile, 500000000) #500,000,000 bytes = 0.5GB
+        #overlap = ''
         
-        for g in genome:
-            print g
-            g = overlap + g
-        #    offset, rqDict = alignHamming(read, quality, g)
+        #for g in genome:
+        #    g = overlap + g
+        offset, rqDict = alignHamming(read, quality, g)
             
             #write results to STDOUT (standard output)
-        #    for o in offset: #to remove empty list and '[' ']' characters
+        for o in offset: #to remove empty list and '[' ']' characters
                 #if o == '':
                 #    readsMismatched += 1
                 #else:
-                #tab-delimited, key:offset of match with reads, value:<default count of 1, read matched, corresponding quality> 
-        #        print '%s\t%s\t%s\t%s' % (o, 1, read, quality)   
+                #tab-delimited, key:offset of match with reads, value:<default count of 1, genome subsequence matched, read matched, corresponding quality> 
+                print '%s\t%s\t%s\t%s' % (o, 1, g[o:o+60], read, quality)
                     #readsMatched += 1
                 #The output here will be the input for the reduce step  
             
-            overlap = g[-100:] #100 for PhiX, 60 for Human   
+        #    overlap = g[-100:] #100 for PhiX, 60 for Human   
  
 if __name__ == '__main__':
     main()            
