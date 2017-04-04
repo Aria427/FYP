@@ -59,9 +59,34 @@ def readInputReads(file):
                 
                 yield sequenceNoNs, qualityNoNs
 
-#This function is also an online naive algorithm but for approximate matching using the Hamming distance.
-def naiveApproxHamming(pattern, text, maxHammingDist=1):
+#This function calculates the edit distance of a read against the genome.
+#Edit distance = minimum no of edits (substitutions, insertions, deletions) required to change one string into another.
+def editDistance(pattern, text): #pattern=read, text=genome
+    D = [] #distance matrix
+    
+    for i in xrange(len(pattern) + 1): #initialize D as x+1 by y+1 array of 0s 
+        D.append([0] * (len(text) + 1))
+    for i in xrange(len(pattern) + 1): #first row of ascending integers
+        D[i][0] = i
+    for i in xrange(len(text) + 1): #first column of ascending integers
+        D[0][i] = i
+    for i in xrange(1, len(pattern) + 1): #fill in rest of matrix row by row
+        for j in xrange(1, len(text) + 1):
+            distHorizontal = D[i][j-1] + 1
+            distVertical = D[i-1][j] + 1
+            if pattern[i-1] == text[j-1]:
+                distDiagonal = D[i-1][j-1]
+            else:
+                distDiagonal = D[i-1][j-1] + 1
+            D[i][j] = min(distHorizontal, distVertical, distDiagonal)
+    
+    return D[-1][-1] #edit distance = bottom-right                
+                
+#This function is a naive algorithm for approximate matching using the Edit distance.
+#Takes too long => inefficient.
+def naiveApproxEdit(pattern, text):
     matchOffsets = []
+    editDist = editDistance(pattern, text)
 
     #loop through every position from where P could start without running past the end of T 
     for i in xrange(len(text) - len(pattern) + 1): #loop over all possible alignments of P in T from left to right	 
@@ -70,13 +95,13 @@ def naiveApproxHamming(pattern, text, maxHammingDist=1):
             #i'th alignment and j'th character   
             if text[i+j] != pattern[j]: #mismatch
                 mismatches += 1  
-                if mismatches > maxHammingDist:   
+                if mismatches > editDist:   
                     break #exceeded maximum distance
                     
-        if mismatches <= maxHammingDist: #approximate match
+        if mismatches <= editDist: #approximate match
             matchOffsets.append(i)
             
-    return matchOffsets                 
+    return matchOffsets               
                 
 #This function finds the reverse complement of a sequencing read.   
 def reverseComplement(read):
@@ -94,21 +119,21 @@ def QtoPhred33(Q):
 def phred33ToQ(qual):
     return ord(qual) - 33 #converts character to integer according to ASCII table
 
-#This function aligns one read (with its corresponding quality) to the genome using the Hamming distance approximate matching method.
-def alignHamming(read, quality, genome):
+#This function aligns the reads to the genome using the Edit distance approximate matching method.
+def alignEdit(read, quality, genome):
     readQualityDictionary = {} #key:read, value:list of quality integers
 
-    #maximum Hamming distance = 2
     reverseRead = reverseComplement(read)
-    matchOffset = naiveApproxHamming(read, genome, 2) #check if read matches in forward direction of genome
-    matchOffset.extend(naiveApproxHamming(reverseRead, genome, 2)) #add results of any matches in reverse complement of genome
-
+    matchOffset = naiveApproxEdit(read, genome) #check if read matches in forward direction of genome
+    matchOffset.extend(naiveApproxEdit(reverseRead, genome)) #add results of any matches in reverse complement of genome
+        
     if len(list(matchOffset)) > 0: #match - read aligned in at least one place
         qualityQ = []
         for q in quality:
             qualityQ.append(phred33ToQ(q))
         readQualityDictionary[read] = qualityQ
-    return matchOffset, readQualityDictionary
+
+    return matchOffset, readQualityDictionary  
     
 def main():
     #hard-coded reference genome stored in S3 via Amazon EMR
@@ -125,7 +150,7 @@ def main():
         
         for g in genome:
             g = overlap + g
-            offset, rqDict = alignHamming(read, quality, g)
+            offset, rqDict = alignEdit(read, quality, g)
          
             #write results to STDOUT (standard output)
             for o in offset: #to remove empty list and '[' ']' characters
@@ -134,8 +159,7 @@ def main():
                 #The output here will be the input for the reduce step  
             
             overlap = g[-99:] #100-1 for PhiX, 60-1 for Human read => -1 as last 60 have already been read
-            filesOffset += (len(g)-100) #store offset according to overlap as file is read in chunks
-
-
+            filesOffset += (len(g)-100) #store offset according to overlap as file is read in chunks  
+ 
 if __name__ == '__main__':
     main()            

@@ -5,21 +5,25 @@ import alignmentHadoop
 import sys
 import smart_open #Add bootstrap action to s3://fyp-input/installPythonModules.sh
 
-#This function reads the genome in chunks (groups of lines).
-def readGenome(file, lines=100):  
-    with open(file, 'r') as f:
-        firstLine = f.readline()
-        if firstLine.startswith('>'):
-            firstLine = ''
-            pass #ignore header information
-        while True:
-            data = firstLine + ''.join(f.next().rstrip().upper().replace('N', '').replace(' ', '') for x in xrange(lines))
-            if not data:
-                break
-            yield data
-            firstLine = '' #first line in file is only needed for first iteration if not header             
-
 #This function reads the genome in chunks (groups of bytes) from the file stored in S3.
+def readGenomeChunks(s3File, bytesNum=100):
+    with gzip.open(s3File, 'r') as f:
+        f.readline()
+        for chunk in iter(lambda: f.read(bytesNum), ''):
+            data = chunk.rstrip().upper().replace('N', '').replace('\n', '').replace(' ', '')
+            yield data          
+
+#This function reads the whole genome from the file stored in S3.
+def readGenome(s3File):
+    genome = ''
+    with gzip.open(s3File, 'r') as f: 
+        for line in f:
+            if line and line[0] != '>': #ignore header line with genome information
+                l = line.rstrip().upper().replace('N', '').replace(' ', '')
+                genome += l
+        return genome
+
+#This function reads the genome in chunks (groups of bytes) from the file stored in S3 using smart_open.
 def readGenomeEMR(s3FileUrl, bytesNum=100):
     with smart_open.smart_open(s3FileUrl, 'r') as dataFile:
         firstLine = dataFile.readline()

@@ -3,6 +3,7 @@
 
 import sys
 import gzip
+import bisect
 
 #This function reads the genome in chunks (groups of bytes) from the file stored in S3.
 def readGenomeChunks(s3File, bytesNum=100):
@@ -59,24 +60,67 @@ def readInputReads(file):
                 
                 yield sequenceNoNs, qualityNoNs
 
-#This function is also an online naive algorithm but for approximate matching using the Hamming distance.
-def naiveApproxHamming(pattern, text, maxHammingDist=1):
-    matchOffsets = []
+#This class is an index object which is applied for k-mer indexing. 
+class KmerIndex(object):
+    #This function initialises the k-mer object to be used by pre-processing text T.
+    def __init__(self, text, k): #initialise index from all k-mer length substrings
+        self.k = k  #k-mer length
+        self.index = []
 
-    #loop through every position from where P could start without running past the end of T 
-    for i in xrange(len(text) - len(pattern) + 1): #loop over all possible alignments of P in T from left to right	 
-        mismatches = 0
-        for j in xrange(len(pattern)): #loop over characters in P from left to right
-            #i'th alignment and j'th character   
-            if text[i+j] != pattern[j]: #mismatch
-                mismatches += 1  
-                if mismatches > maxHammingDist:   
-                    break #exceeded maximum distance
-                    
-        if mismatches <= maxHammingDist: #approximate match
-            matchOffsets.append(i)
+        for i in xrange(len(text) - k + 1): #for each index such that k-mer doesn't run past end of T
+            self.index.append((text[i:i+k], i)) #add (k-mer, offset) tuple
+        self.index.sort()  #sort in ascending order according to k-mer
+    
+    #This function finds the number of index hits for first k-mer of pattern P
+    def query(self, pattern): 
+        kmer = pattern[:self.k]  #query with first k-mer
+        i = bisect.bisect_left(self.index, (kmer, -1)) #binary search for 1st position in list where k-mer occurs
+        indexHits = [] #all indices in T where the first k bases of P match
+        
+        while i < len(self.index): #collect matching index entries
+            if self.index[i][0] != kmer:
+                break
+            indexHits.append(self.index[i][1]) #append 2nd value of tuple
+            i += 1
             
-    return matchOffsets                 
+        return indexHits
+ 
+#This function implements approximate matching on k-mer indexing using the pigeonhole principle. 
+def kmerIndexApproximate(pattern, text, n, indexObject): #n = max number of mismatches
+    segmentLength = int(round(len(pattern) / (n+1))) #n+1 segments where at least 1 must match perfectly against T
+    allMatches = set() #all the indices where matches where found
+    indexHits = 0
+    
+    for i in range(n+1): #for each segment in P
+        #bounds of P for segment being searched
+        start = i*segmentLength
+        end = min((i+1)*segmentLength, len(pattern)) #min() to not run past end of P
+        
+        matches = indexObject.query(pattern[start:end])
+        indexHits += 1
+        
+        #step through each match position to make sure rest of P matches T with no more than n mismatches
+        for m in matches:
+            if m < start or m-start+len(pattern) > len(text):
+                continue #P runs off the start or end of T
+            
+            mismatches = 0
+            for j in range(0, start): #compare segment of P before start against corresponding positions in T
+                if not pattern[j] == text[m-start+j]:
+                    mismatches += 1
+                    if mismatches > n: #exceeds maximum
+                        break
+                    
+            for j in range(end, len(pattern)): #compare suffix after segment
+                if not pattern[j] == text[m-start+j]:
+                    mismatches += 1
+                    if mismatches > n:
+                        break
+                    
+            if mismatches <= n:
+                allMatches.add(m - start) #add start position of match
+                
+    return list(allMatches)                   
                 
 #This function finds the reverse complement of a sequencing read.   
 def reverseComplement(read):
@@ -94,20 +138,23 @@ def QtoPhred33(Q):
 def phred33ToQ(qual):
     return ord(qual) - 33 #converts character to integer according to ASCII table
 
-#This function aligns one read (with its corresponding quality) to the genome using the Hamming distance approximate matching method.
-def alignHamming(read, quality, genome):
+#This function aligns the reads to the genome using the k-mer approximate indexing method.
+def alignKmer(read, quality, genome):
     readQualityDictionary = {} #key:read, value:list of quality integers
 
-    #maximum Hamming distance = 2
+    index = KmerIndex(genome, 10) #k-mer of length 10
+    
+    #maximum number of mismatches = 2
     reverseRead = reverseComplement(read)
-    matchOffset = naiveApproxHamming(read, genome, 2) #check if read matches in forward direction of genome
-    matchOffset.extend(naiveApproxHamming(reverseRead, genome, 2)) #add results of any matches in reverse complement of genome
-
+    matchOffset = kmerIndexApproximate(read, genome, 2, index) #check if read matches in forward direction of genome
+    matchOffset.extend(kmerIndexApproximate(reverseRead, genome, 2, index)) #add results of any matches in reverse complement of genome
+        
     if len(list(matchOffset)) > 0: #match - read aligned in at least one place
         qualityQ = []
         for q in quality:
             qualityQ.append(phred33ToQ(q))
         readQualityDictionary[read] = qualityQ
+     
     return matchOffset, readQualityDictionary
     
 def main():
@@ -125,7 +172,7 @@ def main():
         
         for g in genome:
             g = overlap + g
-            offset, rqDict = alignHamming(read, quality, g)
+            offset, rqDict = alignKmer(read, quality, g)
          
             #write results to STDOUT (standard output)
             for o in offset: #to remove empty list and '[' ']' characters
@@ -134,8 +181,7 @@ def main():
                 #The output here will be the input for the reduce step  
             
             overlap = g[-99:] #100-1 for PhiX, 60-1 for Human read => -1 as last 60 have already been read
-            filesOffset += (len(g)-100) #store offset according to overlap as file is read in chunks
-
-
+            filesOffset += (len(g)-100) #store offset according to overlap as file is read in chunks  
+ 
 if __name__ == '__main__':
     main()            
