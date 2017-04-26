@@ -49,6 +49,7 @@ def reverseComplement(read):
         reverseRead = complement[base] + reverseRead #complement added to beginning in order to reverse the read from end to start
     return reverseRead
 
+"""
 readsFile = path('Data\HumanSequencingReads.tsv').abspath() 
 optimisedFile = path('Output Data\HumanReads.tsv').abspath()
 
@@ -56,11 +57,33 @@ readSeq = readInputReads(readsFile) #Human reads=28,094,847
 
 with open(optimisedFile, 'w') as f:    
     for read, quality in readSeq: 
-        #ignore flag as not used
+        #ignore flag and N's as not used
         f.write( '%s\t%s\n' % (read, quality) )
+        print read
         reverseRead = reverseComplement(read)
         f.write( '%s\t%s\n' % (reverseRead, quality) )
-        
+"""       
+#This function reads and outputs the sequencing reads one by one after optimisation.      
+def readOptimisedReads(optimisedReadsFile):
+    sequence, quality = '', ''
+    with open(optimisedReadsFile, 'r') as file:
+        while True: #runs until EOF
+            line = file.readline() 
+            if not line: #reached EOF
+                break
+            
+            line = line.split()
+            sequence = line[0]
+            quality = line[1]
+
+            yield sequence, quality
+
+optimisedFile = path('Output Data\HumanReads.tsv').abspath()            
+optReadSeq = readOptimisedReads(optimisedFile)   
+ 
+with open(optimisedFile, 'r') as f:    
+    for read, quality in optReadSeq:   
+        print read, quality
         
         
     
