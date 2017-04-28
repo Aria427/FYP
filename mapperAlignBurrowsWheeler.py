@@ -260,12 +260,8 @@ def burrowsWheelerApproximate(bw, bwr, pattern, maxMismatches):
     return sorted(indexDict.items(), key=itemgetter(1), reverse=True) #sort by maxMismtaches in descending order                  
 
 #This function aligns the reads to the genome using the Burrows Wheeler approximate algorithm.
-def alignBurrowsWheeler(read, quality, genome):
+def alignBurrowsWheeler(read, quality, bw, bwr):
     readQualityDictionary = {} #key:read, value:list of quality integers
-    
-    #sa = bwa.suffixArray(genome)
-    bw = bwt(genome) 
-    bwr = bwt(genome[::-1]) 
     
     #maximum number of mismatches = 5
     matchOffset = burrowsWheelerApproximate(bw, bwr, read, 5) #check if read matches in forward/backward direction of genome
@@ -277,12 +273,17 @@ def alignBurrowsWheeler(read, quality, genome):
     
 def main():
     genomeFile = '/home/aria427/test/data/HumanGenome_Part100Update.gz' #-cacheArchive s3://fyp-input/HumanGenome.fa.gz#human  
+    preprocGenome = '/home/aria427/test/preprocessed/BurrowsWheelerGenome'
+    
     genome = readGenome(genomeFile)
     readSeq = readOptimisedReads(sys.stdin) #Human reads=28,094,847
     
+    f = open(preprocGenome, 'r')
+    bw, bwr = f.read().rstrip().split('\n', 1)
+    
     for read, quality in readSeq:
-	#Human genome=64,185,939 lines -> 3,273,481,150 bytes
-	offset, rqDict = alignBurrowsWheeler(read, quality, genome)
+        #Human genome=64,185,939 lines -> 3,273,481,150 bytes
+        offset, rqDict = alignBurrowsWheeler(read, quality, bw, bwr)
          
         #write results to STDOUT (standard output)
         for o in offset: #to remove empty list and '[' ']' characters
@@ -290,6 +291,7 @@ def main():
             print '%s\t%s\t%s\t%s\t%s' % (o[0], 1, genome[o[0]:o[0]+len(read)], read, quality) #[0] as output is tuple (offset, maxMismatches)
 	    #The output here will be the input for the reduce step
         
+    f.close()
         
 if __name__ == '__main__':
     main() 

@@ -4,6 +4,7 @@
 import sys
 import gzip
 import bisect
+import pickle
 
 #This function reads the genome in chunks.
 def readGenomeChunks(s3File, bytesNum=100):
@@ -100,11 +101,10 @@ def kmerIndexApproximate(pattern, text, n, indexObject): #n = max number of mism
     return list(allMatches)                                
 
 #This function aligns the reads to the genome using the k-mer approximate indexing method.
-def alignKmer(read, quality, genome):
+def alignKmer(read, quality, genome, index):
     readQualityDictionary = {} #key:read, value:list of quality integers
 
-    index = KmerIndex(genome, 10) #k-mer of length 10
-    
+    #k-mer of length 10
     #maximum number of mismatches = 5
     matchOffset = kmerIndexApproximate(read, genome, 5, index) #check if read matches in forward/backward direction of genome
         
@@ -115,19 +115,26 @@ def alignKmer(read, quality, genome):
     
 def main():
     genomeFile = '/home/aria427/test/data/HumanGenome_Part100Update.gz' #-cacheArchive s3://fyp-input/HumanGenome.fa.gz#human  
+    preprocGenome = '/home/aria427/test/preprocessed/KmerIndexGenome'
+    
     genome = readGenome(genomeFile)
     readSeq = readOptimisedReads(sys.stdin) #Human reads=28,094,847
     
+    f = open(preprocGenome, 'r')
+    index = pickle.load(f)
+
     for read, quality in readSeq:
-	#Human genome=64,185,939 lines -> 3,273,481,150 bytes
-	offset, rqDict = alignKmer(read, quality, genome)
+        #Human genome=64,185,939 lines -> 3,273,481,150 bytes
+        offset, rqDict = alignKmer(read, quality, genome, index)
          
         #write results to STDOUT (standard output)
         for o in offset: #to remove empty list and '[' ']' characters
             #tab-delimited, key:offset of match with reads, value:<default count of 1, genome subsequence matched, read matched, corresponding quality> 
             print '%s\t%s\t%s\t%s\t%s' % (o, 1, genome[o:o+len(read)], read, quality) 
             #The output here will be the input for the reduce step 
- 
+        
+    f.close()
+            
 if __name__ == '__main__':
     main() 
     
