@@ -3,7 +3,8 @@
 
 from path import path
 import mapperAlignBoyerMoore as bm
-                  
+import pickle
+
 #This function reads the sequencing reads after optimisation as input to the mapper.      
 def readOptimisedReads(readsFile):
     sequence, quality = '', ''
@@ -19,9 +20,7 @@ def readOptimisedReads(readsFile):
     
             yield sequence, quality
 
-genomeFile = path('Data/HumanGenome_Part100Update.gz').abspath()
 readsFile = path('Data/HumanReads_100').abspath()
-genome = bm.readGenome(genomeFile)
 readSeq = readOptimisedReads(readsFile)
 
 preprocFile = path('Preprocessed/BoyerMooreReads').abspath()
@@ -36,4 +35,6 @@ with open(preprocFile, 'w') as f:
             end = min((i+1)*segmentLength, len(read)) 
             
             bmObject = bm.BoyerMoore(read[start:end], alphabet='ACGT') #does preprocessing of Boyer-Moore
-            f.write(bmObject + '\n')
+            pickle.dump(bmObject, f) #write object to file
+           
+#Not sure if this is needed yet!            

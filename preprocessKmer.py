@@ -3,12 +3,16 @@
 
 from path import path
 import mapperAlignKmerIndex as kmer
+import pickle
 
-genomeFile = path('Data/HumanGenome_Part100Update.gz').abspath()
+genomeFile = path('Data/PhiXGenome.fa.gz').abspath()
 genome = kmer.readGenome(genomeFile)
 
 preprocFile = path('Preprocessed/KmerIndexGenome').abspath()
 with open(preprocFile, 'w') as f:
     index = kmer.KmerIndex(genome, 10)
-    f.write(index)
+    pickle.dump(index, f)
+    
+with open(preprocFile, 'r') as f:
+    index = pickle.load(f)    
     
