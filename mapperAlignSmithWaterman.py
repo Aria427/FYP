@@ -8,14 +8,15 @@ GAP = 1
 MISMATCH = 1
 MATCH = 0
 
-#This function reads the genome in chunks (groups of bytes) from the file stored in S3.
+#This function reads the genome in chunks.
 def readGenomeChunks(s3File, bytesNum=100):
     with gzip.open(s3File, 'r') as f:
-        f.readline()
+        f.readline() #ignore header line with genome information
         for chunk in iter(lambda: f.read(bytesNum), ''):
             data = chunk.rstrip().upper().replace('N', '').replace('\n', '').replace(' ', '')
             yield data
 
+#This function reads the whole genome from the file.
 def readGenome(s3File):
     genome = ''
     with gzip.open(s3File, 'r') as f: 
@@ -25,43 +26,19 @@ def readGenome(s3File):
                 genome += l
         return genome
                   
-#This function reads the sequencing reads as input to the mapper.        
-def readInputReads(file):
-    flag, sequence, quality = '', '', ''
+#This function reads the sequencing reads after optimisation as input to the mapper.      
+def readOptimisedReads(file):
+    sequence, quality = '', ''
     while True: #runs until EOF
-        line = file.readline() 
+    	line = file.readline() 
         if not line: #reached EOF
-            break
-        
-        if line.startswith('#'): #read details
-            line = file.readline()
-            pass
-        
-        elif line.startswith('>'): #>flags reads scores
-            line = file.readline()
-            pass
-        
-        else:
-            line = line.split()
-            flag = line[0]
-            sequence = line[1]
-            quality = line[2]
+             break
             
-            #Each read has length = 60
-            if sequence == 'NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN':
-                line = file.readline()
-                pass
-            
-            else:
-                qualityNoNs = ''
-                N = [pos for pos, char in enumerate(sequence) if char == 'N'] #positions of N in read
-                sequenceNoNs = sequence.rstrip().upper().replace('N', '').replace(' ', '') 
-                
-                for i in range(len(quality)):
-                    if i not in N: #remove indices corresponding to Ns in read
-                        qualityNoNs = qualityNoNs + quality[i]
-                
-                yield sequenceNoNs, qualityNoNs
+        line = line.split()
+        sequence = line[0]
+        quality = line[1]
+
+        yield sequence, quality
 
 #This function creates a score matrix of trial alignments of the two sequences.
 def scoreMatrix(seq1, seq2):
@@ -189,22 +166,6 @@ def smithWatermanApproximate(text, pattern, maxMismatches):
             smithWatermanApproximateString(text, pattern, maxMismatches)
     
     return matchOffsets               
-                
-#This function finds the reverse complement of a sequencing read.   
-def reverseComplement(read):
-    complement = {'A':'T', 'T':'A', 'C':'G', 'G':'C', 'N':'N'} #each base is associated with its complementary base
-    reverseRead = ''
-    for base in read:
-        reverseRead = complement[base] + reverseRead #complement added to beginning in order to reverse the read from end to start
-    return reverseRead
-
-#This function takes the quality value Q (rounded integer) and converts it to its respective character. 
-def QtoPhred33(Q):
-    return chr(Q + 33) #converts integer to character according to ASCII table
-
-#This function takes the Phred-33 encoded character and converts it back to Q.  
-def phred33ToQ(qual):
-    return ord(qual) - 33 #converts character to integer according to ASCII table
 
 #This function aligns the reads to the genome using the Smith Waterman local alignment algorithm.
 def alignSmithWaterman(read, quality, genome):
@@ -214,47 +175,30 @@ def alignSmithWaterman(read, quality, genome):
     read1 = read[:50] #first 50 characters 
     read2 = read[50:] #last 50 characters
 
-    #maximum number of mismatches = 2
-    reverseRead1 = reverseComplement(read1)
-    matchOffset = smithWatermanApproximate(genome, read1, 2) #check if read matches in forward direction of genome
-    matchOffset.extend(smithWatermanApproximate(genome, reverseRead1, 2)) #add results of any matches in reverse complement of genome
-    reverseRead2 = reverseComplement(read2)
-    matchOffset = smithWatermanApproximate(genome, read2, 2) #check if read matches in forward direction of genome
-    matchOffset.extend(smithWatermanApproximate(genome, reverseRead2, 2))       
-
+    #maximum number of mismatches = 5
+    matchOffset = smithWatermanApproximate(genome, read1, 5) #check if read matches in forward/backward direction of genome
+    matchOffset = smithWatermanApproximate(genome, read2, 2) #check if read matches in forward/backward direction of genome
+  
     if len(list(matchOffset)) > 0: #match - read aligned in at least one place
-        qualityQ = []
-        for q in quality:
-            qualityQ.append(phred33ToQ(q))
-        readQualityDictionary[read] = qualityQ
+        readQualityDictionary[read] = quality
 
     return matchOffset, readQualityDictionary 
     
 def main():
-    #hard-coded reference genome stored in S3 via Amazon EMR
-    #genomeFile = 's3://fyp-input-gen/HumanGenome_200000.fa.gz' #Frankfurt region doesn't work, Ireland does
-    genomeFile = './human' #-cacheArchive s3://fyp-input/HumanGenome.fa.gz#human
-    #g = readGenome(genomeFile)   
-    readSeq = readInputReads(sys.stdin) #Human reads=28,094,847
+    genomeFile = '/home/aria427/test/data/HumanGenome_Part100Update.gz' #-cacheArchive s3://fyp-input/HumanGenome.fa.gz#human  
+    genome = readGenome(genomeFile)
+    readSeq = readOptimisedReads(sys.stdin) #Human reads=28,094,847
     
-    for read, quality in readSeq: 
-        #Human genome=64,185,939 lines -> 3,273,481,150 bytes
-        genome = readGenomeChunks(genomeFile, 250000) #250,000 bytes = 0.23842MB
-        overlap = '' #size of read-1
-        filesOffset = 0 #file is split in chunks so offset needs to change according to chunk
-        
-        for g in genome:
-            g = overlap + g
-            offset, rqDict = alignSmithWaterman(read, quality, g)
+    for read, quality in readSeq:
+	#Human genome=64,185,939 lines -> 3,273,481,150 bytes
+	offset, rqDict = alignSmithWaterman(read, quality, genome)
          
-            #write results to STDOUT (standard output)
-            for o in offset: #to remove empty list and '[' ']' characters
-                #tab-delimited, key:offset of match with reads, value:<default count of 1, genome subsequence matched, read matched, corresponding quality> 
-                print '%s\t%s\t%s\t%s\t%s' % (o+filesOffset, 1, g[o:o+len(read)], read, quality) 
-                #The output here will be the input for the reduce step  
-            
-            overlap = g[-99:] #100-1 for PhiX, 60-1 for Human read => -1 as last 60 have already been read
-            filesOffset += (len(g)-100) #store offset according to overlap as file is read in chunks  
+        #write results to STDOUT (standard output)
+        for o in offset: #to remove empty list and '[' ']' characters
+            #tab-delimited, key:offset of match with reads, value:<default count of 1, genome subsequence matched, read matched, corresponding quality> 
+            print '%s\t%s\t%s\t%s\t%s' % (o, 1, genome[o:o+len(read)], read, quality) 
+            #The output here will be the input for the reduce step  
  
 if __name__ == '__main__':
-    main()            
+    main() 
+    

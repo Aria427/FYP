@@ -18,15 +18,15 @@ MATCH = 0
 
 prunes = 0
 
-#This function reads the genome in chunks (groups of bytes) from the file stored in S3.
+#This function reads the genome in chunks.
 def readGenomeChunks(s3File, bytesNum=100):
     with gzip.open(s3File, 'r') as f:
-        f.readline()
+        f.readline() #ignore header line with genome information
         for chunk in iter(lambda: f.read(bytesNum), ''):
             data = chunk.rstrip().upper().replace('N', '').replace('\n', '').replace(' ', '')
             yield data
 
-#This function reads the whole genome from the file stored in S3.
+#This function reads the whole genome from the file.
 def readGenome(s3File):
     genome = ''
     with gzip.open(s3File, 'r') as f: 
@@ -35,44 +35,68 @@ def readGenome(s3File):
                 l = line.rstrip().upper().replace('N', '').replace(' ', '')
                 genome += l
         return genome
-                  
-#This function reads the sequencing reads as input to the mapper.        
-def readInputReads(file):
-    flag, sequence, quality = '', '', ''
+
+#This function reads the sequencing reads after optimisation as input to the mapper.      
+def readOptimisedReads(file):
+    sequence, quality = '', ''
+    while True: #runs until EOF
+    	line = file.readline() 
+        if not line: #reached EOF
+             break
+            
+        line = line.split()
+        sequence = line[0]
+        quality = line[1]
+
+        yield sequence, quality
+
+def readInputPhiXReads(file):  
+    readID, sequence, quality = '', '', ''    
     while True: #runs until EOF
         line = file.readline() 
         if not line: #reached EOF
             break
+
+        if line.startswith('@'): #first line of read/record
+            #reset to default values
+            readID = line.rstrip()
+            sequence = ''
+            quality = ''   
+
+        elif not readID: #if no previous line starts with @
+            readID = line.rstrip() #get first ID
+            continue
         
-        if line.startswith('#'): #read details
-            line = file.readline()
-            pass
-        
-        elif line.startswith('>'): #>flags reads scores
-            line = file.readline()
-            pass
-        
-        else:
-            line = line.split()
-            flag = line[0]
-            sequence = line[1]
-            quality = line[2]
-            
-            #Each read has length = 60
-            if sequence == 'NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN':
-                line = file.readline()
-                pass
-            
-            else:
-                qualityNoNs = ''
+        elif not sequence or not quality:
+            sequenceLines = [] 
+            while not line.startswith('+'): #not placeholder line (third line)
+                #rstrip() - removes leading/trailing whitespace
+                #replace() - removes whitespace from within string
                 N = [pos for pos, char in enumerate(sequence) if char == 'N'] #positions of N in read
-                sequenceNoNs = sequence.rstrip().upper().replace('N', '').replace(' ', '') 
+                line = line.rstrip().upper().replace(' ', '')
+                sequenceLines.append(line) #no whitespace in string sequence
+                line = file.readline()
+            sequence = ''.join(sequenceLines) #merge lines to form original sequence
+            sequenceNoNs = sequence.replace('N', '') #remove Ns
+            temp = sequenceNoNs
+        
+            qualityLines = []
+            qualityNoNs = ''
+            
+            while True: #collect base qualities
+                line = line.rstrip().replace(' ', '')
+                qualityLines.append(line) 
+                quality = ''.join(qualityLines) #merge lines to form quality
+                if len(quality) >= len(sequence): #bases and qualities line up
+                    break
+                else:
+                    line = file.readline()
+            
+            for i in range(len(quality)): 
+                if i not in N: #remove indices corresponding to Ns in read
+                    qualityNoNs = qualityNoNs + quality[i]
                 
-                for i in range(len(quality)):
-                    if i not in N: #remove indices corresponding to Ns in read
-                        qualityNoNs = qualityNoNs + quality[i]
-                
-                yield sequenceNoNs, qualityNoNs
+            yield temp, qualityNoNs
 
 #This function generates the suffix array for some text.
 #It implements the algorithm of Vladu and Negruseri:
@@ -234,22 +258,6 @@ def burrowsWheelerApproximate(bw, bwr, pattern, maxMismatches):
             indexDict[i] = j
 
     return sorted(indexDict.items(), key=itemgetter(1), reverse=True) #sort by maxMismtaches in descending order                  
-                
-#This function finds the reverse complement of a sequencing read.   
-def reverseComplement(read):
-    complement = {'A':'T', 'T':'A', 'C':'G', 'G':'C', 'N':'N'} #each base is associated with its complementary base
-    reverseRead = ''
-    for base in read:
-        reverseRead = complement[base] + reverseRead #complement added to beginning in order to reverse the read from end to start
-    return reverseRead
-
-#This function takes the quality value Q (rounded integer) and converts it to its respective character. 
-def QtoPhred33(Q):
-    return chr(Q + 33) #converts integer to character according to ASCII table
-
-#This function takes the Phred-33 encoded character and converts it back to Q.  
-def phred33ToQ(qual):
-    return ord(qual) - 33 #converts character to integer according to ASCII table
 
 #This function aligns the reads to the genome using the Burrows Wheeler approximate algorithm.
 def alignBurrowsWheeler(read, quality, genome):
@@ -259,46 +267,30 @@ def alignBurrowsWheeler(read, quality, genome):
     bw = bwt(genome) 
     bwr = bwt(genome[::-1]) 
     
-    #maximum number of mismatches = 2
-    reverseRead = reverseComplement(read)
-    matchOffset = burrowsWheelerApproximate(bw, bwr, read, 2) #check if read matches in forward direction of genome
-    matchOffset.extend(burrowsWheelerApproximate(bw, bwr, reverseRead, 2)) #add results of any matches in reverse complement of genome
+    #maximum number of mismatches = 5
+    matchOffset = burrowsWheelerApproximate(bw, bwr, read, 5) #check if read matches in forward/backward direction of genome
         
     if len(list(matchOffset)) > 0: #match - read aligned in at least one place
-        qualityQ = []
-        for q in quality:
-            qualityQ.append(phred33ToQ(q))
-        readQualityDictionary[read] = qualityQ
+        readQualityDictionary[read] = quality
         
     return matchOffset, readQualityDictionary
     
 def main():
-    #hard-coded reference genome stored in S3 via Amazon EMR
-    #genomeFile = 's3://fyp-input-gen/HumanGenome_200000.fa.gz' #Frankfurt region doesn't work, Ireland does
-    genomeFile = './human' #-cacheArchive s3://fyp-input/HumanGenome.fa.gz#human
-    #g = readGenome(genomeFile)   
-    readSeq = readInputReads(sys.stdin) #Human reads=28,094,847
+    genomeFile = '/home/aria427/test/data/HumanGenome_Part100Update.gz' #-cacheArchive s3://fyp-input/HumanGenome.fa.gz#human  
+    genome = readGenome(genomeFile)
+    readSeq = readOptimisedReads(sys.stdin) #Human reads=28,094,847
     
-    for read, quality in readSeq: 
-        #Human genome=64,185,939 lines -> 3,273,481,150 bytes
-        genome = readGenomeChunks(genomeFile, 250000) #250,000 bytes = 0.23842MB
-        overlap = '' #size of read-1
-        filesOffset = 0 #file is split in chunks so offset needs to change according to chunk
-        
-        for g in genome:
-            g = overlap + g
-            offset, rqDict = alignBurrowsWheeler(read, quality, g)
+    for read, quality in readSeq:
+	#Human genome=64,185,939 lines -> 3,273,481,150 bytes
+	offset, rqDict = alignBurrowsWheeler(read, quality, genome)
          
-            #write results to STDOUT (standard output)
-            for o in offset: #to remove empty list and '[' ']' characters
-                #tab-delimited, key:offset of match with reads, value:<default count of 1, genome subsequence matched, read matched, corresponding quality> 
-                print '%s\t%s\t%s\t%s\t%s' % (o[0]+filesOffset, 1, g[o[0]:o[0]+len(read)], read, quality) #[0] as output is tuple (offset, maxMismatches)
-                #The output here will be the input for the reduce step  
-            
-            overlap = g[-99:] #100-1 for PhiX, 60-1 for Human read => -1 as last 60 have already been read
-            filesOffset += (len(g)-100) #store offset according to overlap as file is read in chunks
-
+        #write results to STDOUT (standard output)
+        for o in offset: #to remove empty list and '[' ']' characters
+            #tab-delimited, key:offset of match with reads, value:<default count of 1, genome subsequence matched, read matched, corresponding quality> 
+            print '%s\t%s\t%s\t%s\t%s' % (o[0], 1, genome[o[0]:o[0]+len(read)], read, quality) #[0] as output is tuple (offset, maxMismatches)
+	    #The output here will be the input for the reduce step
+        
         
 if __name__ == '__main__':
-    main()            
-   
+    main() 
+    
