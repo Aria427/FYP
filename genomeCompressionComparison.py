@@ -3,6 +3,7 @@
 
 import matplotlib.pyplot as plt
 from collections import OrderedDict
+from path import path
 
 #This function generates a histogram of the different human genome sizes, before and after compression.
 def compressionComparison(output):
@@ -13,10 +14,10 @@ def compressionComparison(output):
     longSize = 1810 #1951564944  #fileParsing.parseGenomeLong()
     
     dictionary = {u'Unzipped': unzippedSize, 
-                  u'GZIP Compression': gzipSize,  
-                  u'LZW Compression': lzwSize,
-                  u'Int Compression': intSize, 
-                  u'Long Compression': longSize} #key:value
+                  u'GZIP': gzipSize,  
+                  u'LZW': lzwSize,
+                  u'Int': intSize, 
+                  u'Long': longSize} #key:value
     
     #sort dictionary sizes in descending order
     dictionary = OrderedDict(sorted(dictionary.items(), key=lambda x: x[1], reverse=True))
@@ -24,7 +25,12 @@ def compressionComparison(output):
     plt.bar(range(len(dictionary)), dictionary.values(), align='center', color='purple')
     plt.title('Bar Chart of Human Genome Compression Sizes')
     plt.xticks(range(len(dictionary)), dictionary.keys(), rotation=45)
+    plt.xlabel('Compression Methods')
     plt.ylabel('Size / MB')
     plt.tight_layout() #ensures whole plot is saved to file
     plt.savefig(output)
     plt.show()
+    
+outputFile = path('Documentation/genComp.png').abspath()
+compressionComparison(outputFile)
+    

@@ -12,10 +12,10 @@ def compressionComparison(output):
     intTime = 30.38
     longTime = 29.58
     
-    dictionary = {u'GZIP Compression': gzipTime,  
-                  u'LZW Compression': lzwTime,
-                  u'Int Compression': intTime, 
-                  u'Long Compression': longTime} #key:value
+    dictionary = {u'GZIP': gzipTime,  
+                  u'LZW': lzwTime,
+                  u'Int': intTime, 
+                  u'Long': longTime} #key:value
     
     #sort dictionary sizes in descending order
     dictionary = OrderedDict(sorted(dictionary.items(), key=lambda x: x[1], reverse=True))
@@ -23,6 +23,7 @@ def compressionComparison(output):
     plt.bar(range(len(dictionary)), dictionary.values(), align='center', color='green', width=0.5)
     plt.title('Bar Chart of Human Genome Compression Run Times')
     plt.xticks(range(len(dictionary)), dictionary.keys(), rotation=45)
+    plt.xlabel('Compression Methods')
     plt.ylabel('Time / Minutes')
     plt.tight_layout() #ensures whole plot is saved to file
     plt.savefig(output)
